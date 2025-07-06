@@ -1,12 +1,12 @@
 import { ThemeProvider } from '@/components/theme-provider';
-import { LoginForm } from './components/forms/login';
+import { Outlet } from 'react-router';
+import { Toaster } from 'sonner';
 
 function App() {
   return (
     <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-      <div className='flex min-h-svh flex-col items-center justify-center'>
-        <LoginForm />
-      </div>
+      <Outlet />
+      <Toaster position='top-right' richColors closeButton />
     </ThemeProvider>
   );
 }
