@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 import './index.css';
 import App from './App.tsx';
 import { LoginForm } from './components/forms/login.tsx';
+import { QueryClientProvider } from './providers/QueryClientProvider.tsx';
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>
 );
