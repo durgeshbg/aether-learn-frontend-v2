@@ -10,6 +10,10 @@ import ProtectedRoutes from './containers/Routes/ProtectedRoutes.tsx';
 import AuthProvider from './providers/AuthProvider.tsx';
 import Dashboard from './components/dashboard/dashboard.tsx';
 import Error from './containers/error/error.tsx';
+import Users from './components/users/Users.tsx';
+import Profile from './components/users/Profile.tsx';
+import UsersList from './components/users/UsersList.tsx';
+import AddUserForm from './components/forms/add-user/add-user.tsx';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +35,24 @@ const router = createBrowserRouter([
               {
                 path: '/',
                 element: <div>Home Content</div>,
+              },
+              {
+                path: 'users',
+                element: <Users />,
+                children: [
+                  {
+                    index: true,
+                    element: <UsersList />,
+                  },
+                  {
+                    path: 'create',
+                    element: <AddUserForm />,
+                  },
+                ],
+              },
+              {
+                path: 'profile',
+                element: <Profile />,
               },
             ],
           },

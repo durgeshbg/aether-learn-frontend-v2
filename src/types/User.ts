@@ -10,7 +10,12 @@ export type User = {
   firstName: string;
   lastName: string;
   email: string;
-  organizationId: string;
+  organization: {
+    id: string;
+    name: string;
+    websiteUrl?: string;
+    logoUrl?: string;
+  } | null;
   orgAdmin: {
     id: string;
     name: string;
