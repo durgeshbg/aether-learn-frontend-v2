@@ -12,7 +12,9 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem(localStorageKeys.ACCESS_TOKEN)
+  );
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState(

@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import './index.css';
 import App from './App.tsx';
-import { LoginForm } from './components/forms/login.tsx';
+import LoginForm from './components/forms/login.tsx';
 import { QueryClientProvider } from './providers/QueryClientProvider.tsx';
 import ProtectedRoutes from './containers/Routes/ProtectedRoutes.tsx';
 import AuthProvider from './providers/AuthProvider.tsx';

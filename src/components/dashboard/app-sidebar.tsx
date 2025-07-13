@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Home, LogOut, User2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, LogOut, User2 } from 'lucide-react';
 
 import {
   Sidebar,
@@ -12,8 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { Link } from 'react-router';
-import { routes } from '@/static-data/routes';
+import { Link, useNavigate } from 'react-router';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -22,35 +21,27 @@ import {
 } from '../ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '../ui/button';
+import { sidebarItems, topMenu } from './constants';
+import { routes } from '@/static-data/routes';
 
-const items = [
-  {
-    title: 'Home',
-    url: routes.HOME,
-    icon: Home,
-  },
-];
-
-const topmenuitems = [
-  {
-    name: 'Organization 1',
-    url: '#',
-  },
-  {
-    name: 'Organization 2',
-    url: '#',
-  },
-  { name: 'Organization 3', url: '#' },
-];
+const { items: topmenuitems, title: topMenuTitle } = topMenu;
 
 export function AppSidebar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const bottommenuitems = [
     {
       name: 'Sign out',
       icon: LogOut,
       onClick: () => logout(),
+    },
+    {
+      name: 'Profile',
+      icon: User2,
+      onClick: () => {
+        navigate(routes.PROFILE);
+      },
     },
   ];
 
@@ -62,7 +53,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className='cursor-pointer'>
-                  Select Workspace
+                  {topMenuTitle}
                   <ChevronDown className='ml-auto' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -82,10 +73,10 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Main</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {sidebarItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link to={item.url}>

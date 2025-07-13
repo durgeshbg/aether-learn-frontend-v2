@@ -26,7 +26,7 @@ const formSchema = z.object({
   }),
 });
 
-export function LoginForm() {
+export default function LoginForm() {
   const { isAuthenticated, login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
