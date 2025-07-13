@@ -16,8 +16,10 @@ import { Input } from '@/components/ui/input';
 import { userKeys } from '@/tanstack/keys/userKeys';
 import { login } from '@/services/users';
 import { useMutation } from '@tanstack/react-query';
-import { useAxiosInstance } from '@/services/axiosInstance';
+import { axiosInstance } from '@/utils/axiosInstance';
 import { localStorageKeys } from '@/static-data/localStorage';
+import { useAuth } from '@/hooks/useAuth';
+import { Navigate } from 'react-router';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -29,7 +31,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const axiosInstance = useAxiosInstance();
+  const { isAuthenticated } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +59,8 @@ export function LoginForm() {
   function onSubmit({ email, password }: z.infer<typeof formSchema>) {
     mutate({ email, password });
   }
+
+  if (isAuthenticated) return <Navigate to='/dashboard' replace />;
 
   return (
     <div className='flex flex-col h-screen justify-center items-center'>
