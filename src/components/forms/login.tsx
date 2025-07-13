@@ -20,6 +20,7 @@ import { axiosInstance } from '@/utils/axiosInstance';
 import { localStorageKeys } from '@/static-data/localStorage';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router';
+import { routes } from '@/static-data/routes';
 
 const formSchema = z.object({
   email: z.string().email({
@@ -60,7 +61,7 @@ export function LoginForm() {
     mutate({ email, password });
   }
 
-  if (isAuthenticated) return <Navigate to='/dashboard' replace />;
+  if (isAuthenticated) return <Navigate to={routes.HOME} replace />;
 
   return (
     <div className='flex flex-col h-screen justify-center items-center'>
