@@ -1,10 +1,10 @@
+import { getAxiosError } from '@/utils/getAxiosError';
 import {
   MutationCache,
   QueryClient,
   type QueryKey,
   QueryClientProvider as QueryProvider,
 } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
 import * as React from 'react';
 import { toast } from 'sonner';
 
@@ -30,13 +30,10 @@ const queryClient = new QueryClient({
         queryClient.invalidateQueries({ queryKey: meta.invalidatesQueries });
       }
     },
-    onError: (_error, _variables, _context, mutation) => {
+    onError: (error, _variables, _context, mutation) => {
       const meta = mutation.meta as QueryMeta;
-      const { response } = _error as AxiosError;
-      const { error } = response?.data as { error: string };
-
       if (meta?.notify) {
-        toast.error(error || meta?.errorMessage);
+        toast.error(getAxiosError(error) || meta?.errorMessage);
       }
     },
     onMutate: (_variables, mutation) => {

@@ -5,6 +5,19 @@ export type UserLogin = {
   password: string;
 };
 
+export type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  organizationId: string;
+  orgAdmin: {
+    id: string;
+    name: string;
+  } | null;
+  role: Role;
+};
+
 export type UserCreateType = {
   firstName: string;
   lastName: string;

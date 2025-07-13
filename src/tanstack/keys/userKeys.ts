@@ -1,6 +1,7 @@
 export const userKeys = {
   all: () => ['users'] as const,
   login: () => [...userKeys.all(), 'login'] as const,
+  me: () => [...userKeys.all(), 'me'] as const,
   create: () => [...userKeys.all(), 'create'] as const,
   getAllInOrg: () => [...userKeys.all(), 'organization'] as const,
   getInOrg: (userId: string) => [...userKeys.getAllInOrg(), userId] as const,

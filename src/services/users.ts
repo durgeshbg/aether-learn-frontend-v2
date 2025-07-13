@@ -18,6 +18,11 @@ export const getUsers = async (axiosInstance: AxiosInstance) => {
   return response.data;
 };
 
+export const getMe = async (axiosInstance: AxiosInstance) => {
+  const response = await axiosInstance.get('/users/me');
+  return response.data;
+};
+
 export const createUser = async (
   axiosInstance: AxiosInstance,
   data: UserCreateType
