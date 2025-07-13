@@ -8,6 +8,8 @@ import { LoginForm } from './components/forms/login.tsx';
 import { QueryClientProvider } from './providers/QueryClientProvider.tsx';
 import ProtectedRoutes from './containers/Routes/ProtectedRoutes.tsx';
 import AuthProvider from './providers/AuthProvider.tsx';
+import Dashboard from './components/dashboard/dashboard.tsx';
+import Error from './containers/error/error.tsx';
 
 const router = createBrowserRouter([
   {
@@ -21,9 +23,21 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <ProtectedRoutes />,
-        children: [{ path: 'dashboard', element: <div>Dashboard</div> }],
+        children: [
+          {
+            path: '/',
+            element: <Dashboard />,
+            children: [
+              {
+                path: '/',
+                element: <div>Home Content</div>,
+              },
+            ],
+          },
+        ],
       },
     ],
+    errorElement: <Error />,
   },
 ]);
 
