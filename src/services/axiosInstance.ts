@@ -1,3 +1,4 @@
+import { localStorageKeys } from '@/static-data/localStorage';
 import axios from 'axios';
 import { useEffect } from 'react';
 
@@ -12,7 +13,7 @@ export const useAxiosInstance = () => {
 
   useEffect(() => {
     const reqInterceptor = axiosInstance.interceptors.request.use((config) => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
       }
