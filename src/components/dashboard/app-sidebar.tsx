@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Home, User2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Home, LogOut, User2 } from 'lucide-react';
 
 import {
   Sidebar,
@@ -20,6 +20,8 @@ import {
   DropdownMenuItem,
   DropdownMenuContent,
 } from '../ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '../ui/button';
 
 const items = [
   {
@@ -41,22 +43,17 @@ const topmenuitems = [
   { name: 'Organization 3', url: '#' },
 ];
 
-const bottommenuitems = [
-  {
-    name: 'Account',
-    url: '#',
-  },
-  {
-    name: 'Billing',
-    url: '#',
-  },
-  {
-    name: 'Sign out',
-    url: '#',
-  },
-];
-
 export function AppSidebar() {
+  const { user, logout } = useAuth();
+
+  const bottommenuitems = [
+    {
+      name: 'Sign out',
+      icon: LogOut,
+      onClick: () => logout(),
+    },
+  ];
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -109,19 +106,20 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className='cursor-pointer'>
-                  <User2 /> Username
+                  <User2 /> {user && `${user?.firstName} ${user?.lastName}`}
                   <ChevronUp className='ml-auto' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side='top'
-                className='w-[--radix-popper-anchor-width]'
+                className='w-[--radix-popper-anchor-width] translate-x-12 -translate-y-2'
               >
                 {bottommenuitems.map((item, index) => (
-                  <DropdownMenuItem className='cursor-pointer' key={index}>
-                    <Link to={item.url}>
+                  <DropdownMenuItem className='cursor-pointer p-0' key={index}>
+                    <Button variant={'link'} onClick={item.onClick}>
+                      {item.icon && <item.icon className='mr-2' />}
                       <span>{item.name}</span>
-                    </Link>
+                    </Button>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>

@@ -1,3 +1,4 @@
+import { localStorageKeys } from '@/static-data/localStorage';
 import type {
   UserCreateType,
   UserIdParamsType,
@@ -108,5 +109,5 @@ export const deleteUser = async (
 };
 
 export const logout = () => {
-  localStorage.removeItem('token');
+  localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
 };

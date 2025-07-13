@@ -13,11 +13,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { userKeys } from '@/tanstack/keys/userKeys';
-import { login } from '@/services/users';
-import { useMutation } from '@tanstack/react-query';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { localStorageKeys } from '@/static-data/localStorage';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router';
 import { routes } from '@/static-data/routes';
@@ -32,7 +27,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,23 +37,8 @@ export function LoginForm() {
     },
   });
 
-  const { mutate } = useMutation({
-    mutationKey: userKeys.login(),
-    mutationFn: async (data: z.infer<typeof formSchema>) => {
-      return await login(axiosInstance, data);
-    },
-    meta: {
-      notify: true,
-      successMessage: 'Login successful!',
-    },
-    onSuccess: (data) => {
-      localStorage.setItem(localStorageKeys.ACCESS_TOKEN, data.token);
-      form.reset();
-    },
-  });
-
   function onSubmit({ email, password }: z.infer<typeof formSchema>) {
-    mutate({ email, password });
+    login({ email, password });
   }
 
   if (isAuthenticated) return <Navigate to={routes.HOME} replace />;

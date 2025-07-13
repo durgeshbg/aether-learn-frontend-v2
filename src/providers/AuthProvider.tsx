@@ -1,10 +1,10 @@
 import { AuthContext } from '@/context/AuthContext';
 import { axiosInstance } from '@/utils/axiosInstance';
-import { getMe, logout } from '@/services/users';
+import { getMe, login, logout } from '@/services/users';
 import { localStorageKeys } from '@/static-data/localStorage';
 import { userKeys } from '@/tanstack/keys/userKeys';
-import type { User } from '@/types/User';
-import { useQuery } from '@tanstack/react-query';
+import type { User, UserLogin } from '@/types/User';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 interface AuthProviderProps {
@@ -15,11 +15,38 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem(localStorageKeys.ACCESS_TOKEN)
+  );
+
+  const { mutate } = useMutation({
+    mutationKey: userKeys.login(),
+    mutationFn: async (data: UserLogin) => {
+      return await login(axiosInstance, data);
+    },
+    meta: {
+      notify: true,
+      successMessage: 'Login successful!',
+    },
+    onSuccess: (data) => {
+      localStorage.setItem(localStorageKeys.ACCESS_TOKEN, data.token);
+      setUser(null);
+      setAccessToken(data.token);
+    },
+  });
 
   const { data, isFetching, isError } = useQuery({
     queryKey: userKeys.me(),
     queryFn: async () => getMe(axiosInstance),
+    enabled: !!accessToken,
   });
+
+  const logoutHandler = () => {
+    logout();
+    setAccessToken(null);
+    setIsAuthenticated(false);
+    setUser(null);
+  };
 
   useEffect(() => {
     if (isFetching) {
@@ -28,21 +55,29 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false);
     }
 
-    if (localStorage.getItem(localStorageKeys.ACCESS_TOKEN)) {
+    if (accessToken) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
     }
 
     if (data) {
-      setUser(data);
+      setUser(data.user);
     } else if (isError) {
       setUser(null);
     }
-  }, [data, isError, isFetching]);
+  }, [data, isError, isFetching, accessToken]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        user,
+        login: mutate,
+        logout: logoutHandler,
+        loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
