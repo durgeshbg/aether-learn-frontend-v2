@@ -1,14 +1,22 @@
 import { AuthContext } from '@/context/AuthContext';
 import { axiosInstance } from '@/utils/axiosInstance';
-import { getMe, login, logout } from '@/services/users';
+import { getUserById, login, logout } from '@/services/user';
 import { localStorageKeys } from '@/static-data/localStorage';
 import { userKeys } from '@/tanstack/keys/userKeys';
-import type { User, UserLogin } from '@/types/User';
+import type { Role, User, UserLoginType } from '@/types/User';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import * as jwt from 'jwt-decode';
 
 interface AuthProviderProps {
   children: React.ReactNode;
+}
+
+export interface TokenPayLoad {
+  id: string;
+  email: string;
+  role: Role;
+  orgAdmin: string | null;
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -23,7 +31,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { mutate } = useMutation({
     mutationKey: userKeys.login(),
-    mutationFn: async (data: UserLogin) => {
+    mutationFn: async (data: UserLoginType) => {
       return await login(axiosInstance, data);
     },
     meta: {
@@ -36,10 +44,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setAccessToken(data.token);
     },
   });
+  const tokenPayload = accessToken ? jwt.jwtDecode(accessToken || '') as TokenPayLoad | null : null;
 
   const { data, isFetching, isError } = useQuery({
-    queryKey: userKeys.me(),
-    queryFn: async () => getMe(axiosInstance),
+    queryKey: userKeys.getById(tokenPayload?.id || ''),
+    queryFn: async () =>
+      getUserById(axiosInstance, { id: tokenPayload?.id || '' }),
     enabled: !!accessToken,
   });
 

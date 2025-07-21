@@ -15,7 +15,11 @@ const OrgAdminRoutes = () => {
     return <Navigate to={routes.LOGIN} replace />;
   }
 
-  if (!user || !user.orgAdmin || user.organizationId === user.orgAdmin.id) {
+  if (
+    !user ||
+    !user.orgAdminOf ||
+    user?.organization?.id === user.orgAdminOf.id
+  ) {
     return <Navigate to={routes.HOME} replace />;
   }
 
