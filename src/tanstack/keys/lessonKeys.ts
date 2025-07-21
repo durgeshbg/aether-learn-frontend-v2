@@ -1,5 +1,8 @@
+import { courseKeys } from './courseKeys';
+
 export const lessonKeys = {
-  all: (courseId: string) => [courseId, 'lessons'] as const,
+  all: (courseId: string) =>
+    [...courseKeys.getById(courseId), 'lessons'] as const,
   create: (courseId: string) =>
     [...lessonKeys.all(courseId), 'create'] as const,
   getById: (courseId: string, id: string) =>
