@@ -21,16 +21,19 @@ import {
 } from '../../ui/select';
 import { Checkbox } from '../../ui/checkbox';
 import { Label } from '../../ui/label';
-import { formSchema, roles } from './constants';
+import { roles } from './constants';
 import TestData from './test-data';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { userKeys } from '@/tanstack/keys/userKeys';
-import { createUser } from '@/services/users';
+import { createUser } from '@/services/user';
 import { axiosInstance } from '@/utils/axiosInstance';
+import { UserCreateSchema } from '@/types/User';
+import { organizationKeys } from '@/tanstack/keys/organizationKeys';
+import { getOrganizations } from '@/services/organization';
 
 export default function AddUserForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof UserCreateSchema>>({
+    resolver: zodResolver(UserCreateSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -44,7 +47,7 @@ export default function AddUserForm() {
 
   const { mutate } = useMutation({
     mutationKey: userKeys.create(),
-    mutationFn: async (data: z.infer<typeof formSchema>) => {
+    mutationFn: async (data: z.infer<typeof UserCreateSchema>) => {
       return createUser(axiosInstance, data);
     },
     meta: {
@@ -53,15 +56,16 @@ export default function AddUserForm() {
       invalidatesQueries: userKeys.all(),
     },
   });
+  const {
+    data: { organizations },
+  } = useSuspenseQuery({
+    queryKey: organizationKeys.all(),
+    queryFn: async () => {
+      return getOrganizations(axiosInstance);
+    },
+  });
 
-  // TODO: Fetch organizations from API or context
-  const organizations = [
-    { id: 'org1', name: 'Organization One' },
-    { id: 'org2', name: 'Organization Two' },
-    { id: 'org3', name: 'Organization Three' },
-  ];
-
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  function onSubmit(data: z.infer<typeof UserCreateSchema>) {
     mutate(data);
     form.reset();
   }
@@ -116,7 +120,7 @@ export default function AddUserForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {organizations.map((org) => (
+                    {organizations.map((org: { id: string; name: string }) => (
                       <SelectItem key={org.id} value={org.id}>
                         {org.name}
                       </SelectItem>

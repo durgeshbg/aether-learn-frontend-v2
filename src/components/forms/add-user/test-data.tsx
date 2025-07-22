@@ -10,7 +10,7 @@ const TestData = ({ form }) => {
         variant='secondary'
         type='button'
         onClick={() => {
-          form.setValue('email', 'admin@mail.com');
+          form.setValue('email', 'admin@dummmy.com');
           form.setValue('password', 'password');
           form.setValue('firstName', 'Admin');
           form.setValue('lastName', 'User');
@@ -24,7 +24,7 @@ const TestData = ({ form }) => {
         variant='secondary'
         type='button'
         onClick={() => {
-          form.setValue('email', 'admin2@mail.com');
+          form.setValue('email', 'admin2@dummmy.com');
           form.setValue('password', 'password');
           form.setValue('firstName', 'Org');
           form.setValue('lastName', 'Admin');
@@ -38,7 +38,7 @@ const TestData = ({ form }) => {
         variant='secondary'
         type='button'
         onClick={() => {
-          form.setValue('email', 'user10@example.com');
+          form.setValue('email', 'user10@dummmy.com');
           form.setValue('password', 'password');
           form.setValue('firstName', 'User');
           form.setValue('lastName', 'Ten');
