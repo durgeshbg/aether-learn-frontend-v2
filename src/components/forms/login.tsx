@@ -16,28 +16,20 @@ import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router';
 import { routes } from '@/static-data/routes';
-
-const formSchema = z.object({
-  email: z.string().email({
-    message: 'Please enter a valid email address.',
-  }),
-  password: z.string().min(6, {
-    message: 'Password must be at least 6 characters long.',
-  }),
-});
+import { UserLoginSchema } from '@/types/User';
 
 export default function LoginForm() {
   const { isAuthenticated, login } = useAuth();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof UserLoginSchema>>({
+    resolver: zodResolver(UserLoginSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  function onSubmit({ email, password }: z.infer<typeof formSchema>) {
+  function onSubmit({ email, password }: z.infer<typeof UserLoginSchema>) {
     login({ email, password });
   }
 
@@ -88,7 +80,7 @@ export default function LoginForm() {
               variant='secondary'
               type='button'
               onClick={() => {
-                form.setValue('email', 'admin1@codeverse.academy');
+                form.setValue('email', 'admin1@mail.com');
                 form.setValue('password', 'password');
               }}
             >
@@ -98,7 +90,7 @@ export default function LoginForm() {
               variant='secondary'
               type='button'
               onClick={() => {
-                form.setValue('email', 'admin2@devmasters.io');
+                form.setValue('email', 'org1admin@mail.com');
                 form.setValue('password', 'password');
               }}
             >
@@ -108,7 +100,7 @@ export default function LoginForm() {
               variant='secondary'
               type='button'
               onClick={() => {
-                form.setValue('email', 'user1@example.com');
+                form.setValue('email', 'user1@mail.com');
                 form.setValue('password', 'password');
               }}
             >

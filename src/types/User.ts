@@ -34,7 +34,7 @@ export const UserCreateSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   organizationId: z.string().cuid('Invalid organization ID format').optional(),
-  orgAdmin: z.boolean().optional().default(false),
+  orgAdmin: z.boolean().default(false).optional(),
   role: z
     .enum(['ADMIN', 'USER'], {
       errorMap: () => ({
