@@ -4,7 +4,7 @@ import { getUserById, login, logout } from '@/services/user';
 import { localStorageKeys } from '@/static-data/localStorage';
 import { userKeys } from '@/tanstack/keys/userKeys';
 import type { Role, User, UserLoginType } from '@/types/User';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import * as jwt from 'jwt-decode';
 
@@ -23,6 +23,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem(localStorageKeys.ACCESS_TOKEN)
   );
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState(
@@ -44,7 +45,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setAccessToken(data.token);
     },
   });
-  const tokenPayload = accessToken ? jwt.jwtDecode(accessToken || '') as TokenPayLoad | null : null;
+  const tokenPayload = accessToken
+    ? (jwt.jwtDecode(accessToken || '') as TokenPayLoad | null)
+    : null;
 
   const { data, isFetching, isError } = useQuery({
     queryKey: userKeys.getById(tokenPayload?.id || ''),
@@ -58,6 +61,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setAccessToken(null);
     setIsAuthenticated(false);
     setUser(null);
+    queryClient.clear();
   };
 
   useEffect(() => {
