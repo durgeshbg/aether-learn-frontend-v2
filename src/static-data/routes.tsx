@@ -4,6 +4,10 @@ export const routes = {
   USERS: '/users',
   PROFILE: '/profile',
   USER_CREATE: '/users/create',
+  USER_DETAILS: (id: string) => `/users/${id}`,
+  USER_EDIT: (id: string) => `/users/${id}/edit`,
+  USER_EDIT_ROLE: (id: string) => `/users/${id}/edit/role`,
+  USER_EDIT_ORGANIZATION: (id: string) => `/users/${id}/edit/organization`,
 };
 
 export const apiRoutes = {

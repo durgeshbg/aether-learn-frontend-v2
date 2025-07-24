@@ -14,6 +14,8 @@ import Users from './components/users/Users.tsx';
 import Profile from './components/users/Profile.tsx';
 import UsersList from './components/users/UsersList.tsx';
 import AddUserForm from './components/forms/add-user/add-user.tsx';
+import EditUserForm from './components/forms/edit-user/edit-user.tsx';
+import UserDetails from './components/users/UserDetails.tsx';
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,22 @@ const router = createBrowserRouter([
                   {
                     path: 'create',
                     element: <AddUserForm />,
+                  },
+                  {
+                    path: ':userId',
+                    element: <UserDetails />,
+                  },
+                  {
+                    path: ':userId/edit',
+                    element: <EditUserForm />,
+                  },
+                  {
+                    path: ':userId/edit/role',
+                    element: <EditUserForm type='role' />,
+                  },
+                  {
+                    path: ':userId/edit/organization',
+                    element: <EditUserForm type='organization' />,
                   },
                 ],
               },
