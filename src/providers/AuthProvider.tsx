@@ -80,6 +80,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     if (data) {
       setUser(data.user);
     } else if (isError) {
+      logoutHandler();
       setUser(null);
     }
   }, [data, isError, isFetching, accessToken]);
