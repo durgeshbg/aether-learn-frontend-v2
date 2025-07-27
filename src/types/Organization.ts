@@ -12,6 +12,7 @@ export type Organization = {
   phone?: string;
   email?: string;
   orgAdmin?: User;
+  orgAdminId?: string;
   users?: User[];
   courses?: Course[];
   createdAt: string;

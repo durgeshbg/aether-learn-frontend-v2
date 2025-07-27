@@ -79,15 +79,6 @@ export const updateOrganizationAdmin = async (
 };
 
 //Users
-export const getOrganizationUsers = async (
-  axiosInstance: AxiosInstance,
-  params: OrganizationIdParamType
-) => {
-  const response = await axiosInstance.get(
-    `${apiRoutes.ORGANIZATION_ID_USERS(params.id)}`
-  );
-  return response.data;
-};
 
 export const addOrganizationUsers = async (
   axiosInstance: AxiosInstance,
@@ -114,16 +105,6 @@ export const removeOrganizationUsers = async (
 };
 
 // Courses
-
-export const getOrganizationCourses = async (
-  axiosInstance: AxiosInstance,
-  params: OrganizationIdParamType
-) => {
-  const response = await axiosInstance.get(
-    `${apiRoutes.ORGANIZATION_ID_COURSES(params.id)}`
-  );
-  return response.data;
-};
 
 export const addOrganizationCourses = async (
   axiosInstance: AxiosInstance,

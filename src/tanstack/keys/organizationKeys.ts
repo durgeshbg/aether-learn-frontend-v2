@@ -9,14 +9,11 @@ export const organizationKeys = {
   updateAdmin: (id: string) =>
     [...organizationKeys.getById(id), 'admin'] as const,
   // Users related keys
-  getUsers: (id: string) => [...organizationKeys.getById(id), 'users'] as const,
   addUsers: (id: string) =>
     [...organizationKeys.getById(id), 'add', 'users'] as const,
   removeUsers: (id: string) =>
     [...organizationKeys.getById(id), 'remove', 'users'] as const,
   // Courses related keys
-  getCourses: (id: string) =>
-    [...organizationKeys.getById(id), 'courses'] as const,
   addCourses: (id: string) =>
     [...organizationKeys.getById(id), 'add', 'courses'] as const,
   removeCourses: (id: string) =>
