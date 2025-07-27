@@ -8,6 +8,19 @@ export const routes = {
   USER_EDIT: (id: string) => `/users/${id}/edit`,
   USER_EDIT_ROLE: (id: string) => `/users/${id}/edit/role`,
   USER_EDIT_ORGANIZATION: (id: string) => `/users/${id}/edit/organization`,
+  ORGANIZATIONS: '/organizations',
+  ORGANIZATION_CREATE: '/organizations/create',
+  ORGANIZATION_DETAILS: (id: string) => `/organizations/${id}`,
+  ORGANIZATION_EDIT: (id: string) => `/organizations/${id}/edit`,
+  ORGANIZATION_EDIT_ADMIN: (id: string) => `/organizations/${id}/edit/admin`,
+  ORGANIZATION_EDIT_USERS_ADD: (id: string) =>
+    `/organizations/${id}/edit/users?type=add`,
+  ORGANIZATION_EDIT_USERS_REMOVE: (id: string) =>
+    `/organizations/${id}/edit/users?type=remove`,
+  ORGANIZATION_EDIT_COURSES_ADD: (id: string) =>
+    `/organizations/${id}/edit/courses?type=add`,
+  ORGANIZATION_EDIT_COURSES_REMOVE: (id: string) =>
+    `/organizations/${id}/edit/courses?type=remove`,
 };
 
 export const apiRoutes = {
