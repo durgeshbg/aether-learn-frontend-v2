@@ -11,4 +11,4 @@ export const lessonKeys = {
     [...lessonKeys.all(courseId), 'update', id] as const,
   delete: (courseId: string, id: string) =>
     [...lessonKeys.all(courseId), 'delete', id] as const,
-} as const;
+};
