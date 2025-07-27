@@ -13,6 +13,7 @@ export const routes = {
 export const apiRoutes = {
   // Users
   USERS: '/users',
+  USERS_NON_ORGANIZATION: '/users/non-organization-users',
   USER_LOGIN: '/users/login',
   USERS_ID: (id: string) => `/users/${id}`,
   USER_ID_ORGANIZATION: (id: string) => `/users/${id}/organization`,
@@ -27,6 +28,7 @@ export const apiRoutes = {
 
   // Courses
   COURSES: '/courses',
+  COURSES_NON_ORGANIZATION: '/courses/non-organization-courses',
   COURSE_ID: (id: string) => `/courses/${id}`,
 
   // Lessons

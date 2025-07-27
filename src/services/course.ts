@@ -2,12 +2,29 @@ import { apiRoutes } from '@/static-data/routes';
 import type {
   CourseCreateType,
   CourseIdParamType,
+  CourseOrganizationIDQueryRequiredType,
+  CourseOrganizationIDQueryType,
   CourseUpdateType,
 } from '@/types/Course';
 import type { AxiosInstance } from 'axios';
 
-export const getCourses = async (axiosInstance: AxiosInstance) => {
-  const response = await axiosInstance.get(apiRoutes.COURSES);
+export const getCourses = async (
+  axiosInstance: AxiosInstance,
+  query: CourseOrganizationIDQueryType
+) => {
+  const response = await axiosInstance.get(apiRoutes.COURSES, {
+    params: query,
+  });
+  return response.data;
+};
+
+export const getNonOrganizationCourses = async (
+  axiosInstance: AxiosInstance,
+  query: CourseOrganizationIDQueryRequiredType
+) => {
+  const response = await axiosInstance.get(apiRoutes.COURSES_NON_ORGANIZATION, {
+    params: query,
+  });
   return response.data;
 };
 

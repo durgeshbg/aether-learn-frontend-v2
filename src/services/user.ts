@@ -3,8 +3,10 @@ import { apiRoutes } from '@/static-data/routes';
 import type {
   UserCreateType,
   UserDetailsUpdateType,
+  UserFilterQueryType,
   UserIdParamType,
   UserLoginType,
+  UserOrganizationIDQueryType,
   UserOrganizationUpdateType,
   UserRoleUpdateType,
 } from '@/types/User';
@@ -18,8 +20,18 @@ export const login = async (
   return response.data;
 };
 
-export const getUsers = async (axiosInstance: AxiosInstance) => {
-  const response = await axiosInstance.get(apiRoutes.USERS);
+export const getUsers = async (
+  axiosInstance: AxiosInstance,
+  query?: UserOrganizationIDQueryType
+) => {
+  const response = await axiosInstance.get(apiRoutes.USERS, {
+    params: query,
+  });
+  return response.data;
+};
+
+export const getNonOrganizationUsers = async (axiosInstance: AxiosInstance) => {
+  const response = await axiosInstance.get(apiRoutes.USERS_NON_ORGANIZATION);
   return response.data;
 };
 
@@ -33,9 +45,12 @@ export const createUser = async (
 
 export const getUserById = async (
   axiosInstance: AxiosInstance,
-  params: UserIdParamType
+  params: UserIdParamType,
+  query?: UserFilterQueryType
 ) => {
-  const response = await axiosInstance.get(apiRoutes.USERS_ID(params.id));
+  const response = await axiosInstance.get(apiRoutes.USERS_ID(params.id), {
+    params: query,
+  });
   return response.data;
 };
 

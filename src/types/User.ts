@@ -71,6 +71,20 @@ export const UserIdParamSchema = z.object({
   id: z.string().cuid('Invalid user ID format'),
 });
 
+export const UserFilterQuerySchema = z.object({
+  filter: z
+    .enum(['code-solutions', 'quiz-results'], {
+      errorMap: () => ({
+        message: 'Filter must be either code-solutions or quiz-results',
+      }),
+    })
+    .optional(),
+});
+
+export const UserOrganizationIDQuerySchema = z.object({
+  organizationId: z.string().cuid('Invalid organization ID format').optional(),
+});
+
 export type UserCreateType = z.infer<typeof UserCreateSchema>;
 export type UserDetailsUpdateType = z.infer<typeof UserDetailsUpdateSchema>;
 export type UserOrganizationUpdateType = z.infer<
@@ -79,4 +93,7 @@ export type UserOrganizationUpdateType = z.infer<
 export type UserRoleUpdateType = z.infer<typeof UserRoleUpdateSchema>;
 export type UserLoginType = z.infer<typeof UserLoginSchema>;
 export type UserIdParamType = z.infer<typeof UserIdParamSchema>;
-export type UserQueryParamType = 'code-solutions' | 'quiz-results';
+export type UserFilterQueryType = z.infer<typeof UserFilterQuerySchema>;
+export type UserOrganizationIDQueryType = z.infer<
+  typeof UserOrganizationIDQuerySchema
+>;
