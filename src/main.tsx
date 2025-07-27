@@ -16,6 +16,11 @@ import UsersList from './components/users/UsersList.tsx';
 import AddUserForm from './components/forms/add-user/add-user.tsx';
 import EditUserForm from './components/forms/edit-user/edit-user.tsx';
 import UserDetails from './components/users/UserDetails.tsx';
+import Organizations from './components/organizations/Organizations.tsx';
+import OrganizationCreateForm from './components/organizations/OrganizationCreateForm.tsx';
+import OrganizationDetials from './components/organizations/OrganizationDetials.tsx';
+import OrganizationsList from './components/organizations/OrganizationsList.tsx';
+import OrganizationEditForm from './components/organizations/OrganizationEditForm.tsx';
 
 const router = createBrowserRouter([
   {
@@ -65,6 +70,40 @@ const router = createBrowserRouter([
                   {
                     path: ':userId/edit/organization',
                     element: <EditUserForm type='organization' />,
+                  },
+                ],
+              },
+              {
+                path: 'organizations',
+                element: <Organizations />,
+                children: [
+                  {
+                    index: true,
+                    element: <OrganizationsList />,
+                  },
+                  {
+                    path: 'create',
+                    element: <OrganizationCreateForm />,
+                  },
+                  {
+                    path: ':organizationId',
+                    element: <OrganizationDetials />,
+                  },
+                  {
+                    path: ':organizationId/edit',
+                    element: <OrganizationEditForm />,
+                  },
+                  {
+                    path: ':organizationId/edit/admin',
+                    element: <OrganizationEditForm type='admin' />,
+                  },
+                  {
+                    path: ':organizationId/edit/users',
+                    element: <OrganizationEditForm type='users' />,
+                  },
+                  {
+                    path: ':organizationId/edit/courses',
+                    element: <OrganizationEditForm type='courses' />,
                   },
                 ],
               },
