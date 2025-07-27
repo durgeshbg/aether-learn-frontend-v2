@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 const toastMap = new Map<number, string | number>();
 
 interface QueryMeta {
-  invalidatesQueries?: QueryKey;
+  invalidatesQueries?: QueryKey | QueryKey[];
   successMessage?: string;
   errorMessage?: string;
   notify?: boolean;
@@ -27,7 +27,16 @@ const queryClient = new QueryClient({
       }
 
       if (meta?.invalidatesQueries) {
-        queryClient.invalidateQueries({ queryKey: meta.invalidatesQueries });
+        const keys =
+          Array.isArray(meta.invalidatesQueries) &&
+          Array.isArray(meta.invalidatesQueries[0])
+            ? meta.invalidatesQueries
+            : [meta.invalidatesQueries];
+
+        keys.forEach((key) => {
+          console.log(key);
+          queryClient.invalidateQueries({ queryKey: key, type: 'all' });
+        });
       }
     },
     onError: (error, _variables, _context, mutation) => {
