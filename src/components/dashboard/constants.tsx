@@ -1,5 +1,5 @@
 import { routes } from '@/static-data/routes';
-import { Home, Users } from 'lucide-react';
+import { Home, School, Users } from 'lucide-react';
 
 export const sidebarItems = [
   {
@@ -11,6 +11,11 @@ export const sidebarItems = [
     title: 'Users',
     url: routes.USERS,
     icon: Users,
+  },
+  {
+    title: 'Organizations',
+    url: routes.ORGANIZATIONS,
+    icon: School,
   },
 ];
 
