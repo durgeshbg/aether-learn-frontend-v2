@@ -34,7 +34,6 @@ const queryClient = new QueryClient({
             : [meta.invalidatesQueries];
 
         keys.forEach((key) => {
-          console.log(key);
           queryClient.invalidateQueries({ queryKey: key, type: 'all' });
         });
       }
