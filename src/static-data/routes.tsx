@@ -27,6 +27,12 @@ export const routes = {
   COURSE_CREATE: '/courses/create',
   COURSE_DETAILS: (id: string) => `/courses/${id}`,
   COURSE_EDIT: (id: string) => `/courses/${id}/edit`,
+
+  LESSON_CREATE: (courseId: string) => `/courses/${courseId}/lessons/create`,
+  LESSON_DETAILS: (courseId: string, lessonId: string) =>
+    `/courses/${courseId}/lessons/${lessonId}`,
+  LESSON_EDIT: (courseId: string, lessonId: string) =>
+    `/courses/${courseId}/lessons/${lessonId}/edit`,
 };
 
 export const apiRoutes = {

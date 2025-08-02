@@ -6,7 +6,7 @@ import type { Course } from '@/types/Course';
 import type { Lesson } from '@/types/Lesson';
 import { axiosInstance } from '@/utils/axiosInstance';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { Button } from '../ui/button';
 import { routes } from '@/static-data/routes';
 
@@ -61,6 +61,13 @@ const CourseDetails = () => {
         >
           Delete
         </Button>
+
+        <Button
+          className='bg-green-500 text-white px-4 py-2 rounded ml-2'
+          onClick={() => navigate(routes.LESSON_CREATE(course.id))}
+        >
+          Add Lesson
+        </Button>
       </div>
       <div className='mb-2'>
         <strong>Name:</strong> {course.name}
@@ -73,7 +80,12 @@ const CourseDetails = () => {
         <ul className='list-disc pl-5'>
           {lessons.map((lesson) => (
             <li key={lesson.id} className='mb-1'>
-              {lesson.title}
+              <Link
+                to={routes.LESSON_DETAILS(courseId, lesson.id)}
+                className='text-blue-600 hover:underline'
+              >
+                {lesson.title}
+              </Link>
             </li>
           ))}
         </ul>
