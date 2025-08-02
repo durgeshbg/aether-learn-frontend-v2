@@ -21,6 +21,10 @@ import OrganizationCreateForm from './components/organizations/OrganizationCreat
 import OrganizationDetials from './components/organizations/OrganizationDetials.tsx';
 import OrganizationsList from './components/organizations/OrganizationsList.tsx';
 import OrganizationEditForm from './components/organizations/OrganizationEditForm.tsx';
+import Courses from './components/courses/Courses.tsx';
+import CoursesList from './components/courses/CoursesList.tsx';
+import CrourseCreateForm from './components/courses/CrourseCreateForm.tsx';
+import CourseDetails from './components/courses/CourseDetails.tsx';
 
 const router = createBrowserRouter([
   {
@@ -106,6 +110,28 @@ const router = createBrowserRouter([
                     element: <OrganizationEditForm type='courses' />,
                   },
                 ],
+              },
+              {
+                path: 'courses',
+                element: <Courses />,
+                children: [
+                  {
+                    index: true,
+                    element: <CoursesList />,
+                  },
+                  {
+                    path: 'create',
+                    element: <CrourseCreateForm />,
+                  },
+                  {
+                    path: ':courseId/edit',
+                    element: <CrourseCreateForm type='edit' />,
+                  },
+                ],
+              },
+              {
+                path: 'courses/:courseId',
+                element: <CourseDetails />,
               },
               {
                 path: 'profile',

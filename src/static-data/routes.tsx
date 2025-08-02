@@ -8,6 +8,7 @@ export const routes = {
   USER_EDIT: (id: string) => `/users/${id}/edit`,
   USER_EDIT_ROLE: (id: string) => `/users/${id}/edit/role`,
   USER_EDIT_ORGANIZATION: (id: string) => `/users/${id}/edit/organization`,
+
   ORGANIZATIONS: '/organizations',
   ORGANIZATION_CREATE: '/organizations/create',
   ORGANIZATION_DETAILS: (id: string) => `/organizations/${id}`,
@@ -21,6 +22,11 @@ export const routes = {
     `/organizations/${id}/edit/courses?type=add`,
   ORGANIZATION_EDIT_COURSES_REMOVE: (id: string) =>
     `/organizations/${id}/edit/courses?type=remove`,
+
+  COURSES: '/courses',
+  COURSE_CREATE: '/courses/create',
+  COURSE_DETAILS: (id: string) => `/courses/${id}`,
+  COURSE_EDIT: (id: string) => `/courses/${id}/edit`,
 };
 
 export const apiRoutes = {
