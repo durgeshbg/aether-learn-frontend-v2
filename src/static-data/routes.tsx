@@ -33,6 +33,13 @@ export const routes = {
     `/courses/${courseId}/lessons/${lessonId}`,
   LESSON_EDIT: (courseId: string, lessonId: string) =>
     `/courses/${courseId}/lessons/${lessonId}/edit`,
+
+  MODULE_CREATE: (courseId: string, lessonId: string) =>
+    `/courses/${courseId}/lessons/${lessonId}/modules/create`,
+  MODULE_DETAILS: (courseId: string, lessonId: string, moduleId: string) =>
+    `/courses/${courseId}/lessons/${lessonId}/modules/${moduleId}`,
+  MODULE_EDIT: (courseId: string, lessonId: string, moduleId: string) =>
+    `/courses/${courseId}/lessons/${lessonId}/modules/${moduleId}/edit`,
 };
 
 export const apiRoutes = {
