@@ -48,6 +48,12 @@ const Lessons = () => {
         >
           Delete
         </Button>
+        <Button
+          className='bg-green-500 text-white px-4 py-2 rounded ml-2'
+          onClick={() => navigate(routes.MODULE_CREATE(courseId, lessonId))}
+        >
+          Add Module
+        </Button>
       </div>
       <Outlet />
     </div>

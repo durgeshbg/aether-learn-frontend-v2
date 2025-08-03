@@ -28,6 +28,9 @@ import CourseDetails from './components/courses/CourseDetails.tsx';
 import Lessons from './components/lessons/Lessons.tsx';
 import LessonCreateForm from './components/lessons/LessonCreate.tsx';
 import LessonDetails from './components/lessons/LessonDetails.tsx';
+import Modules from './components/modules/Modules.tsx';
+import ModuleCreateForm from './components/modules/ModuleCreateForm.tsx';
+import ModuleDetails from './components/modules/ModuleDetails.tsx';
 
 const router = createBrowserRouter([
   {
@@ -151,6 +154,24 @@ const router = createBrowserRouter([
                   {
                     path: ':lessonId/edit',
                     element: <LessonCreateForm type='edit' />,
+                  },
+                ],
+              },
+              {
+                path: 'courses/:courseId/lessons/:lessonId/modules',
+                element: <Modules />,
+                children: [
+                  {
+                    path: 'create',
+                    element: <ModuleCreateForm />,
+                  },
+                  {
+                    path: ':moduleId',
+                    element: <ModuleDetails />,
+                  },
+                  {
+                    path: ':moduleId/edit',
+                    element: <ModuleCreateForm type='edit' />,
                   },
                 ],
               },
