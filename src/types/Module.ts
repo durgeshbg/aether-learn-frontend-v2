@@ -5,6 +5,8 @@ export type Module = {
   title: string;
   content: string;
   lessonId: string;
+  code?: string;
+  languageId: number;
   createdAt: string;
   updatedAt: string;
 };
@@ -13,7 +15,7 @@ export const ModuleCreateSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   content: z.string().min(1, 'Content is required'),
   code: z.string().optional(),
-  languageId: z
+  languageId: z.coerce
     .number()
     .int()
     .positive('Language ID must be a positive integer'),
@@ -23,7 +25,7 @@ export const ModuleUpdateSchema = z.object({
   title: z.string().min(1, 'Title is required').optional(),
   content: z.string().min(1, 'Content is required').optional(),
   code: z.string().optional(),
-  languageId: z
+  languageId: z.coerce
     .number()
     .int()
     .positive('Language ID must be a positive integer')
