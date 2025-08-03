@@ -23,20 +23,3 @@ export const sidebarItems = [
     url: routes.COURSES,
   },
 ];
-
-const topmenuitems = [
-  {
-    name: 'Organization 1',
-    url: '#',
-  },
-  {
-    name: 'Organization 2',
-    url: '#',
-  },
-  { name: 'Organization 3', url: '#' },
-];
-
-export const topMenu = {
-  title: 'Select Organization',
-  items: topmenuitems,
-};
