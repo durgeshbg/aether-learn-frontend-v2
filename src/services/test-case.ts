@@ -11,9 +11,10 @@ export const getTestCases = async (
   axiosInstance: AxiosInstance,
   params: TestCaseCourseCodeAssessmentIdParamsType
 ) => {
-  return axiosInstance.get(
+  const response = await axiosInstance.get(
     apiRoutes.TEST_CASES(params.courseId, params.codeAssessmentId)
   );
+  return response.data;
 };
 
 export const createTestCase = async (
@@ -21,19 +22,21 @@ export const createTestCase = async (
   params: TestCaseCourseCodeAssessmentIdParamsType,
   data: TestCaseCreateType
 ) => {
-  return axiosInstance.post(
+  const response = await axiosInstance.post(
     apiRoutes.TEST_CASES(params.courseId, params.codeAssessmentId),
     data
   );
+  return response.data;
 };
 
 export const getTestCaseById = async (
   axiosInstance: AxiosInstance,
   params: TestCaseIdParamsType
 ) => {
-  return axiosInstance.get(
+  const response = await axiosInstance.get(
     apiRoutes.TEST_CASE_ID(params.courseId, params.codeAssessmentId, params.id)
   );
+  return response.data;
 };
 
 export const updateTestCase = async (
@@ -41,17 +44,19 @@ export const updateTestCase = async (
   params: TestCaseIdParamsType,
   data: TestCaseUpdateType
 ) => {
-  return axiosInstance.put(
+  const response = await axiosInstance.put(
     apiRoutes.TEST_CASE_ID(params.courseId, params.codeAssessmentId, params.id),
     data
   );
+  return response.data;
 };
 
 export const deleteTestCase = async (
   axiosInstance: AxiosInstance,
   params: TestCaseIdParamsType
 ) => {
-  return axiosInstance.delete(
+  const response = await axiosInstance.delete(
     apiRoutes.TEST_CASE_ID(params.courseId, params.codeAssessmentId, params.id)
   );
+  return response.data;
 };

@@ -10,9 +10,10 @@ export const getCodeSolutions = async (
   axiosInstance: AxiosInstance,
   params: CodeSolutionAssesmentCourseIdParamsType
 ) => {
-  return axiosInstance.get(
+  const response = await axiosInstance.get(
     apiRoutes.CODE_SOLUTIONS(params.courseId, params.codeAssessmentId)
   );
+  return response.data;
 };
 
 export const createCodeSolution = async (
@@ -20,23 +21,25 @@ export const createCodeSolution = async (
   params: CodeSolutionAssesmentCourseIdParamsType,
   data: CodeSolutionCreateType
 ) => {
-  return axiosInstance.post(
+  const response = await axiosInstance.post(
     apiRoutes.CODE_SOLUTIONS(params.courseId, params.codeAssessmentId),
     data
   );
+  return response.data;
 };
 
 export const getCodeSolutionById = async (
   axiosInstance: AxiosInstance,
   params: CodeSolutionIdParamsType
 ) => {
-  return axiosInstance.get(
+  const response = await axiosInstance.get(
     apiRoutes.CODE_SOLUTION_ID(
       params.courseId,
       params.codeAssessmentId,
       params.id
     )
   );
+  return response.data;
 };
 
 // export const deleteCodeSolution = async (

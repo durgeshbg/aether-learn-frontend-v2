@@ -11,7 +11,10 @@ export const getCodeAssessments = async (
   axiosInstance: AxiosInstance,
   params: CodeAssessmentCourseIdParamsType
 ) => {
-  return axiosInstance.get(apiRoutes.CODE_ASSESSMENTS(params.courseId));
+  const response = await axiosInstance.get(
+    apiRoutes.CODE_ASSESSMENTS(params.courseId)
+  );
+  return response.data;
 };
 
 export const createCodeAssessment = async (
@@ -19,16 +22,21 @@ export const createCodeAssessment = async (
   params: CodeAssessmentCourseIdParamsType,
   data: CodeAssessmentCreateType
 ) => {
-  return axiosInstance.post(apiRoutes.CODE_ASSESSMENTS(params.courseId), data);
+  const response = await axiosInstance.post(
+    apiRoutes.CODE_ASSESSMENTS(params.courseId),
+    data
+  );
+  return response.data;
 };
 
 export const getCodeAssessmentById = async (
   axiosInstance: AxiosInstance,
   params: CodeAssessmentIdParamsType
 ) => {
-  return axiosInstance.get(
+  const response = await axiosInstance.get(
     apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id)
   );
+  return response.data;
 };
 
 export const updateCodeAssessment = async (
@@ -36,17 +44,19 @@ export const updateCodeAssessment = async (
   params: CodeAssessmentIdParamsType,
   data: CodeAssessmentUpdateType
 ) => {
-  return axiosInstance.put(
+  const response = await axiosInstance.put(
     apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id),
     data
   );
+  return response.data;
 };
 
 export const deleteCodeAssessment = async (
   axiosInstance: AxiosInstance,
   params: CodeAssessmentIdParamsType
 ) => {
-  return axiosInstance.delete(
+  const response = await axiosInstance.delete(
     apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id)
   );
+  return response.data;
 };

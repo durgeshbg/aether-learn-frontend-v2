@@ -11,7 +11,8 @@ export const getQuizzez = async (
   axiosInstance: AxiosInstance,
   params: QuizCourseIdParamsType
 ) => {
-  return axiosInstance.get(apiRoutes.QUIZZES(params.courseId));
+  const response = await axiosInstance.get(apiRoutes.QUIZZES(params.courseId));
+  return response.data;
 };
 
 export const createQuiz = async (
@@ -19,14 +20,21 @@ export const createQuiz = async (
   params: QuizCourseIdParamsType,
   data: QuizCreateType
 ) => {
-  return axiosInstance.post(apiRoutes.QUIZZES(params.courseId), data);
+  const response = await axiosInstance.post(
+    apiRoutes.QUIZZES(params.courseId),
+    data
+  );
+  return response.data;
 };
 
 export const getQuiz = async (
   axiosInstance: AxiosInstance,
   params: QuizIdParamsType
 ) => {
-  return axiosInstance.get(apiRoutes.QUIZ_ID(params.courseId, params.id));
+  const response = await axiosInstance.get(
+    apiRoutes.QUIZ_ID(params.courseId, params.id)
+  );
+  return response.data;
 };
 
 export const updateQuiz = async (
@@ -34,12 +42,19 @@ export const updateQuiz = async (
   params: QuizIdParamsType,
   data: QuizUpdateType
 ) => {
-  return axiosInstance.put(apiRoutes.QUIZ_ID(params.courseId, params.id), data);
+  const response = await axiosInstance.put(
+    apiRoutes.QUIZ_ID(params.courseId, params.id),
+    data
+  );
+  return response.data;
 };
 
 export const deleteQuiz = async (
   axiosInstance: AxiosInstance,
   params: QuizIdParamsType
 ) => {
-  return axiosInstance.delete(apiRoutes.QUIZ_ID(params.courseId, params.id));
+  const response = await axiosInstance.delete(
+    apiRoutes.QUIZ_ID(params.courseId, params.id)
+  );
+  return response.data;
 };

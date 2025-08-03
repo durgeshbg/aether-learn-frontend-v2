@@ -7,49 +7,56 @@ import type {
 } from '@/types/Question';
 import type { AxiosInstance } from 'axios';
 
-export const getQuestions = (
+export const getQuestions = async (
   axiosInstance: AxiosInstance,
   params: QuestionQuizCourseIdParamsType
 ) => {
-  return axiosInstance.get(apiRoutes.QUESTIONS(params.courseId, params.quizId));
+  const response = await axiosInstance.get(
+    apiRoutes.QUESTIONS(params.courseId, params.quizId)
+  );
+  return response.data;
 };
 
-export const createQuestion = (
+export const createQuestion = async (
   axiosInstance: AxiosInstance,
   params: QuestionQuizCourseIdParamsType,
   data: QuestionCreateType
 ) => {
-  return axiosInstance.post(
+  const response = await axiosInstance.post(
     apiRoutes.QUESTIONS(params.courseId, params.quizId),
     data
   );
+  return response.data;
 };
 
-export const getQuestion = (
+export const getQuestion = async (
   axiosInstance: AxiosInstance,
   params: QuestionIdParamsType
 ) => {
-  return axiosInstance.get(
+  const response = await axiosInstance.get(
     apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id)
   );
+  return response.data;
 };
 
-export const updateQuestion = (
+export const updateQuestion = async (
   axiosInstance: AxiosInstance,
   params: QuestionIdParamsType,
   data: QuestionUpdateType
 ) => {
-  return axiosInstance.put(
+  const response = await axiosInstance.put(
     apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id),
     data
   );
+  return response.data;
 };
 
-export const deleteQuestion = (
+export const deleteQuestion = async (
   axiosInstance: AxiosInstance,
   params: QuestionIdParamsType
 ) => {
-  return axiosInstance.delete(
+  const response = await axiosInstance.delete(
     apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id)
   );
+  return response.data;
 };
