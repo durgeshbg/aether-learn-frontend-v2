@@ -1,12 +1,13 @@
-import { getAxiosError } from '@/utils/getAxiosError';
+import { getAxiosError } from "@/utils/getAxiosError";
 import {
   MutationCache,
   QueryClient,
   type QueryKey,
   QueryClientProvider as QueryProvider,
-} from '@tanstack/react-query';
-import * as React from 'react';
-import { toast } from 'sonner';
+} from "@tanstack/react-query";
+import * as React from "react";
+import { toast } from "sonner";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const toastMap = new Map<number, string | number>();
 
@@ -34,7 +35,7 @@ const queryClient = new QueryClient({
             : [meta.invalidatesQueries];
 
         keys.forEach((key) => {
-          queryClient.invalidateQueries({ queryKey: key, type: 'all' });
+          queryClient.invalidateQueries({ queryKey: key, type: "all" });
         });
       }
     },
@@ -47,7 +48,7 @@ const queryClient = new QueryClient({
     onMutate: (_variables, mutation) => {
       const meta = mutation.meta as QueryMeta;
       if (meta?.notify) {
-        const loadingToastId = toast.loading('Processing request...');
+        const loadingToastId = toast.loading("Processing request...");
         toastMap.set(mutation.mutationId, loadingToastId);
       }
     },
@@ -73,5 +74,10 @@ export interface IQueryClientProviderProps {
 }
 
 export function QueryClientProvider({ children }: IQueryClientProviderProps) {
-  return <QueryProvider client={queryClient}>{children}</QueryProvider>;
+  return (
+    <QueryProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryProvider>
+  );
 }
