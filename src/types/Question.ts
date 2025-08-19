@@ -7,23 +7,24 @@ export type Question = {
   quizId: string;
   createdAt: string;
   updatedAt: string;
+  answer: number;
+  explaination: string;
 };
 
 export const QuestionCreateSchema = z
   .object({
     text: z.string().min(1, 'Question cannot be empty'),
     options: z.array(z.string()).min(2, 'At least two options are required'),
-    answer: z.number().int(),
+    answer: z.coerce.number().int(),
+    explanation: z.string().optional(),
   })
   .superRefine(
     (data: { options: string[]; answer: number }, ctx: z.RefinementCtx) => {
-      if (data.answer < 0 || data.answer >= data.options.length) {
+      if (data.answer < 1 || data.answer > data.options.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['answer'],
-          message: `Invalid index of the options array (0 to ${
-            data.options.length - 1
-          })`,
+          message: `Invalid index of the options array (1 to ${data.options.length})`,
         });
       }
     }
@@ -36,7 +37,8 @@ export const QuestionUpdateSchema = z
       .array(z.string())
       .min(2, 'At least two options are required')
       .optional(),
-    answer: z.number().int().optional(),
+    answer: z.coerce.number().int().optional(),
+    explanation: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.options === undefined && data.answer !== undefined) {
@@ -56,13 +58,11 @@ export const QuestionUpdateSchema = z
     }
 
     if (data.answer !== undefined && data.options !== undefined) {
-      if (data.answer < 0 || data.answer >= (data.options?.length ?? 0)) {
+      if (data.answer < 1 || data.answer > (data.options?.length ?? 0)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['answer'],
-          message: `Invalid index of the options array (0 to ${
-            data.options?.length - 1
-          })`,
+          message: `Invalid index of the options array (1 to ${data.options?.length})`,
         });
       }
     }
