@@ -40,6 +40,17 @@ export const routes = {
     `/courses/${courseId}/lessons/${lessonId}/modules/${moduleId}`,
   MODULE_EDIT: (courseId: string, lessonId: string, moduleId: string) =>
     `/courses/${courseId}/lessons/${lessonId}/modules/${moduleId}/edit`,
+
+  QUIZZES: (courseId: string) => `/courses/${courseId}/quizzes`,
+  QUIZ_CREATE: (courseId: string) => `/courses/${courseId}/quizzes/create`,
+  QUIZ_DETAILS: (courseId: string, quizId: string) =>
+    `/courses/${courseId}/quizzes/${quizId}`,
+  QUIZ_EDIT: (courseId: string, quizId: string) =>
+    `/courses/${courseId}/quizzes/${quizId}/edit`,
+  QUESTION_CREATE: (courseId: string, quizId: string) =>
+    `/courses/${courseId}/quizzes/${quizId}/questions/create`,
+  QUESTION_EDIT: (courseId: string, quizId: string, questionId: string) =>
+    `/courses/${courseId}/quizzes/${quizId}/questions/${questionId}/edit`,
 };
 
 export const apiRoutes = {

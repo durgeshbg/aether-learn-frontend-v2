@@ -31,6 +31,10 @@ import LessonDetails from './components/lessons/LessonDetails.tsx';
 import Modules from './components/modules/Modules.tsx';
 import ModuleCreateForm from './components/modules/ModuleCreateForm.tsx';
 import ModuleDetails from './components/modules/ModuleDetails.tsx';
+import Quizzes from './components/quizzes/Quizzes.tsx';
+import QuizCreateForm from './components/quizzes/QuizCreateForm.tsx';
+import QuizDetails from './components/quizzes/QuizDetails.tsx';
+import QuestionCreateForm from './components/quizzes/QuestionCreateForm.tsx';
 
 const router = createBrowserRouter([
   {
@@ -172,6 +176,32 @@ const router = createBrowserRouter([
                   {
                     path: ':moduleId/edit',
                     element: <ModuleCreateForm type='edit' />,
+                  },
+                ],
+              },
+              {
+                path: 'courses/:courseId/quizzes',
+                element: <Quizzes />,
+                children: [
+                  {
+                    path: 'create',
+                    element: <QuizCreateForm />,
+                  },
+                  {
+                    path: ':quizId',
+                    element: <QuizDetails />,
+                  },
+                  {
+                    path: ':quizId/edit',
+                    element: <QuizCreateForm type='edit' />,
+                  },
+                  {
+                    path: ':quizId/questions/create',
+                    element: <QuestionCreateForm />,
+                  },
+                  {
+                    path: ':quizId/questions/:questionId/edit',
+                    element: <QuestionCreateForm type='edit' />,
                   },
                 ],
               },

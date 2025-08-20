@@ -9,6 +9,9 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router';
 import { Button } from '../ui/button';
 import { routes } from '@/static-data/routes';
+import { quizKeys } from '@/tanstack/keys/quizKeys';
+import type { Quiz } from '@/types/Quiz';
+import { getQuizzez } from '@/services/quiz';
 
 const CourseDetails = () => {
   const { courseId = '' } = useParams<{ courseId: string }>();
@@ -28,6 +31,14 @@ const CourseDetails = () => {
       return getLessons(axiosInstance, { courseId });
     },
     select: (data: { lessons: Lesson[] }) => data.lessons,
+  });
+
+  const { data: quizzes } = useSuspenseQuery({
+    queryKey: quizKeys.all(courseId),
+    queryFn: async () => {
+      return getQuizzez(axiosInstance, { courseId });
+    },
+    select: (data: { quizzes: Quiz[] }) => data.quizzes,
   });
 
   const { mutate: deleteCourseMutation } = useMutation({
@@ -68,6 +79,13 @@ const CourseDetails = () => {
         >
           Add Lesson
         </Button>
+
+        <Button
+          className='bg-yellow-500 text-white px-4 py-2 rounded ml-2'
+          onClick={() => navigate(routes.QUIZ_CREATE(course.id))}
+        >
+          Add Quiz
+        </Button>
       </div>
       <div className='mb-2'>
         <strong>Name:</strong> {course.name}
@@ -85,6 +103,22 @@ const CourseDetails = () => {
                 className='text-blue-600 hover:underline'
               >
                 {lesson.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className='mb-4'>
+        <strong>Quizzes:</strong>
+        <ul className='list-disc pl-5'>
+          {quizzes.map((quiz) => (
+            <li key={quiz.id} className='mb-1'>
+              <Link
+                to={routes.QUIZ_DETAILS(courseId, quiz.id)}
+                className='text-blue-600 hover:underline'
+              >
+                {quiz.title}
               </Link>
             </li>
           ))}
