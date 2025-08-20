@@ -1,20 +1,23 @@
-import { deleteCourse, getCourseById } from '@/services/course';
-import { getLessons } from '@/services/lesson';
-import { courseKeys } from '@/tanstack/keys/courseKeys';
-import { lessonKeys } from '@/tanstack/keys/lessonKeys';
-import type { Course } from '@/types/Course';
-import type { Lesson } from '@/types/Lesson';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useParams } from 'react-router';
-import { Button } from '../ui/button';
-import { routes } from '@/static-data/routes';
-import { quizKeys } from '@/tanstack/keys/quizKeys';
-import type { Quiz } from '@/types/Quiz';
-import { getQuizzez } from '@/services/quiz';
+import { deleteCourse, getCourseById } from "@/services/course";
+import { getLessons } from "@/services/lesson";
+import { courseKeys } from "@/tanstack/keys/courseKeys";
+import { lessonKeys } from "@/tanstack/keys/lessonKeys";
+import type { Course } from "@/types/Course";
+import type { Lesson } from "@/types/Lesson";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { Link, useNavigate, useParams } from "react-router";
+import { Button } from "../ui/button";
+import { routes } from "@/static-data/routes";
+import { quizKeys } from "@/tanstack/keys/quizKeys";
+import type { Quiz } from "@/types/Quiz";
+import { getQuizzez } from "@/services/quiz";
+import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
+import { getCodeAssessments } from "@/services/code-assesment";
+import type { CodeAssesment } from "@/types/CodeAssesment";
 
 const CourseDetails = () => {
-  const { courseId = '' } = useParams<{ courseId: string }>();
+  const { courseId = "" } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
 
   const { data: course } = useSuspenseQuery({
@@ -41,6 +44,15 @@ const CourseDetails = () => {
     select: (data: { quizzes: Quiz[] }) => data.quizzes,
   });
 
+  const { data: codeAssessments } = useSuspenseQuery({
+    queryKey: codeAssessmentKeys.all(courseId),
+    queryFn: async () => {
+      return getCodeAssessments(axiosInstance, { courseId });
+    },
+    select: (data: { codeAssessments: CodeAssesment[] }) =>
+      data.codeAssessments,
+  });
+
   const { mutate: deleteCourseMutation } = useMutation({
     mutationKey: courseKeys.delete(courseId),
     mutationFn: async () => {
@@ -51,56 +63,63 @@ const CourseDetails = () => {
     },
     meta: {
       notify: true,
-      successMessage: 'Course deleted successfully',
+      successMessage: "Course deleted successfully",
       invalidatesQueries: courseKeys.all(),
     },
   });
 
   return (
-    <div className='p-4 shadow-md rounded-lg'>
-      <h2 className='text-xl font-semibold mb-4'>Course Details</h2>
-      <div className='flex mb-4'>
+    <div className="p-4 shadow-md rounded-lg">
+      <h2 className="text-xl font-semibold mb-4">Course Details</h2>
+      <div className="flex mb-4">
         <Button
-          className='bg-gray-200 text-gray-800 px-4 py-2 rounded mr-2'
+          className="bg-gray-200 text-gray-800 px-4 py-2 rounded mr-2"
           onClick={() => navigate(routes.COURSE_EDIT(course.id))}
         >
           Edit
         </Button>
         <Button
-          className='bg-blue-500 text-white px-4 py-2 rounded'
+          className="bg-blue-500 text-white px-4 py-2 rounded"
           onClick={() => deleteCourseMutation()}
         >
           Delete
         </Button>
 
         <Button
-          className='bg-green-500 text-white px-4 py-2 rounded ml-2'
+          className="bg-green-500 text-white px-4 py-2 rounded ml-2"
           onClick={() => navigate(routes.LESSON_CREATE(course.id))}
         >
           Add Lesson
         </Button>
 
         <Button
-          className='bg-yellow-500 text-white px-4 py-2 rounded ml-2'
+          className="bg-yellow-500 text-white px-4 py-2 rounded ml-2"
           onClick={() => navigate(routes.QUIZ_CREATE(course.id))}
         >
           Add Quiz
         </Button>
+
+        <Button
+          className="bg-purple-500 text-white px-4 py-2 rounded ml-2"
+          onClick={() => navigate(routes.CODE_ASSESSMENT_CREATE(course.id))}
+        >
+          Add Code Assessment
+        </Button>
       </div>
-      <div className='mb-2'>
+      <div className="mb-2">
         <strong>Name:</strong> {course.name}
       </div>
-      <div className='mb-2'>
+      <div className="mb-2">
         <strong>Description:</strong> {course.description}
       </div>
-      <div className='mb-4'>
+      <div className="mb-4">
         <strong>Lessons:</strong>
-        <ul className='list-disc pl-5'>
+        <ul className="list-disc pl-5">
           {lessons.map((lesson) => (
-            <li key={lesson.id} className='mb-1'>
+            <li key={lesson.id} className="mb-1">
               <Link
                 to={routes.LESSON_DETAILS(courseId, lesson.id)}
-                className='text-blue-600 hover:underline'
+                className="text-blue-600 hover:underline"
               >
                 {lesson.title}
               </Link>
@@ -109,16 +128,32 @@ const CourseDetails = () => {
         </ul>
       </div>
 
-      <div className='mb-4'>
+      <div className="mb-4">
         <strong>Quizzes:</strong>
-        <ul className='list-disc pl-5'>
+        <ul className="list-disc pl-5">
           {quizzes.map((quiz) => (
-            <li key={quiz.id} className='mb-1'>
+            <li key={quiz.id} className="mb-1">
               <Link
                 to={routes.QUIZ_DETAILS(courseId, quiz.id)}
-                className='text-blue-600 hover:underline'
+                className="text-blue-600 hover:underline"
               >
                 {quiz.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mb-4">
+        <strong>Code Assessments:</strong>
+        <ul className="list-disc pl-5">
+          {codeAssessments.map((assessment) => (
+            <li key={assessment.id} className="mb-1">
+              <Link
+                to={routes.CODE_ASSESSMENT_DETAILS(courseId, assessment.id)}
+                className="text-blue-600 hover:underline"
+              >
+                {assessment.title}
               </Link>
             </li>
           ))}

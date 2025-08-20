@@ -1,16 +1,16 @@
 export const routes = {
-  HOME: '/',
-  LOGIN: '/login',
-  USERS: '/users',
-  PROFILE: '/profile',
-  USER_CREATE: '/users/create',
+  HOME: "/",
+  LOGIN: "/login",
+  USERS: "/users",
+  PROFILE: "/profile",
+  USER_CREATE: "/users/create",
   USER_DETAILS: (id: string) => `/users/${id}`,
   USER_EDIT: (id: string) => `/users/${id}/edit`,
   USER_EDIT_ROLE: (id: string) => `/users/${id}/edit/role`,
   USER_EDIT_ORGANIZATION: (id: string) => `/users/${id}/edit/organization`,
 
-  ORGANIZATIONS: '/organizations',
-  ORGANIZATION_CREATE: '/organizations/create',
+  ORGANIZATIONS: "/organizations",
+  ORGANIZATION_CREATE: "/organizations/create",
   ORGANIZATION_DETAILS: (id: string) => `/organizations/${id}`,
   ORGANIZATION_EDIT: (id: string) => `/organizations/${id}/edit`,
   ORGANIZATION_EDIT_ADMIN: (id: string) => `/organizations/${id}/edit/admin`,
@@ -23,8 +23,8 @@ export const routes = {
   ORGANIZATION_EDIT_COURSES_REMOVE: (id: string) =>
     `/organizations/${id}/edit/courses?type=remove`,
 
-  COURSES: '/courses',
-  COURSE_CREATE: '/courses/create',
+  COURSES: "/courses",
+  COURSE_CREATE: "/courses/create",
   COURSE_DETAILS: (id: string) => `/courses/${id}`,
   COURSE_EDIT: (id: string) => `/courses/${id}/edit`,
 
@@ -51,18 +51,31 @@ export const routes = {
     `/courses/${courseId}/quizzes/${quizId}/questions/create`,
   QUESTION_EDIT: (courseId: string, quizId: string, questionId: string) =>
     `/courses/${courseId}/quizzes/${quizId}/questions/${questionId}/edit`,
+
+  CODE_ASSESSMENTS: (courseId: string) =>
+    `/courses/${courseId}/code-assessments`,
+  CODE_ASSESSMENT_CREATE: (courseId: string) =>
+    `/courses/${courseId}/code-assessments/create`,
+  CODE_ASSESSMENT_DETAILS: (courseId: string, id: string) =>
+    `/courses/${courseId}/code-assessments/${id}`,
+  CODE_ASSESSMENT_EDIT: (courseId: string, id: string) =>
+    `/courses/${courseId}/code-assessments/${id}/edit`,
+  TEST_CASE_CREATE: (courseId: string, codeAssessmentId: string) =>
+    `/courses/${courseId}/code-assessments/${codeAssessmentId}/test-cases/create`,
+  TEST_CASE_EDIT: (courseId: string, codeAssessmentId: string, id: string) =>
+    `/courses/${courseId}/code-assessments/${codeAssessmentId}/test-cases/${id}/edit`,
 };
 
 export const apiRoutes = {
   // Users
-  USERS: '/users',
-  USERS_NON_ORGANIZATION: '/users/non-organization-users',
-  USER_LOGIN: '/users/login',
+  USERS: "/users",
+  USERS_NON_ORGANIZATION: "/users/non-organization-users",
+  USER_LOGIN: "/users/login",
   USERS_ID: (id: string) => `/users/${id}`,
   USER_ID_ORGANIZATION: (id: string) => `/users/${id}/organization`,
   USER_ID_ROLE: (id: string) => `/users/${id}/role`,
   // Organizations
-  ORGANIZATIONS: '/organizations',
+  ORGANIZATIONS: "/organizations",
   ORGANIZATIONS_SEARCH: (name: string) => `/organizations/search?name=${name}`,
   ORGANIZATION_ID: (id: string) => `/organizations/${id}`,
   ORGANIZATION_ID_ORG_ADMIN: (id: string) => `/organizations/${id}/admin`,
@@ -70,8 +83,8 @@ export const apiRoutes = {
   ORGANIZATION_ID_COURSES: (id: string) => `/organizations/${id}/courses`,
 
   // Courses
-  COURSES: '/courses',
-  COURSES_NON_ORGANIZATION: '/courses/non-organization-courses',
+  COURSES: "/courses",
+  COURSES_NON_ORGANIZATION: "/courses/non-organization-courses",
   COURSE_ID: (id: string) => `/courses/${id}`,
 
   // Lessons

@@ -1,6 +1,6 @@
-import type { CodeSolution } from './CodeSolution';
-import type { TestCase } from './TestCase';
-import { z } from 'zod';
+import type { CodeSolution } from "./CodeSolution";
+import type { TestCase } from "./TestCase";
+import { z } from "zod";
 
 export type CodeAssesment = {
   id: string;
@@ -17,35 +17,35 @@ export type CodeAssesment = {
 };
 
 export const CodeAssessmentCreateSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
-  instructions: z.string().min(1, 'Instructions are required'),
-  starterCode: z.string().min(1, 'Starter code is required'),
-  languageId: z
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  instructions: z.string().min(1, "Instructions are required"),
+  starterCode: z.string().min(1, "Starter code is required"),
+  languageId: z.coerce
     .number()
     .int()
-    .positive('Language ID must be a positive integer'),
+    .positive("Language ID must be a positive integer"),
 });
 
 export const CodeAssessmentUpdateSchema = z.object({
-  title: z.string().min(1, 'Title is required').optional(),
-  description: z.string().min(1, 'Description is required').optional(),
-  instructions: z.string().min(1, 'Instructions are required').optional(),
-  starterCode: z.string().min(1, 'Starter code is required').optional(),
-  languageId: z
+  title: z.string().min(1, "Title is required").optional(),
+  description: z.string().min(1, "Description is required").optional(),
+  instructions: z.string().min(1, "Instructions are required").optional(),
+  starterCode: z.string().min(1, "Starter code is required").optional(),
+  languageId: z.coerce
     .number()
     .int()
-    .positive('Language ID must be a positive integer')
+    .positive("Language ID must be a positive integer")
     .optional(),
 });
 
 export const CodeAssessmentIdParamsSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
-  id: z.string().cuid('Invalid code assessment ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
+  id: z.string().cuid("Invalid code assessment ID format"),
 });
 
 export const CodeAssessmentCourseIdParamsSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
 });
 
 export type CodeAssessmentCreateType = z.infer<
