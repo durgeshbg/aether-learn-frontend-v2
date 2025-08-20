@@ -1,10 +1,10 @@
 export type CourseFormType = {
-  type?: 'edit' | 'create';
+  type?: "edit" | "create";
 };
 
-export const getCourseFormData = (type: CourseFormType['type']) => {
+export const getCourseFormData = (type: CourseFormType["type"]) => {
   return {
-    title: type === 'edit' ? 'Edit Course' : 'Create Course',
-    buttonText: type === 'edit' ? 'Update' : 'Create',
+    title: type === "edit" ? "Edit Course" : "Create Course",
+    buttonText: type === "edit" ? "Update" : "Create",
   };
 };

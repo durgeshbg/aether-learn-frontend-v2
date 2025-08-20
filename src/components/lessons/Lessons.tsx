@@ -1,13 +1,13 @@
-import { Outlet, useNavigate, useParams } from 'react-router';
-import { Button } from '../ui/button';
-import { routes } from '@/static-data/routes';
-import { deleteLesson } from '@/services/lesson';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { lessonKeys } from '@/tanstack/keys/lessonKeys';
-import { useMutation } from '@tanstack/react-query';
+import { Outlet, useNavigate, useParams } from "react-router";
+import { Button } from "../ui/button";
+import { routes } from "@/static-data/routes";
+import { deleteLesson } from "@/services/lesson";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { lessonKeys } from "@/tanstack/keys/lessonKeys";
+import { useMutation } from "@tanstack/react-query";
 
 const Lessons = () => {
-  const { courseId = '', lessonId = '' } = useParams<{
+  const { courseId = "", lessonId = "" } = useParams<{
     courseId: string;
     lessonId: string;
   }>();
@@ -27,29 +27,29 @@ const Lessons = () => {
     },
     meta: {
       notify: true,
-      successMessage: 'Lesson deleted successfully',
+      successMessage: "Lesson deleted successfully",
       invalidatesQueries: lessonKeys.all(courseId),
     },
   });
 
   return (
-    <div className='p-4'>
-      <h1 className='text-2xl font-bold mb-4'>Lesson</h1>
-      <div className='flex mb-4'>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Lesson</h1>
+      <div className="flex mb-4">
         <Button
           onClick={handleEditLesson}
-          className='bg-gray-200 text-gray-800 px-4 py-2 rounded mr-2'
+          className="bg-gray-200 text-gray-800 px-4 py-2 rounded mr-2"
         >
           Edit
         </Button>
         <Button
           onClick={() => deleteLessonMutation()}
-          className='bg-blue-500 text-white px-4 py-2 rounded'
+          className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           Delete
         </Button>
         <Button
-          className='bg-green-500 text-white px-4 py-2 rounded ml-2'
+          className="bg-green-500 text-white px-4 py-2 rounded ml-2"
           onClick={() => navigate(routes.MODULE_CREATE(courseId, lessonId))}
         >
           Add Module

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export type Question = {
   id: string;
@@ -13,8 +13,8 @@ export type Question = {
 
 export const QuestionCreateSchema = z
   .object({
-    text: z.string().min(1, 'Question cannot be empty'),
-    options: z.array(z.string()).min(2, 'At least two options are required'),
+    text: z.string().min(1, "Question cannot be empty"),
+    options: z.array(z.string()).min(2, "At least two options are required"),
     answer: z.coerce.number().int(),
     explanation: z.string().optional(),
   })
@@ -23,19 +23,19 @@ export const QuestionCreateSchema = z
       if (data.answer < 1 || data.answer > data.options.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ['answer'],
+          path: ["answer"],
           message: `Invalid index of the options array (1 to ${data.options.length})`,
         });
       }
-    }
+    },
   );
 
 export const QuestionUpdateSchema = z
   .object({
-    text: z.string().min(1, 'Question cannot be empty').optional(),
+    text: z.string().min(1, "Question cannot be empty").optional(),
     options: z
       .array(z.string())
-      .min(2, 'At least two options are required')
+      .min(2, "At least two options are required")
       .optional(),
     answer: z.coerce.number().int().optional(),
     explanation: z.string().optional(),
@@ -44,16 +44,16 @@ export const QuestionUpdateSchema = z
     if (data.options === undefined && data.answer !== undefined) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['options'],
-        message: 'required when answer is provided',
+        path: ["options"],
+        message: "required when answer is provided",
       });
     }
 
     if (data.options !== undefined && data.answer === undefined) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['answer'],
-        message: 'required when options are provided',
+        path: ["answer"],
+        message: "required when options are provided",
       });
     }
 
@@ -61,7 +61,7 @@ export const QuestionUpdateSchema = z
       if (data.answer < 1 || data.answer > (data.options?.length ?? 0)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ['answer'],
+          path: ["answer"],
           message: `Invalid index of the options array (1 to ${data.options?.length})`,
         });
       }
@@ -69,14 +69,14 @@ export const QuestionUpdateSchema = z
   });
 
 export const QuestionQuizCourseIdParamsSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
-  quizId: z.string().cuid('Invalid quiz ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
+  quizId: z.string().cuid("Invalid quiz ID format"),
 });
 
 export const QuestionIdParamsSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
-  quizId: z.string().cuid('Invalid quiz ID format'),
-  id: z.string().cuid('Invalid question ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
+  quizId: z.string().cuid("Invalid quiz ID format"),
+  id: z.string().cuid("Invalid question ID format"),
 });
 
 export type QuestionCreateType = z.infer<typeof QuestionCreateSchema>;

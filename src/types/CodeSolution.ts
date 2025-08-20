@@ -1,5 +1,5 @@
-export type CodeSolutionStatus = 'SUBMITTED' | 'GRADED';
-import { z } from 'zod';
+export type CodeSolutionStatus = "SUBMITTED" | "GRADED";
+import { z } from "zod";
 
 export type CodeSolution = {
   id: string;
@@ -12,36 +12,36 @@ export type CodeSolution = {
 };
 
 export const CodeSolutionStatus = {
-  SUBMITTED: 'SUBMITTED',
-  GRADED: 'GRADED',
+  SUBMITTED: "SUBMITTED",
+  GRADED: "GRADED",
 };
 
 export const CodeSolutionCreateSchema = z.object({
-  code: z.string().min(1, 'Code is required'),
+  code: z.string().min(1, "Code is required"),
 });
 
 export const CodeSolutionStatusUpdateSchema = z.object({
   status: z.enum([CodeSolutionStatus.GRADED, CodeSolutionStatus.SUBMITTED], {
-    errorMap: () => ({ message: 'Invalid status' }),
+    errorMap: () => ({ message: "Invalid status" }),
   }),
 });
 
 export const CodeSolutionScoreUpdateSchema = z.object({
   score: z
     .number()
-    .min(0, 'Score must be a non-negative number')
-    .max(100, 'Score must be at most 100'),
+    .min(0, "Score must be a non-negative number")
+    .max(100, "Score must be at most 100"),
 });
 
 export const CodeSolutionAssesmentCourseIdParamSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
-  codeAssessmentId: z.string().cuid('Invalid code assessment ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
+  codeAssessmentId: z.string().cuid("Invalid code assessment ID format"),
 });
 
 export const CodeSolutionIdParamSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
-  codeAssessmentId: z.string().cuid('Invalid code solution ID format'),
-  id: z.string().cuid('Invalid code assessment ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
+  codeAssessmentId: z.string().cuid("Invalid code solution ID format"),
+  id: z.string().cuid("Invalid code assessment ID format"),
 });
 
 export type CodeSolutionCreateType = z.infer<typeof CodeSolutionCreateSchema>;

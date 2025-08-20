@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import type { Course } from './Course';
-import type { User } from './User';
+import { z } from "zod";
+import type { Course } from "./Course";
+import type { User } from "./User";
 
 export type Organization = {
   id: string;
@@ -20,37 +20,37 @@ export type Organization = {
 };
 
 export const OrganizationCreateSchema = z.object({
-  name: z.string().min(1, 'Organization name is required'),
+  name: z.string().min(1, "Organization name is required"),
   description: z.string().optional(),
-  logoUrl: z.string().url('Invalid logo URL format').optional(),
-  websiteUrl: z.string().url('Invalid website URL format').optional(),
+  logoUrl: z.string().url("Invalid logo URL format").optional(),
+  websiteUrl: z.string().url("Invalid website URL format").optional(),
   address: z.string().optional(),
   phone: z.string().optional(),
-  email: z.string().email('Invalid email format').optional(),
+  email: z.string().email("Invalid email format").optional(),
   orgAdminId: z
     .string()
-    .cuid('Invalid organization admin ID format')
+    .cuid("Invalid organization admin ID format")
     .optional(),
 });
 
 export const OrganizationUpdateSchema = OrganizationCreateSchema.extend({
-  name: z.string().min(1, 'Organization name too short').optional(),
+  name: z.string().min(1, "Organization name too short").optional(),
 });
 
 export const OrganizationUserUpdateSchema = z.object({
-  userIds: z.array(z.string().cuid('Invalid user ID format')),
+  userIds: z.array(z.string().cuid("Invalid user ID format")),
 });
 
 export const OrganizationCourseUpdateSchema = z.object({
-  courseIds: z.array(z.string().cuid('Invalid course ID format')),
+  courseIds: z.array(z.string().cuid("Invalid course ID format")),
 });
 
 export const OrgAdminUpdateScehma = z.object({
-  userId: z.string().cuid('Invalid user ID format'),
+  userId: z.string().cuid("Invalid user ID format"),
 });
 
 export const OrganizationIdParamSchema = z.object({
-  id: z.string().cuid('Invalid organization ID format'),
+  id: z.string().cuid("Invalid organization ID format"),
 });
 
 export type OrganizationCreateType = z.infer<typeof OrganizationCreateSchema>;

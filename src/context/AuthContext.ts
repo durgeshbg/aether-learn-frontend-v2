@@ -1,5 +1,5 @@
-import type { User, UserLoginType } from '@/types/User';
-import { createContext } from 'react';
+import type { User, UserLoginType } from "@/types/User";
+import { createContext } from "react";
 
 export const AuthContext = createContext<{
   isAuthenticated: boolean;

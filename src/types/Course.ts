@@ -1,7 +1,7 @@
-import type { CodeAssesment } from './CodeAssesment';
-import type { Lesson } from './Lesson';
-import type { Quiz } from './Quiz';
-import { z } from 'zod';
+import type { CodeAssesment } from "./CodeAssesment";
+import type { Lesson } from "./Lesson";
+import type { Quiz } from "./Quiz";
+import { z } from "zod";
 
 export type Course = {
   id: string;
@@ -17,25 +17,25 @@ export type Course = {
 };
 
 export const CourseCreateSchema = z.object({
-  name: z.string().min(1, 'Course name is required'),
+  name: z.string().min(1, "Course name is required"),
   description: z.string().optional(),
   thumbnailUrl: z.string().optional(),
 });
 
 export const CourseUpdateSchema = CourseCreateSchema.extend({
-  name: z.string().min(1, 'Course name too short').optional(),
+  name: z.string().min(1, "Course name too short").optional(),
 });
 
 export const CourseIdParamSchema = z.object({
-  id: z.string().cuid('Invalid course ID format'),
+  id: z.string().cuid("Invalid course ID format"),
 });
 
 export const CourseOrganizationIDQuerySchema = z.object({
-  organizationId: z.string().cuid('Invalid organization ID format').optional(),
+  organizationId: z.string().cuid("Invalid organization ID format").optional(),
 });
 
 export const CourseOrganizationIDQueryRequiredSchema = z.object({
-  organizationId: z.string().cuid('Invalid organization ID format'),
+  organizationId: z.string().cuid("Invalid organization ID format"),
 });
 
 export type CourseCreateType = z.infer<typeof CourseCreateSchema>;

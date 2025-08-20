@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -6,37 +6,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   getOrganizationById,
   updateOrganizationAdmin,
-} from '@/services/organization';
-import { getUsers } from '@/services/user';
-import { organizationKeys } from '@/tanstack/keys/organizationKeys';
-import { userKeys } from '@/tanstack/keys/userKeys';
-import { OrgAdminUpdateScehma, type Organization } from '@/types/Organization';
-import type { User } from '@/types/User';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router';
-import z from 'zod';
+} from "@/services/organization";
+import { getUsers } from "@/services/user";
+import { organizationKeys } from "@/tanstack/keys/organizationKeys";
+import { userKeys } from "@/tanstack/keys/userKeys";
+import { OrgAdminUpdateScehma, type Organization } from "@/types/Organization";
+import type { User } from "@/types/User";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router";
+import z from "zod";
 
 const OrganizationEditAdminForm = () => {
-  const { organizationId = '' } = useParams<{ organizationId: string }>();
+  const { organizationId = "" } = useParams<{ organizationId: string }>();
 
   const { data: organization } = useSuspenseQuery({
     queryKey: organizationKeys.getById(organizationId),
     queryFn: async () => {
-      return getOrganizationById(axiosInstance, { id: organizationId || '' });
+      return getOrganizationById(axiosInstance, { id: organizationId || "" });
     },
     select: (data: { organization: Organization }) => data.organization,
   });
@@ -67,12 +67,12 @@ const OrganizationEditAdminForm = () => {
       return updateOrganizationAdmin(
         axiosInstance,
         { id: organizationId },
-        data
+        data,
       );
     },
     meta: {
       notify: true,
-      successMessage: 'Organization admin updated successfully',
+      successMessage: "Organization admin updated successfully",
       invalidatesQueries: organizationKeys.getById(organizationId),
     },
     onSettled: () => {
@@ -85,16 +85,16 @@ const OrganizationEditAdminForm = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
-        <h1 className='text-4xl font-bold mb-6'>Update user role</h1>
+        <h1 className="text-4xl font-bold mb-6">Update user role</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md'
+          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
         >
           <FormField
             control={form.control}
-            name='userId'
+            name="userId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Role</FormLabel>
@@ -103,8 +103,8 @@ const OrganizationEditAdminForm = () => {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select role' />
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select role" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -120,7 +120,7 @@ const OrganizationEditAdminForm = () => {
             )}
           />
 
-          <Button type='submit'>Create</Button>
+          <Button type="submit">Create</Button>
         </form>
       </Form>
     </div>

@@ -1,24 +1,24 @@
-import { routes } from '@/static-data/routes';
-import { Home, PanelsRightBottom, School, Users } from 'lucide-react';
+import { routes } from "@/static-data/routes";
+import { Home, PanelsRightBottom, School, Users } from "lucide-react";
 
 export const sidebarItems = [
   {
-    title: 'Home',
+    title: "Home",
     url: routes.HOME,
     icon: Home,
   },
   {
-    title: 'Users',
+    title: "Users",
     url: routes.USERS,
     icon: Users,
   },
   {
-    title: 'Organizations',
+    title: "Organizations",
     url: routes.ORGANIZATIONS,
     icon: School,
   },
   {
-    title: 'Courses',
+    title: "Courses",
     icon: PanelsRightBottom,
     url: routes.COURSES,
   },

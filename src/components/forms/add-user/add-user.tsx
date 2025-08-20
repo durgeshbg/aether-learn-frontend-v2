@@ -1,8 +1,8 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -10,38 +10,38 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../ui/select';
-import { Checkbox } from '../../ui/checkbox';
-import { Label } from '../../ui/label';
-import { roles } from './constants';
-import TestData from './test-data';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { userKeys } from '@/tanstack/keys/userKeys';
-import { createUser } from '@/services/user';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { UserCreateSchema } from '@/types/User';
-import { organizationKeys } from '@/tanstack/keys/organizationKeys';
-import { getOrganizations } from '@/services/organization';
+} from "../../ui/select";
+import { Checkbox } from "../../ui/checkbox";
+import { Label } from "../../ui/label";
+import { roles } from "./constants";
+import TestData from "./test-data";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { userKeys } from "@/tanstack/keys/userKeys";
+import { createUser } from "@/services/user";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { UserCreateSchema } from "@/types/User";
+import { organizationKeys } from "@/tanstack/keys/organizationKeys";
+import { getOrganizations } from "@/services/organization";
 
 export default function AddUserForm() {
   const form = useForm<z.infer<typeof UserCreateSchema>>({
     resolver: zodResolver(UserCreateSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      organizationId: '',
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      organizationId: "",
       orgAdmin: false,
-      role: 'USER',
+      role: "USER",
     },
   });
 
@@ -52,7 +52,7 @@ export default function AddUserForm() {
     },
     meta: {
       notify: true,
-      successMessage: 'User created successfully',
+      successMessage: "User created successfully",
       invalidatesQueries: userKeys.all(),
     },
   });
@@ -71,21 +71,21 @@ export default function AddUserForm() {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
-        <h1 className='text-4xl font-bold mb-6'>Create User</h1>
+        <h1 className="text-4xl font-bold mb-6">Create User</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md'
+          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
         >
           <FormField
             control={form.control}
-            name='firstName'
+            name="firstName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='John' {...field} />
+                  <Input placeholder="John" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,12 +93,12 @@ export default function AddUserForm() {
           />
           <FormField
             control={form.control}
-            name='lastName'
+            name="lastName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Smith' {...field} />
+                  <Input placeholder="Smith" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,7 +106,7 @@ export default function AddUserForm() {
           />
           <FormField
             control={form.control}
-            name='organizationId'
+            name="organizationId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Organization</FormLabel>
@@ -115,8 +115,8 @@ export default function AddUserForm() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select an Organization' />
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select an Organization" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -133,11 +133,11 @@ export default function AddUserForm() {
           />
           <FormField
             control={form.control}
-            name='orgAdmin'
+            name="orgAdmin"
             render={({ field }) => (
-              <FormItem className='flex items-center space-x-2'>
+              <FormItem className="flex items-center space-x-2">
                 <FormControl>
-                  <Label className='flex items-center space-x-2'>
+                  <Label className="flex items-center space-x-2">
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={(checked) => {
@@ -154,12 +154,12 @@ export default function AddUserForm() {
 
           <FormField
             control={form.control}
-            name='email'
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='name@mail.com' {...field} />
+                  <Input placeholder="name@mail.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -167,12 +167,12 @@ export default function AddUserForm() {
           />
           <FormField
             control={form.control}
-            name='password'
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type='password' placeholder='••••••••' {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -181,7 +181,7 @@ export default function AddUserForm() {
 
           <FormField
             control={form.control}
-            name='role'
+            name="role"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Role</FormLabel>
@@ -190,8 +190,8 @@ export default function AddUserForm() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select role' />
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select role" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -207,7 +207,7 @@ export default function AddUserForm() {
             )}
           />
 
-          <Button type='submit'>Create</Button>
+          <Button type="submit">Create</Button>
 
           <TestData form={form} />
         </form>

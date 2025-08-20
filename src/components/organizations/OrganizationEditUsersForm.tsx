@@ -1,7 +1,7 @@
-import { OrganizationUserUpdateSchema } from '@/types/Organization';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import z from 'zod';
+import { OrganizationUserUpdateSchema } from "@/types/Organization";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
 import {
   Form,
   FormControl,
@@ -10,31 +10,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { organizationKeys } from '@/tanstack/keys/organizationKeys';
+} from "@/components/ui/form";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { organizationKeys } from "@/tanstack/keys/organizationKeys";
 import {
   addOrganizationUsers,
   removeOrganizationUsers,
-} from '@/services/organization';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { userKeys } from '@/tanstack/keys/userKeys';
-import { getNonOrganizationUsers, getUsers } from '@/services/user';
-import type { User } from '@/types/User';
-import { Button } from '../ui/button';
-import { Checkbox } from '../ui/checkbox';
-import { routes } from '@/static-data/routes';
-import { getOrganizationUsersEditFormData, type IformType } from './constants';
+} from "@/services/organization";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { userKeys } from "@/tanstack/keys/userKeys";
+import { getNonOrganizationUsers, getUsers } from "@/services/user";
+import type { User } from "@/types/User";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { routes } from "@/static-data/routes";
+import { getOrganizationUsersEditFormData, type IformType } from "./constants";
 
 const OrganizationEditUsersForm = () => {
-  const { organizationId = '' } = useParams<{
+  const { organizationId = "" } = useParams<{
     organizationId: string;
   }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const formType: IformType =
-    searchParams.get('type') === 'remove' ? 'remove' : 'add';
+    searchParams.get("type") === "remove" ? "remove" : "add";
 
   const { title, btnText, description } =
     getOrganizationUsersEditFormData(formType);
@@ -48,11 +48,11 @@ const OrganizationEditUsersForm = () => {
 
   const { data: users } = useSuspenseQuery({
     queryKey:
-      formType === 'remove'
+      formType === "remove"
         ? userKeys.getByOrganization(organizationId)
         : userKeys.allNonOrganization(),
     queryFn: async () => {
-      return formType === 'remove'
+      return formType === "remove"
         ? getUsers(axiosInstance, { organizationId })
         : getNonOrganizationUsers(axiosInstance);
     },
@@ -67,12 +67,12 @@ const OrganizationEditUsersForm = () => {
         { id: organizationId },
         {
           userIds,
-        }
+        },
       );
     },
     meta: {
       notify: true,
-      successMessage: 'Users added successfully',
+      successMessage: "Users added successfully",
       invalidatesQueries: userKeys.all(),
     },
     onSettled: () => {
@@ -89,12 +89,12 @@ const OrganizationEditUsersForm = () => {
         { id: organizationId },
         {
           userIds,
-        }
+        },
       );
     },
     meta: {
       notify: true,
-      successMessage: 'Users removed successfully',
+      successMessage: "Users removed successfully",
       invalidatesQueries: userKeys.all(),
     },
     onSettled: () => {
@@ -104,7 +104,7 @@ const OrganizationEditUsersForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof OrganizationUserUpdateSchema>) => {
-    if (formType === 'add') {
+    if (formType === "add") {
       addUsers(data.userIds);
     } else {
       removeUsers(data.userIds);
@@ -112,31 +112,31 @@ const OrganizationEditUsersForm = () => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
-        <h1 className='text-4xl font-bold mb-6'>{title}</h1>
+        <h1 className="text-4xl font-bold mb-6">{title}</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md'
+          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
         >
           <FormField
             control={form.control}
-            name='userIds'
+            name="userIds"
             render={() => (
               <FormItem>
-                <div className='mb-4'>
+                <div className="mb-4">
                   <FormDescription>{description}</FormDescription>
                 </div>
                 {users.map((user) => (
                   <FormField
                     key={user.id}
                     control={form.control}
-                    name='userIds'
+                    name="userIds"
                     render={({ field }) => {
                       return (
                         <FormItem
                           key={user.id}
-                          className='flex flex-row items-center gap-2'
+                          className="flex flex-row items-center gap-2"
                         >
                           <FormControl>
                             <Checkbox
@@ -146,13 +146,13 @@ const OrganizationEditUsersForm = () => {
                                   ? field.onChange([...field.value, user.id])
                                   : field.onChange(
                                       field.value?.filter(
-                                        (value) => value !== user.id
-                                      )
+                                        (value) => value !== user.id,
+                                      ),
                                     );
                               }}
                             />
                           </FormControl>
-                          <FormLabel className='text-sm font-normal'>
+                          <FormLabel className="text-sm font-normal">
                             {user.firstName} {user.lastName} ({user.email})
                           </FormLabel>
                         </FormItem>
@@ -164,7 +164,7 @@ const OrganizationEditUsersForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit'>{btnText}</Button>
+          <Button type="submit">{btnText}</Button>
         </form>
       </Form>
     </div>

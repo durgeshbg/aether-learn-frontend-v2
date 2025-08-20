@@ -1,18 +1,18 @@
-import { apiRoutes } from '@/static-data/routes';
+import { apiRoutes } from "@/static-data/routes";
 import type {
   ModuleCreateType,
   ModuleIdParamsType,
   ModuleLessonCourseIdParamsType,
   ModuleUpdateType,
-} from '@/types/Module';
-import type { AxiosInstance } from 'axios';
+} from "@/types/Module";
+import type { AxiosInstance } from "axios";
 
 export const getModules = async (
   axiosInstance: AxiosInstance,
-  params: ModuleLessonCourseIdParamsType
+  params: ModuleLessonCourseIdParamsType,
 ) => {
   const response = await axiosInstance.get(
-    apiRoutes.MODULES(params.courseId, params.lessonId)
+    apiRoutes.MODULES(params.courseId, params.lessonId),
   );
   return response.data;
 };
@@ -20,21 +20,21 @@ export const getModules = async (
 export const createModule = async (
   axiosInstance: AxiosInstance,
   params: ModuleLessonCourseIdParamsType,
-  data: ModuleCreateType
+  data: ModuleCreateType,
 ) => {
   const response = await axiosInstance.post(
     apiRoutes.MODULES(params.courseId, params.lessonId),
-    data
+    data,
   );
   return response.data;
 };
 
 export const getModuleById = async (
   axiosInstance: AxiosInstance,
-  params: ModuleIdParamsType
+  params: ModuleIdParamsType,
 ) => {
   const response = await axiosInstance.get(
-    apiRoutes.MODULE_ID(params.courseId, params.lessonId, params.id)
+    apiRoutes.MODULE_ID(params.courseId, params.lessonId, params.id),
   );
   return response.data;
 };
@@ -42,21 +42,21 @@ export const getModuleById = async (
 export const updateModule = async (
   axiosInstance: AxiosInstance,
   params: ModuleIdParamsType,
-  data: ModuleUpdateType
+  data: ModuleUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.MODULE_ID(params.courseId, params.lessonId, params.id),
-    data
+    data,
   );
   return response.data;
 };
 
 export const deleteModule = async (
   axiosInstance: AxiosInstance,
-  params: ModuleIdParamsType
+  params: ModuleIdParamsType,
 ) => {
   const response = await axiosInstance.delete(
-    apiRoutes.MODULE_ID(params.courseId, params.lessonId, params.id)
+    apiRoutes.MODULE_ID(params.courseId, params.lessonId, params.id),
   );
   return response.data;
 };

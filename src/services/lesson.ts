@@ -1,15 +1,15 @@
-import { apiRoutes } from '@/static-data/routes';
+import { apiRoutes } from "@/static-data/routes";
 import type {
   LessonCourseIdParamsType,
   LessonCreateType,
   LessonUpdateType,
   LessonIdParamsType,
-} from '@/types/Lesson';
-import type { AxiosInstance } from 'axios';
+} from "@/types/Lesson";
+import type { AxiosInstance } from "axios";
 
 export const getLessons = async (
   axiosInstance: AxiosInstance,
-  params: LessonCourseIdParamsType
+  params: LessonCourseIdParamsType,
 ) => {
   const response = await axiosInstance.get(apiRoutes.LESSONS(params.courseId));
   return response.data;
@@ -18,21 +18,21 @@ export const getLessons = async (
 export const createLesson = async (
   axiosInstance: AxiosInstance,
   params: LessonCourseIdParamsType,
-  data: LessonCreateType
+  data: LessonCreateType,
 ) => {
   const response = await axiosInstance.post(
     apiRoutes.LESSONS(params.courseId),
-    data
+    data,
   );
   return response.data;
 };
 
 export const getLessonById = async (
   axiosInstance: AxiosInstance,
-  params: LessonIdParamsType
+  params: LessonIdParamsType,
 ) => {
   const response = await axiosInstance.get(
-    apiRoutes.LESSON_ID(params.courseId, params.id)
+    apiRoutes.LESSON_ID(params.courseId, params.id),
   );
   return response.data;
 };
@@ -40,21 +40,21 @@ export const getLessonById = async (
 export const updateLesson = async (
   axiosInstance: AxiosInstance,
   params: LessonIdParamsType,
-  data: LessonUpdateType
+  data: LessonUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.LESSON_ID(params.courseId, params.id),
-    data
+    data,
   );
   return response.data;
 };
 
 export const deleteLesson = async (
   axiosInstance: AxiosInstance,
-  params: LessonIdParamsType
+  params: LessonIdParamsType,
 ) => {
   const response = await axiosInstance.delete(
-    apiRoutes.LESSON_ID(params.courseId, params.id)
+    apiRoutes.LESSON_ID(params.courseId, params.id),
   );
   return response.data;
 };

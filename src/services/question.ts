@@ -1,18 +1,18 @@
-import { apiRoutes } from '@/static-data/routes';
+import { apiRoutes } from "@/static-data/routes";
 import type {
   QuestionQuizCourseIdParamsType,
   QuestionCreateType,
   QuestionIdParamsType,
   QuestionUpdateType,
-} from '@/types/Question';
-import type { AxiosInstance } from 'axios';
+} from "@/types/Question";
+import type { AxiosInstance } from "axios";
 
 export const getQuestions = async (
   axiosInstance: AxiosInstance,
-  params: QuestionQuizCourseIdParamsType
+  params: QuestionQuizCourseIdParamsType,
 ) => {
   const response = await axiosInstance.get(
-    apiRoutes.QUESTIONS(params.courseId, params.quizId)
+    apiRoutes.QUESTIONS(params.courseId, params.quizId),
   );
   return response.data;
 };
@@ -20,21 +20,21 @@ export const getQuestions = async (
 export const createQuestion = async (
   axiosInstance: AxiosInstance,
   params: QuestionQuizCourseIdParamsType,
-  data: QuestionCreateType
+  data: QuestionCreateType,
 ) => {
   const response = await axiosInstance.post(
     apiRoutes.QUESTIONS(params.courseId, params.quizId),
-    data
+    data,
   );
   return response.data;
 };
 
 export const getQuestion = async (
   axiosInstance: AxiosInstance,
-  params: QuestionIdParamsType
+  params: QuestionIdParamsType,
 ) => {
   const response = await axiosInstance.get(
-    apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id)
+    apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id),
   );
   return response.data;
 };
@@ -42,21 +42,21 @@ export const getQuestion = async (
 export const updateQuestion = async (
   axiosInstance: AxiosInstance,
   params: QuestionIdParamsType,
-  data: QuestionUpdateType
+  data: QuestionUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id),
-    data
+    data,
   );
   return response.data;
 };
 
 export const deleteQuestion = async (
   axiosInstance: AxiosInstance,
-  params: QuestionIdParamsType
+  params: QuestionIdParamsType,
 ) => {
   const response = await axiosInstance.delete(
-    apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id)
+    apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id),
   );
   return response.data;
 };

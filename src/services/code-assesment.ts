@@ -1,18 +1,18 @@
-import { apiRoutes } from '@/static-data/routes';
+import { apiRoutes } from "@/static-data/routes";
 import type {
   CodeAssessmentCourseIdParamsType,
   CodeAssessmentCreateType,
   CodeAssessmentIdParamsType,
   CodeAssessmentUpdateType,
-} from '@/types/CodeAssesment';
-import type { AxiosInstance } from 'axios';
+} from "@/types/CodeAssesment";
+import type { AxiosInstance } from "axios";
 
 export const getCodeAssessments = async (
   axiosInstance: AxiosInstance,
-  params: CodeAssessmentCourseIdParamsType
+  params: CodeAssessmentCourseIdParamsType,
 ) => {
   const response = await axiosInstance.get(
-    apiRoutes.CODE_ASSESSMENTS(params.courseId)
+    apiRoutes.CODE_ASSESSMENTS(params.courseId),
   );
   return response.data;
 };
@@ -20,21 +20,21 @@ export const getCodeAssessments = async (
 export const createCodeAssessment = async (
   axiosInstance: AxiosInstance,
   params: CodeAssessmentCourseIdParamsType,
-  data: CodeAssessmentCreateType
+  data: CodeAssessmentCreateType,
 ) => {
   const response = await axiosInstance.post(
     apiRoutes.CODE_ASSESSMENTS(params.courseId),
-    data
+    data,
   );
   return response.data;
 };
 
 export const getCodeAssessmentById = async (
   axiosInstance: AxiosInstance,
-  params: CodeAssessmentIdParamsType
+  params: CodeAssessmentIdParamsType,
 ) => {
   const response = await axiosInstance.get(
-    apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id)
+    apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id),
   );
   return response.data;
 };
@@ -42,21 +42,21 @@ export const getCodeAssessmentById = async (
 export const updateCodeAssessment = async (
   axiosInstance: AxiosInstance,
   params: CodeAssessmentIdParamsType,
-  data: CodeAssessmentUpdateType
+  data: CodeAssessmentUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id),
-    data
+    data,
   );
   return response.data;
 };
 
 export const deleteCodeAssessment = async (
   axiosInstance: AxiosInstance,
-  params: CodeAssessmentIdParamsType
+  params: CodeAssessmentIdParamsType,
 ) => {
   const response = await axiosInstance.delete(
-    apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id)
+    apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id),
   );
   return response.data;
 };

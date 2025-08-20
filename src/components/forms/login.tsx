@@ -1,8 +1,8 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,12 +11,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/hooks/useAuth';
-import { Navigate } from 'react-router';
-import { routes } from '@/static-data/routes';
-import { UserLoginSchema } from '@/types/User';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate } from "react-router";
+import { routes } from "@/static-data/routes";
+import { UserLoginSchema } from "@/types/User";
 
 export default function LoginForm() {
   const { isAuthenticated, login } = useAuth();
@@ -24,8 +24,8 @@ export default function LoginForm() {
   const form = useForm<z.infer<typeof UserLoginSchema>>({
     resolver: zodResolver(UserLoginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -36,21 +36,21 @@ export default function LoginForm() {
   if (isAuthenticated) return <Navigate to={routes.HOME} replace />;
 
   return (
-    <div className='flex flex-col h-screen justify-center items-center'>
+    <div className="flex flex-col h-screen justify-center items-center">
       <Form {...form}>
-        <h1 className='text-4xl font-bold mb-6'>Login</h1>
+        <h1 className="text-4xl font-bold mb-6">Login</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md'
+          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
         >
           <FormField
             control={form.control}
-            name='email'
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='name@mail.com' {...field} />
+                  <Input placeholder="name@mail.com" {...field} />
                 </FormControl>
                 <FormDescription>
                   Enter your registered email address.
@@ -61,47 +61,47 @@ export default function LoginForm() {
           />
           <FormField
             control={form.control}
-            name='password'
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type='password' placeholder='••••••••' {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormDescription>Enter your account password.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type='submit'>Submit</Button>
+          <Button type="submit">Submit</Button>
           {/* For testing purposes, use */}
-          <div className='flex gap-3'>
+          <div className="flex gap-3">
             <Button
-              variant='secondary'
-              type='button'
+              variant="secondary"
+              type="button"
               onClick={() => {
-                form.setValue('email', 'admin1@mail.com');
-                form.setValue('password', 'password');
+                form.setValue("email", "admin1@mail.com");
+                form.setValue("password", "password");
               }}
             >
               Admin
             </Button>
             <Button
-              variant='secondary'
-              type='button'
+              variant="secondary"
+              type="button"
               onClick={() => {
-                form.setValue('email', 'org1admin@mail.com');
-                form.setValue('password', 'password');
+                form.setValue("email", "org1admin@mail.com");
+                form.setValue("password", "password");
               }}
             >
               Org Admin
             </Button>
             <Button
-              variant='secondary'
-              type='button'
+              variant="secondary"
+              type="button"
               onClick={() => {
-                form.setValue('email', 'user1@mail.com');
-                form.setValue('password', 'password');
+                form.setValue("email", "user1@mail.com");
+                form.setValue("password", "password");
               }}
             >
               User

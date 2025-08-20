@@ -1,7 +1,7 @@
-import { OrganizationCourseUpdateSchema } from '@/types/Organization';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import z from 'zod';
+import { OrganizationCourseUpdateSchema } from "@/types/Organization";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
 import {
   Form,
   FormControl,
@@ -10,34 +10,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { organizationKeys } from '@/tanstack/keys/organizationKeys';
+} from "@/components/ui/form";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import { organizationKeys } from "@/tanstack/keys/organizationKeys";
 import {
   addOrganizationCourses,
   removeOrganizationCourses,
-} from '@/services/organization';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { Button } from '../ui/button';
-import { Checkbox } from '../ui/checkbox';
-import { routes } from '@/static-data/routes';
-import { getCourses, getNonOrganizationCourses } from '@/services/course';
-import type { Course } from '@/types/Course';
-import { courseKeys } from '@/tanstack/keys/courseKeys';
+} from "@/services/organization";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { routes } from "@/static-data/routes";
+import { getCourses, getNonOrganizationCourses } from "@/services/course";
+import type { Course } from "@/types/Course";
+import { courseKeys } from "@/tanstack/keys/courseKeys";
 import {
   getOrganizationCoursesEditFormData,
   type IformType,
-} from './constants';
+} from "./constants";
 
 const OrganizationEditCourseForm = () => {
-  const { organizationId = '' } = useParams<{
+  const { organizationId = "" } = useParams<{
     organizationId: string;
   }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const formType: IformType =
-    searchParams.get('type') === 'remove' ? 'remove' : 'add';
+    searchParams.get("type") === "remove" ? "remove" : "add";
   const { title, btnText, description } =
     getOrganizationCoursesEditFormData(formType);
 
@@ -50,11 +50,11 @@ const OrganizationEditCourseForm = () => {
 
   const { data: courses } = useSuspenseQuery({
     queryKey:
-      formType === 'add'
+      formType === "add"
         ? courseKeys.allNonOrganization(organizationId)
         : courseKeys.getByOrganization(organizationId),
     queryFn: async () => {
-      return formType === 'add'
+      return formType === "add"
         ? getNonOrganizationCourses(axiosInstance, { organizationId })
         : getCourses(axiosInstance, { organizationId });
     },
@@ -69,12 +69,12 @@ const OrganizationEditCourseForm = () => {
         { id: organizationId },
         {
           courseIds,
-        }
+        },
       );
     },
     meta: {
       notify: true,
-      successMessage: 'Courses added successfully',
+      successMessage: "Courses added successfully",
       invalidatesQueries: [
         courseKeys.getByOrganization(organizationId),
         courseKeys.allNonOrganization(organizationId),
@@ -94,12 +94,12 @@ const OrganizationEditCourseForm = () => {
         { id: organizationId },
         {
           courseIds,
-        }
+        },
       );
     },
     meta: {
       notify: true,
-      successMessage: 'Courses removed successfully',
+      successMessage: "Courses removed successfully",
       invalidatesQueries: [
         courseKeys.getByOrganization(organizationId),
         courseKeys.allNonOrganization(organizationId),
@@ -112,7 +112,7 @@ const OrganizationEditCourseForm = () => {
   });
 
   function onSubmit(data: z.infer<typeof OrganizationCourseUpdateSchema>) {
-    if (formType === 'add') {
+    if (formType === "add") {
       addCourses(data.courseIds);
     } else {
       removeCourses(data.courseIds);
@@ -120,31 +120,31 @@ const OrganizationEditCourseForm = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
-        <h1 className='text-4xl font-bold mb-6'>{title}</h1>
+        <h1 className="text-4xl font-bold mb-6">{title}</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md'
+          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
         >
           <FormField
             control={form.control}
-            name='courseIds'
+            name="courseIds"
             render={() => (
               <FormItem>
-                <div className='mb-4'>
+                <div className="mb-4">
                   <FormDescription>{description}</FormDescription>
                 </div>
                 {courses.map((course) => (
                   <FormField
                     key={course.id}
                     control={form.control}
-                    name='courseIds'
+                    name="courseIds"
                     render={({ field }) => {
                       return (
                         <FormItem
                           key={course.id}
-                          className='flex flex-row items-center gap-2'
+                          className="flex flex-row items-center gap-2"
                         >
                           <FormControl>
                             <Checkbox
@@ -154,13 +154,13 @@ const OrganizationEditCourseForm = () => {
                                   ? field.onChange([...field.value, course.id])
                                   : field.onChange(
                                       field.value?.filter(
-                                        (value) => value !== course.id
-                                      )
+                                        (value) => value !== course.id,
+                                      ),
                                     );
                               }}
                             />
                           </FormControl>
-                          <FormLabel className='text-sm font-normal'>
+                          <FormLabel className="text-sm font-normal">
                             {course.name}
                           </FormLabel>
                         </FormItem>
@@ -172,7 +172,7 @@ const OrganizationEditCourseForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit'>{btnText}</Button>
+          <Button type="submit">{btnText}</Button>
         </form>
       </Form>
     </div>

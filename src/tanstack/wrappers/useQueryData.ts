@@ -1,4 +1,4 @@
-import { useQueryClient, type QueryKey } from '@tanstack/react-query';
+import { useQueryClient, type QueryKey } from "@tanstack/react-query";
 
 export const useQueryData = (queryKey: QueryKey) => {
   const queryClient = useQueryClient();

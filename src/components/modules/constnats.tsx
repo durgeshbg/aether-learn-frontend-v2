@@ -1,13 +1,13 @@
-import { LANGUAGES_MAP } from '@/static-data/languages';
+import { LANGUAGES_MAP } from "@/static-data/languages";
 
 export type ModuleFormType = {
-  type?: 'edit' | 'create';
+  type?: "edit" | "create";
 };
 
-export const getModuleFormData = (type: ModuleFormType['type']) => {
+export const getModuleFormData = (type: ModuleFormType["type"]) => {
   return {
-    title: type === 'edit' ? 'Edit Module' : 'Create Module',
-    buttonText: type === 'edit' ? 'Update' : 'Create',
+    title: type === "edit" ? "Edit Module" : "Create Module",
+    buttonText: type === "edit" ? "Update" : "Create",
   };
 };
 

@@ -1,8 +1,8 @@
-import { AuthContext } from '@/context/AuthContext';
-import { routes } from '@/static-data/routes';
-import { useContext } from 'react';
-import { Navigate, Outlet } from 'react-router';
-import Loading from '../loading/loading';
+import { AuthContext } from "@/context/AuthContext";
+import { routes } from "@/static-data/routes";
+import { useContext } from "react";
+import { Navigate, Outlet } from "react-router";
+import Loading from "../loading/loading";
 
 const AdminRoutes = () => {
   const { isAuthenticated, user, loading } = useContext(AuthContext);
@@ -15,7 +15,7 @@ const AdminRoutes = () => {
     return <Navigate to={routes.LOGIN} replace />;
   }
 
-  if (!user || user.role !== 'ADMIN') {
+  if (!user || user.role !== "ADMIN") {
     return <Navigate to={routes.HOME} replace />;
   }
 

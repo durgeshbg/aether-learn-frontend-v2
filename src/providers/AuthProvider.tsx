@@ -1,12 +1,12 @@
-import { AuthContext } from '@/context/AuthContext';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { getUserById, login, logout } from '@/services/user';
-import { localStorageKeys } from '@/static-data/localStorage';
-import { userKeys } from '@/tanstack/keys/userKeys';
-import type { Role, User, UserLoginType } from '@/types/User';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import * as jwt from 'jwt-decode';
+import { AuthContext } from "@/context/AuthContext";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { getUserById, login, logout } from "@/services/user";
+import { localStorageKeys } from "@/static-data/localStorage";
+import { userKeys } from "@/tanstack/keys/userKeys";
+import type { Role, User, UserLoginType } from "@/types/User";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import * as jwt from "jwt-decode";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -21,13 +21,13 @@ export interface TokenPayLoad {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem(localStorageKeys.ACCESS_TOKEN)
+    !!localStorage.getItem(localStorageKeys.ACCESS_TOKEN),
   );
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState(
-    localStorage.getItem(localStorageKeys.ACCESS_TOKEN)
+    localStorage.getItem(localStorageKeys.ACCESS_TOKEN),
   );
 
   const { mutate } = useMutation({
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     },
     meta: {
       notify: true,
-      successMessage: 'Login successful!',
+      successMessage: "Login successful!",
     },
     onSuccess: (data) => {
       localStorage.setItem(localStorageKeys.ACCESS_TOKEN, data.token);
@@ -46,13 +46,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     },
   });
   const tokenPayload = accessToken
-    ? (jwt.jwtDecode(accessToken || '') as TokenPayLoad | null)
+    ? (jwt.jwtDecode(accessToken || "") as TokenPayLoad | null)
     : null;
 
   const { data, isFetching, isError } = useQuery({
-    queryKey: userKeys.getById(tokenPayload?.id || ''),
+    queryKey: userKeys.getById(tokenPayload?.id || ""),
     queryFn: async () =>
-      getUserById(axiosInstance, { id: tokenPayload?.id || '' }),
+      getUserById(axiosInstance, { id: tokenPayload?.id || "" }),
     enabled: !!accessToken,
   });
 

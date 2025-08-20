@@ -1,4 +1,4 @@
-import { ChevronUp, Home, LogOut, User2 } from 'lucide-react';
+import { ChevronUp, Home, LogOut, User2 } from "lucide-react";
 
 import {
   Sidebar,
@@ -11,23 +11,23 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { Link, useNavigate } from 'react-router';
+} from "@/components/ui/sidebar";
+import { Link, useNavigate } from "react-router";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuItem,
   DropdownMenuContent,
-} from '../ui/dropdown-menu';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '../ui/button';
-import { sidebarItems } from './constants';
-import { routes } from '@/static-data/routes';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { courseKeys } from '@/tanstack/keys/courseKeys';
-import { getCourses } from '@/services/course';
-import { axiosInstance } from '@/utils/axiosInstance';
-import type { Course } from '@/types/Course';
+} from "../ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "../ui/button";
+import { sidebarItems } from "./constants";
+import { routes } from "@/static-data/routes";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { courseKeys } from "@/tanstack/keys/courseKeys";
+import { getCourses } from "@/services/course";
+import { axiosInstance } from "@/utils/axiosInstance";
+import type { Course } from "@/types/Course";
 
 export function AppSidebar() {
   const { user, logout } = useAuth();
@@ -50,12 +50,12 @@ export function AppSidebar() {
 
   const bottommenuitems = [
     {
-      name: 'Sign out',
+      name: "Sign out",
       icon: LogOut,
       onClick: () => logout(),
     },
     {
-      name: 'Profile',
+      name: "Profile",
       icon: User2,
       onClick: () => {
         navigate(routes.PROFILE);
@@ -66,14 +66,14 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className='flex items-center justify-between'>
-          <h1 className='text-lg font-semibold'>Aether Learn</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold">Aether Learn</h1>
           <Button
-            variant='ghost'
-            size='icon'
+            variant="ghost"
+            size="icon"
             onClick={() => navigate(routes.HOME)}
           >
-            <span className='sr-only'>Go to Home</span>
+            <span className="sr-only">Go to Home</span>
             <Home />
           </Button>
         </div>
@@ -121,19 +121,19 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className='cursor-pointer'>
+                <SidebarMenuButton className="cursor-pointer">
                   <User2 /> {user && `${user?.firstName} ${user?.lastName}`}
-                  <ChevronUp className='ml-auto' />
+                  <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                side='top'
-                className='w-[--radix-popper-anchor-width] translate-x-12 -translate-y-2'
+                side="top"
+                className="w-[--radix-popper-anchor-width] translate-x-12 -translate-y-2"
               >
                 {bottommenuitems.map((item, index) => (
-                  <DropdownMenuItem className='cursor-pointer p-0' key={index}>
-                    <Button variant={'link'} onClick={item.onClick}>
-                      {item.icon && <item.icon className='mr-2' />}
+                  <DropdownMenuItem className="cursor-pointer p-0" key={index}>
+                    <Button variant={"link"} onClick={item.onClick}>
+                      {item.icon && <item.icon className="mr-2" />}
                       <span>{item.name}</span>
                     </Button>
                   </DropdownMenuItem>

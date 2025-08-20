@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export type Module = {
   id: string;
@@ -12,35 +12,35 @@ export type Module = {
 };
 
 export const ModuleCreateSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  content: z.string().min(1, 'Content is required'),
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
   code: z.string().optional(),
   languageId: z.coerce
     .number()
     .int()
-    .positive('Language ID must be a positive integer'),
+    .positive("Language ID must be a positive integer"),
 });
 
 export const ModuleUpdateSchema = z.object({
-  title: z.string().min(1, 'Title is required').optional(),
-  content: z.string().min(1, 'Content is required').optional(),
+  title: z.string().min(1, "Title is required").optional(),
+  content: z.string().min(1, "Content is required").optional(),
   code: z.string().optional(),
   languageId: z.coerce
     .number()
     .int()
-    .positive('Language ID must be a positive integer')
+    .positive("Language ID must be a positive integer")
     .optional(),
 });
 
 export const ModuleLessonCourseIdParamSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
-  lessonId: z.string().cuid('Invalid lesson ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
+  lessonId: z.string().cuid("Invalid lesson ID format"),
 });
 
 export const ModuleIdParamsSchema = z.object({
-  courseId: z.string().cuid('Invalid course ID format'),
-  lessonId: z.string().cuid('Invalid lesson ID format'),
-  id: z.string().cuid('Invalid module ID format'),
+  courseId: z.string().cuid("Invalid course ID format"),
+  lessonId: z.string().cuid("Invalid lesson ID format"),
+  id: z.string().cuid("Invalid module ID format"),
 });
 
 export type ModuleCreateType = z.infer<typeof ModuleCreateSchema>;

@@ -1,5 +1,5 @@
-import { localStorageKeys } from '@/static-data/localStorage';
-import { apiRoutes } from '@/static-data/routes';
+import { localStorageKeys } from "@/static-data/localStorage";
+import { apiRoutes } from "@/static-data/routes";
 import type {
   UserCreateType,
   UserDetailsUpdateType,
@@ -9,12 +9,12 @@ import type {
   UserOrganizationIDQueryType,
   UserOrganizationUpdateType,
   UserRoleUpdateType,
-} from '@/types/User';
-import type { AxiosInstance } from 'axios';
+} from "@/types/User";
+import type { AxiosInstance } from "axios";
 
 export const login = async (
   axiosInstance: AxiosInstance,
-  data: UserLoginType
+  data: UserLoginType,
 ) => {
   const response = await axiosInstance.post(apiRoutes.USER_LOGIN, data);
   return response.data;
@@ -22,7 +22,7 @@ export const login = async (
 
 export const getUsers = async (
   axiosInstance: AxiosInstance,
-  query?: UserOrganizationIDQueryType
+  query?: UserOrganizationIDQueryType,
 ) => {
   const response = await axiosInstance.get(apiRoutes.USERS, {
     params: query,
@@ -37,7 +37,7 @@ export const getNonOrganizationUsers = async (axiosInstance: AxiosInstance) => {
 
 export const createUser = async (
   axiosInstance: AxiosInstance,
-  data: UserCreateType
+  data: UserCreateType,
 ) => {
   const response = await axiosInstance.post(apiRoutes.USERS, data);
   return response.data;
@@ -46,7 +46,7 @@ export const createUser = async (
 export const getUserById = async (
   axiosInstance: AxiosInstance,
   params: UserIdParamType,
-  query?: UserFilterQueryType
+  query?: UserFilterQueryType,
 ) => {
   const response = await axiosInstance.get(apiRoutes.USERS_ID(params.id), {
     params: query,
@@ -57,7 +57,7 @@ export const getUserById = async (
 export const upadteUserDetails = async (
   axiosInstance: AxiosInstance,
   params: UserIdParamType,
-  data: UserDetailsUpdateType
+  data: UserDetailsUpdateType,
 ) => {
   const response = await axiosInstance.put(apiRoutes.USERS_ID(params.id), data);
   return response.data;
@@ -66,11 +66,11 @@ export const upadteUserDetails = async (
 export const updateUserOrganization = async (
   axiosInstance: AxiosInstance,
   params: UserIdParamType,
-  data: UserOrganizationUpdateType
+  data: UserOrganizationUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.USER_ID_ORGANIZATION(params.id),
-    data
+    data,
   );
   return response.data;
 };
@@ -78,18 +78,18 @@ export const updateUserOrganization = async (
 export const updateUserRole = async (
   axiosInstance: AxiosInstance,
   params: UserIdParamType,
-  data: UserRoleUpdateType
+  data: UserRoleUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.USER_ID_ROLE(params.id),
-    data
+    data,
   );
   return response.data;
 };
 
 export const deleteUser = async (
   axiosInstance: AxiosInstance,
-  params: UserIdParamType
+  params: UserIdParamType,
 ) => {
   const response = await axiosInstance.delete(apiRoutes.USERS_ID(params.id));
   return response.data;

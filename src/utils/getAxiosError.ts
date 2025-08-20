@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
 export function getAxiosError(error: unknown): string {
-  const defaultErrorMessage = 'An error occurred, please try again later.';
+  const defaultErrorMessage = "An error occurred, please try again later.";
   if (axios.isAxiosError(error)) {
     return (
       error.response?.data?.message ||

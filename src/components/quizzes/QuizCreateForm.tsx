@@ -1,14 +1,14 @@
-import { useNavigate, useParams } from 'react-router';
-import { getQuizFormData, type QuizFormType } from './constants';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { quizKeys } from '@/tanstack/keys/quizKeys';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { createQuiz, getQuiz, updateQuiz } from '@/services/quiz';
-import { QuizCreateSchema, QuizUpdateSchema, type Quiz } from '@/types/Quiz';
-import { routes } from '@/static-data/routes';
-import type z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useNavigate, useParams } from "react-router";
+import { getQuizFormData, type QuizFormType } from "./constants";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { quizKeys } from "@/tanstack/keys/quizKeys";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { createQuiz, getQuiz, updateQuiz } from "@/services/quiz";
+import { QuizCreateSchema, QuizUpdateSchema, type Quiz } from "@/types/Quiz";
+import { routes } from "@/static-data/routes";
+import type z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -16,13 +16,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '../ui/button';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
 
-const QuizCreateForm = ({ type = 'create' }: QuizFormType) => {
+const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
   const { title, buttonText } = getQuizFormData(type);
-  const { courseId = '', quizId = '' } = useParams<{
+  const { courseId = "", quizId = "" } = useParams<{
     courseId: string;
     quizId: string;
   }>();
@@ -31,7 +31,7 @@ const QuizCreateForm = ({ type = 'create' }: QuizFormType) => {
   const { data: quiz } = useSuspenseQuery({
     queryKey: quizKeys.getById(courseId, quizId),
     queryFn: async () => {
-      return type === 'edit'
+      return type === "edit"
         ? getQuiz(axiosInstance, { courseId, id: quizId })
         : null;
     },
@@ -41,7 +41,7 @@ const QuizCreateForm = ({ type = 'create' }: QuizFormType) => {
   const form = useForm<z.infer<typeof QuizCreateSchema>>({
     resolver: zodResolver(QuizCreateSchema),
     defaultValues: {
-      ...(type === 'edit' && quiz
+      ...(type === "edit" && quiz
         ? {
             title: quiz.title,
             description: quiz.description,
@@ -60,7 +60,7 @@ const QuizCreateForm = ({ type = 'create' }: QuizFormType) => {
     },
     meta: {
       notify: true,
-      successMessage: 'Quiz created successfully',
+      successMessage: "Quiz created successfully",
       invalidatesQueries: quizKeys.all(courseId),
     },
   });
@@ -75,13 +75,13 @@ const QuizCreateForm = ({ type = 'create' }: QuizFormType) => {
     },
     meta: {
       notify: true,
-      successMessage: 'Quiz updated successfully',
+      successMessage: "Quiz updated successfully",
       invalidatesQueries: quizKeys.all(courseId),
     },
   });
 
   const onSubmit = (data: z.infer<typeof QuizCreateSchema>) => {
-    if (type === 'create') {
+    if (type === "create") {
       createQuizMutation(data);
     } else {
       updateQuizMutation(data);
@@ -89,21 +89,21 @@ const QuizCreateForm = ({ type = 'create' }: QuizFormType) => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
-        <h1 className='text-4xl font-bold mb-6'>{title}</h1>
+        <h1 className="text-4xl font-bold mb-6">{title}</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md'
+          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
         >
           <FormField
             control={form.control}
-            name='title'
+            name="title"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Title: </FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter Quiz title' {...field} />
+                  <Input placeholder="Enter Quiz title" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -112,19 +112,19 @@ const QuizCreateForm = ({ type = 'create' }: QuizFormType) => {
 
           <FormField
             control={form.control}
-            name='description'
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description: </FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter Quiz description' {...field} />
+                  <Input placeholder="Enter Quiz description" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type='submit'>{buttonText}</Button>
+          <Button type="submit">{buttonText}</Button>
         </form>
       </Form>
     </div>

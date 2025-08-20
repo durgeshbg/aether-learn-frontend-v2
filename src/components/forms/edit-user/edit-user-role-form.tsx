@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -6,32 +6,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { getUserById, updateUserRole } from '@/services/user';
-import { userKeys } from '@/tanstack/keys/userKeys';
-import { UserRoleUpdateSchema, type User } from '@/types/User';
-import { axiosInstance } from '@/utils/axiosInstance';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router';
-import type z from 'zod';
-import { roles } from '../add-user/constants';
-import { routes } from '@/static-data/routes';
+} from "@/components/ui/select";
+import { getUserById, updateUserRole } from "@/services/user";
+import { userKeys } from "@/tanstack/keys/userKeys";
+import { UserRoleUpdateSchema, type User } from "@/types/User";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
+import type z from "zod";
+import { roles } from "../add-user/constants";
+import { routes } from "@/static-data/routes";
 
 const EditUserRoleForm = () => {
   const navigate = useNavigate();
-  const { userId = '' } = useParams<{ userId: string }>();
+  const { userId = "" } = useParams<{ userId: string }>();
 
   const { data: user } = useSuspenseQuery({
-    queryKey: userKeys.getById(userId || ''),
+    queryKey: userKeys.getById(userId || ""),
     queryFn: async () => {
       return getUserById(axiosInstance, { id: userId });
     },
@@ -41,7 +41,7 @@ const EditUserRoleForm = () => {
   const form = useForm<z.infer<typeof UserRoleUpdateSchema>>({
     resolver: zodResolver(UserRoleUpdateSchema),
     defaultValues: {
-      role: user.role || 'USER',
+      role: user.role || "USER",
     },
   });
 
@@ -52,7 +52,7 @@ const EditUserRoleForm = () => {
     },
     meta: {
       notify: true,
-      successMessage: 'User role updated successfully',
+      successMessage: "User role updated successfully",
       invalidatesQueries: userKeys.getById(userId),
     },
     onSettled: () => {
@@ -66,16 +66,16 @@ const EditUserRoleForm = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center'>
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
-        <h1 className='text-4xl font-bold mb-6'>Update user role</h1>
+        <h1 className="text-4xl font-bold mb-6">Update user role</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md'
+          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
         >
           <FormField
             control={form.control}
-            name='role'
+            name="role"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Role</FormLabel>
@@ -84,8 +84,8 @@ const EditUserRoleForm = () => {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className='w-full'>
-                      <SelectValue placeholder='Select role' />
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select role" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -101,7 +101,7 @@ const EditUserRoleForm = () => {
             )}
           />
 
-          <Button type='submit'>Create</Button>
+          <Button type="submit">Create</Button>
         </form>
       </Form>
     </div>
