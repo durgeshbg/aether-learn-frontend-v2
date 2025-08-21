@@ -8,7 +8,7 @@ export default function Dashboard() {
     <>
       <GlassmorphicNavbar />
       <Suspense fallback={<Loading />}>
-        <main>
+        <main className="px-20 py-8">
           <Outlet />
         </main>
       </Suspense>
