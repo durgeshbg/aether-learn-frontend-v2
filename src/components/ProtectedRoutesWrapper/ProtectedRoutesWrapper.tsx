@@ -1,9 +1,9 @@
 import { Outlet } from "react-router";
 import { Suspense } from "react";
 import Loading from "@/containers/loading/loading";
-import { GlassmorphicNavbar } from "../navbar/glassmorphic-navbar";
+import { GlassmorphicNavbar } from "../navbar/GlassmorphicNavbar";
 
-export default function Dashboard() {
+function ProtectedRoutesWrapper() {
   return (
     <>
       <GlassmorphicNavbar />
@@ -15,3 +15,4 @@ export default function Dashboard() {
     </>
   );
 }
+export default ProtectedRoutesWrapper;

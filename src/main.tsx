@@ -39,6 +39,7 @@ import CodeAssestments from "./components/code-assessments/CodeAssestments.tsx";
 import CodeAssessmentCreateForm from "./components/code-assessments/CodeAssessmentCreateForm.tsx";
 import CodeAssessmentDetails from "./components/code-assessments/CodeAssessmentDetails.tsx";
 import TestCaseCreateForm from "./components/code-assessments/TestCaseCreateForm.tsx";
+import Dashboard from "./components/Dashboard/Dashboard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
             children: [
               {
                 path: "/",
-                element: <div>Home Content</div>,
+                element: <Dashboard />,
               },
               {
                 path: "users",
