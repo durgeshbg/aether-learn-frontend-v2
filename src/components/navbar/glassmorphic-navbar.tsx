@@ -22,6 +22,7 @@ import { Link, useNavigate } from "react-router";
 import { navbarConstants } from "./constants";
 import { useAuth } from "@/hooks/useAuth";
 import { routes } from "@/static-data/routes";
+import Logo from "./Logo";
 
 interface NavbarProps {
   className?: string;
@@ -67,13 +68,11 @@ export function GlassmorphicNavbar({ className }: NavbarProps) {
         <div className="flex items-center justify-between h-full">
           {/* Logo */}
           <div className="flex items-center space-x-8">
-            <Link to="/app" className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">
-                  {appName[0]}
-                </span>
+            <Link to={routes.HOME} className="flex items-center space-x-2">
+              <div className="flex items-center justify-center h-8 w-8">
+                <Logo />
               </div>
-              <span className="font-semibold text-lg text-foreground">
+              <span className="font-semibold text-lg text-foreground hidden md:inline-block">
                 {appName}
               </span>
             </Link>
