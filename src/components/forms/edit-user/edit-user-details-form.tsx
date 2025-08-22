@@ -18,10 +18,23 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import type z from "zod";
+import {
+  ArrowLeft,
+  User as UserIcon,
+  Mail,
+  Lock,
+  Edit3,
+  Save,
+  Eye,
+  EyeOff,
+  Sparkles,
+} from "lucide-react";
+import { useState } from "react";
 
 const EditUserDetailsForm = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const { data: user } = useSuspenseQuery({
     queryKey: userKeys.getById(userId || ""),
@@ -41,7 +54,7 @@ const EditUserDetailsForm = () => {
     },
   });
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: userKeys.updateDetails(userId || ""),
     mutationFn: async (data: z.infer<typeof UserDetailsUpdateSchema>) => {
       return upadteUserDetails(
@@ -68,71 +81,261 @@ const EditUserDetailsForm = () => {
     form.reset();
   }
 
+  // Enhanced user data for display
+  const enhancedUser = {
+    ...user,
+    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
+  };
+
   return (
-    <div className="flex flex-col justify-center items-center">
-      <Form {...form}>
-        <h1 className="text-4xl font-bold mb-6">Update User</h1>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full max-w-md py-12 px-10 border rounded-lg shadow-md"
-        >
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="John" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Smith" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <div className="min-h-screen bg-background/50 backdrop-blur-sm p-6">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />
+      <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--primary)_0%,_transparent_50%)] opacity-10" />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="name@mail.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <div className="relative max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(routes.USER_DETAILS(userId || ""))}
+            className="p-2 hover:bg-card/40 backdrop-blur-sm"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+              Edit Student Details
+            </h1>
+            <p className="text-muted-foreground">
+              Update personal information for {user.firstName} {user.lastName}
+            </p>
+          </div>
+        </div>
 
-          <Button type="submit">Create</Button>
-        </form>
-      </Form>
+        {/* Main Form Card */}
+        <div className="rounded-2xl bg-card/40 backdrop-blur-md border border-border/20 shadow-2xl overflow-hidden">
+          {/* Profile Header */}
+          <div className="relative p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-b border-border/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
+            <div className="relative flex items-center gap-4">
+              <div className="relative">
+                <img
+                  src={enhancedUser.avatar}
+                  alt={`${user.firstName} ${user.lastName}`}
+                  className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg"
+                />
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/30">
+                  <Edit3 className="h-3 w-3 text-primary" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-foreground">
+                  {user.firstName} {user.lastName}
+                </h2>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
+                <div className="mt-1 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary border border-primary/30">
+                  {user.role}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Form Content */}
+          <div className="p-8">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                {/* Personal Information Section */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <UserIcon className="h-5 w-5 text-primary" />
+                    Personal Information
+                  </h3>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            First Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="John"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Last Name
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Smith"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Account Information Section */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <Mail className="h-5 w-5 text-primary" />
+                    Account Information
+                  </h3>
+
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Email Address
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                placeholder="student@college.edu"
+                                className="pl-10 bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            New Password
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="••••••••••"
+                                className="pl-10 pr-10 bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                                {...field}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Leave blank to keep current password
+                          </p>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-4 pt-6 border-t border-border/20">
+                  <Button
+                    type="submit"
+                    disabled={isPending}
+                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 backdrop-blur-sm transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50"
+                  >
+                    {isPending ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground mr-2" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-4 w-4 mr-2" />
+                        Save Changes
+                      </>
+                    )}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => form.reset()}
+                    disabled={isPending}
+                    className="bg-card/40 backdrop-blur-sm border-border/40 hover:bg-card/60 disabled:opacity-50"
+                  >
+                    Reset Form
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate(routes.USER_DETAILS(userId || ""))}
+                    disabled={isPending}
+                    className="bg-red-500/10 border-red-500/20 text-red-700 hover:bg-red-500/20 backdrop-blur-sm disabled:opacity-50"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+
+          {/* Subtle glow effect */}
+          <div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 blur-xl" />
+        </div>
+
+        {/* Info Card */}
+        <div className="mt-6 rounded-xl bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 p-4">
+          <div className="flex items-start gap-3">
+            <div className="p-1 bg-blue-500/20 rounded-lg">
+              <Sparkles className="h-4 w-4 text-blue-600" />
+            </div>
+            <div className="flex-1">
+              <h4 className="font-medium text-blue-800 mb-1">
+                Update Information
+              </h4>
+              <p className="text-sm text-blue-700">
+                Changes will be saved immediately and the student will be
+                notified via email. Leave the password field blank if you don't
+                want to change it.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
