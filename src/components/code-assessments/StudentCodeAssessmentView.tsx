@@ -115,7 +115,7 @@ export const StudentCodeAssessmentView = ({
 
   return (
     <div
-      className={`${isFullscreen ? "fixed inset-0 z-50" : "w-full max-w-7xl mx-auto py-8 px-4"} bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900`}
+      className={`${isFullscreen ? "fixed inset-0 z-50" : "w-full max-w-7xl mx-auto py-8 px-4"} bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900`}
     >
       {/* Header */}
       <div className="mb-6">
@@ -168,17 +168,17 @@ export const StudentCodeAssessmentView = ({
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Fixed glassmorphic styling */}
       <div className="grid lg:grid-cols-2 gap-6 h-full">
         {/* Left Panel - Problem Description */}
         <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl overflow-hidden">
-          {/* Tabs */}
+          {/* Tabs - Fixed active state colors */}
           <div className="flex border-b border-white/10">
             <button
               onClick={() => setActiveTab("description")}
               className={`px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === "description"
-                  ? "text-white bg-white/10 border-b-2 border-blue-400"
+                  ? "text-white bg-white/10 border-b-2 border-emerald-400"
                   : "text-white/70 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -189,7 +189,7 @@ export const StudentCodeAssessmentView = ({
               onClick={() => setActiveTab("submissions")}
               className={`px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === "submissions"
-                  ? "text-white bg-white/10 border-b-2 border-blue-400"
+                  ? "text-white bg-white/10 border-b-2 border-emerald-400"
                   : "text-white/70 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -226,7 +226,7 @@ export const StudentCodeAssessmentView = ({
                   </div>
                 </div>
 
-                {/* Example Test Cases */}
+                {/* Example Test Cases - Fixed colors */}
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-3">
                     Examples
@@ -243,13 +243,13 @@ export const StudentCodeAssessmentView = ({
                         <div className="space-y-2 text-sm">
                           <div>
                             <span className="text-white/70">Input:</span>
-                            <pre className="text-emerald-400 font-mono mt-1">
+                            <pre className="text-emerald-300 font-mono mt-1 bg-gray-900/30 p-2 rounded">
                               {testCase.input}
                             </pre>
                           </div>
                           <div>
                             <span className="text-white/70">Output:</span>
-                            <pre className="text-blue-400 font-mono mt-1">
+                            <pre className="text-blue-300 font-mono mt-1 bg-gray-900/30 p-2 rounded">
                               {testCase.expected}
                             </pre>
                           </div>
@@ -259,13 +259,13 @@ export const StudentCodeAssessmentView = ({
                   </div>
                 </div>
 
-                {/* Constraints */}
+                {/* Constraints - Fixed colors */}
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-3">
                     Constraints
                   </h3>
                   <div className="p-4 rounded-xl bg-yellow-500/10 border border-yellow-400/30">
-                    <ul className="text-yellow-200 text-sm space-y-1">
+                    <ul className="text-yellow-100 text-sm space-y-2 text-left">
                       <li>• Time limit: 2 seconds</li>
                       <li>• Memory limit: 256 MB</li>
                       <li>• Use only standard library functions</li>
@@ -292,7 +292,7 @@ export const StudentCodeAssessmentView = ({
 
         {/* Right Panel - Code Editor and Results */}
         <div className="space-y-4">
-          {/* Code Editor */}
+          {/* Code Editor - Fixed colors */}
           <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-white/10">
               <div className="flex items-center gap-2">
@@ -336,7 +336,7 @@ export const StudentCodeAssessmentView = ({
                 ref={codeEditorRef}
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="w-full p-4 bg-gray-900/50 text-white font-mono text-sm leading-relaxed resize-none focus:outline-none"
+                className="w-full p-4 bg-gray-900/70 text-white font-mono text-sm leading-relaxed resize-none focus:outline-none border-none"
                 style={{
                   height: isFullscreen ? "calc(50vh - 100px)" : "300px",
                 }}
@@ -344,7 +344,7 @@ export const StudentCodeAssessmentView = ({
                 spellCheck={false}
               />
 
-              {/* Line numbers would go here in a real editor */}
+              {/* Line numbers */}
               <div className="absolute top-4 left-2 text-white/30 text-sm font-mono leading-relaxed pointer-events-none">
                 {code.split("\n").map((_, index) => (
                   <div key={index}>{index + 1}</div>
@@ -353,7 +353,7 @@ export const StudentCodeAssessmentView = ({
             </div>
           </div>
 
-          {/* Test Results */}
+          {/* Test Results - Fixed colors */}
           {showResults && (
             <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl overflow-hidden">
               <div className="flex items-center justify-between p-4 border-b border-white/10">
@@ -364,8 +364,8 @@ export const StudentCodeAssessmentView = ({
                     <span
                       className={`text-sm px-2 py-1 rounded-lg ${
                         passedTests === totalTests
-                          ? "bg-emerald-500/20 text-emerald-400"
-                          : "bg-red-500/20 text-red-400"
+                          ? "bg-emerald-500/20 text-emerald-300"
+                          : "bg-red-500/20 text-red-300"
                       }`}
                     >
                       {passedTests}/{totalTests} passed
@@ -401,7 +401,7 @@ export const StudentCodeAssessmentView = ({
                         )}
                         <span
                           className={`text-sm font-medium ${
-                            result.passed ? "text-emerald-400" : "text-red-400"
+                            result.passed ? "text-emerald-300" : "text-red-300"
                           }`}
                         >
                           Test Case {index + 1}
@@ -417,7 +417,7 @@ export const StudentCodeAssessmentView = ({
                         </div>
                         <div>
                           <span className="text-white/70">Expected:</span>
-                          <span className="text-emerald-400 ml-2 font-mono">
+                          <span className="text-emerald-300 ml-2 font-mono">
                             {result.expected}
                           </span>
                         </div>
@@ -426,8 +426,8 @@ export const StudentCodeAssessmentView = ({
                           <span
                             className={`ml-2 font-mono ${
                               result.passed
-                                ? "text-emerald-400"
-                                : "text-red-400"
+                                ? "text-emerald-300"
+                                : "text-red-300"
                             }`}
                           >
                             {result.actual}
