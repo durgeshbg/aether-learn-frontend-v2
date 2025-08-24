@@ -8,6 +8,9 @@ import type { Module } from "@/types/Module";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router";
+import { deleteLesson } from "@/services/lesson";
+import { useMutation } from "@tanstack/react-query";
+
 import {
   PlayCircle,
   FileText,
@@ -21,8 +24,10 @@ import {
   CheckCircle,
   Users,
   Target,
+  Trash2,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 // Helper function to get dummy lesson stats (replace with real data from backend)
 const getLessonStats = (modules: Module[]) => ({
@@ -55,6 +60,7 @@ const LessonDetails = () => {
     lessonId: string;
   }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { data: lesson } = useSuspenseQuery({
     queryKey: lessonKeys.getById(courseId, lessonId),
@@ -70,6 +76,25 @@ const LessonDetails = () => {
       return getModules(axiosInstance, { courseId, lessonId });
     },
     select: (data: { modules: Module[] }) => data.modules,
+  });
+
+  const handleEditLesson = () => {
+    navigate(routes.LESSON_EDIT(courseId, lessonId));
+  };
+
+  const { mutate: deleteLessonMutation, isPending: isDeleting } = useMutation({
+    mutationKey: lessonKeys.delete(courseId, lessonId),
+    mutationFn: async () => {
+      return deleteLesson(axiosInstance, { courseId, id: lessonId });
+    },
+    onSuccess: () => {
+      navigate(routes.COURSE_DETAILS(courseId));
+    },
+    meta: {
+      notify: true,
+      successMessage: "Lesson deleted successfully",
+      invalidatesQueries: lessonKeys.all(courseId),
+    },
   });
 
   const stats = getLessonStats(modules);
@@ -120,25 +145,45 @@ const LessonDetails = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-              <Button
-                onClick={() => navigate(routes.LESSON_EDIT(courseId, lessonId))}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
-              >
-                <Edit3 className="h-4 w-4 mr-2" />
-                Edit
-              </Button>
-              <Button
-                onClick={() =>
-                  navigate(routes.MODULE_CREATE(courseId, lessonId))
-                }
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Module
-              </Button>
-            </div>
+            {user?.role === "ADMIN" && (
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  onClick={handleEditLesson}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+                >
+                  <Edit3 className="h-4 w-4 mr-2" />
+                  Edit Lesson
+                </Button>
+
+                <Button
+                  onClick={() => deleteLessonMutation()}
+                  disabled={isDeleting}
+                  className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isDeleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Lesson
+                    </>
+                  )}
+                </Button>
+
+                <Button
+                  onClick={() =>
+                    navigate(routes.MODULE_CREATE(courseId, lessonId))
+                  }
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Module
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Stats Grid */}
@@ -199,13 +244,17 @@ const LessonDetails = () => {
               <Layers className="h-6 w-6 text-emerald-400" />
               Modules ({modules.length})
             </h2>
-            <Button
-              onClick={() => navigate(routes.MODULE_CREATE(courseId, lessonId))}
-              className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-400/30 px-3 py-1 rounded-lg text-sm transition-all duration-300"
-            >
-              <Plus className="h-3 w-3 mr-1" />
-              Add
-            </Button>
+            {user?.role === "ADMIN" && (
+              <Button
+                onClick={() =>
+                  navigate(routes.MODULE_CREATE(courseId, lessonId))
+                }
+                className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-400/30 px-3 py-1 rounded-lg text-sm transition-all duration-300"
+              >
+                <Plus className="h-3 w-3 mr-1" />
+                Add
+              </Button>
+            )}
           </div>
 
           <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -257,42 +306,6 @@ const LessonDetails = () => {
             )}
           </div>
         </section>
-      </div>
-
-      {/* Additional Info Section */}
-      <div className="mt-8 rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-        <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-          <BookOpen className="h-5 w-5 text-purple-400" />
-          Lesson Management
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <h4 className="text-white font-medium mb-2">
-              Content Organization
-            </h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Break content into digestible modules</li>
-              <li>• Maintain logical learning progression</li>
-              <li>• Include interactive elements</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-medium mb-2">Module Types</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Text-based explanations</li>
-              <li>• Video demonstrations</li>
-              <li>• Interactive exercises</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-medium mb-2">Best Practices</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Keep modules focused and concise</li>
-              <li>• Include clear learning objectives</li>
-              <li>• Provide practical examples</li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   );

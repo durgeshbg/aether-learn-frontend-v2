@@ -23,6 +23,7 @@ import {
   Bookmark,
   Settings,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 // Helper function to get dummy module stats (replace with real data from backend)
 const getModuleStats = () => ({
@@ -89,6 +90,7 @@ const ModuleDetails = () => {
     moduleId: string;
   }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { data: module } = useSuspenseQuery({
     queryKey: moduleKeys.getById(courseId, lessonId, moduleId),
@@ -147,12 +149,7 @@ const ModuleDetails = () => {
                   >
                     {stats.difficulty}
                   </div>
-                  <div
-                    className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg font-semibold text-sm ${getModuleTypeColor(stats.moduleType)}`}
-                  >
-                    {getModuleTypeIcon(stats.moduleType)}
-                    {stats.moduleType} Module
-                  </div>
+
                   <div className="flex items-center gap-1 text-white/70 text-sm">
                     <Clock className="h-4 w-4" />
                     <span>{stats.estimatedDuration}</span>
@@ -166,32 +163,40 @@ const ModuleDetails = () => {
 
             {/* Action Buttons */}
             <div className="flex gap-3">
-              <Button
-                onClick={() =>
-                  navigate(routes.MODULE_EDIT(courseId, lessonId, moduleId))
-                }
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
-              >
-                <Edit3 className="h-4 w-4 mr-2" />
-                Edit
+              <Button className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 px-4 py-2 rounded-lg text-sm transition-all duration-300">
+                <Bookmark className="h-3 w-3 mr-2" />
+                Bookmark
               </Button>
-              <Button
-                onClick={() => deleteModuleMutation()}
-                disabled={isDeleting}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isDeleting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </>
-                )}
-              </Button>
+              {user?.role === "ADMIN" && (
+                <>
+                  <Button
+                    onClick={() =>
+                      navigate(routes.MODULE_EDIT(courseId, lessonId, moduleId))
+                    }
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button
+                    onClick={() => deleteModuleMutation()}
+                    disabled={isDeleting}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isDeleting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                        Deleting...
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
@@ -242,18 +247,6 @@ const ModuleDetails = () => {
               <p className="text-white/90 leading-relaxed whitespace-pre-wrap">
                 {module.content}
               </p>
-            </div>
-
-            {/* Content Actions */}
-            <div className="flex gap-3">
-              <Button className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-400/30 px-4 py-2 rounded-lg text-sm transition-all duration-300">
-                <Bookmark className="h-3 w-3 mr-2" />
-                Bookmark
-              </Button>
-              <Button className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 px-4 py-2 rounded-lg text-sm transition-all duration-300">
-                <Play className="h-3 w-3 mr-2" />
-                Preview
-              </Button>
             </div>
           </div>
         </section>
@@ -329,43 +322,6 @@ const ModuleDetails = () => {
             </div>
           </div>
         </section>
-      </div>
-
-      {/* Additional Info Section */}
-      <div className="mt-8 rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-        <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-          <Bookmark className="h-5 w-5 text-yellow-400" />
-          Module Management Tips
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <h4 className="text-white font-medium mb-2">Content Quality</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Keep content focused and concise</li>
-              <li>• Use clear, actionable examples</li>
-              <li>• Include relevant code snippets</li>
-              <li>• Test all code before publishing</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-medium mb-2">Student Engagement</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Add interactive elements</li>
-              <li>• Include knowledge checkpoints</li>
-              <li>• Provide practical exercises</li>
-              <li>• Encourage experimentation</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-medium mb-2">Maintenance</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Regular content reviews</li>
-              <li>• Update outdated information</li>
-              <li>• Monitor completion rates</li>
-              <li>• Gather student feedback</li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   );

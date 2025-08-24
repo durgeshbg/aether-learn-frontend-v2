@@ -40,6 +40,8 @@ import CodeAssessmentCreateForm from "./components/code-assessments/CodeAssessme
 import CodeAssessmentDetails from "./components/code-assessments/CodeAssessmentDetails.tsx";
 import TestCaseCreateForm from "./components/code-assessments/TestCaseCreateForm.tsx";
 import Dashboard from "./components/Dashboard/Dashboard.tsx";
+import OrgAdminRoutes from "./containers/Routes/OrgAdminRoutes.tsx";
+import AdminRoutes from "./containers/Routes/AdminRoutes.tsx";
 
 const router = createBrowserRouter([
   {
@@ -63,66 +65,16 @@ const router = createBrowserRouter([
                 element: <Dashboard />,
               },
               {
+                path: "profile",
+                element: <Profile />,
+              },
+              {
                 path: "users",
                 element: <Users />,
                 children: [
                   {
-                    index: true,
-                    element: <UsersList />,
-                  },
-                  {
-                    path: "create",
-                    element: <AddUserForm />,
-                  },
-                  {
-                    path: ":userId",
-                    element: <UserDetails />,
-                  },
-                  {
                     path: ":userId/edit",
                     element: <EditUserForm />,
-                  },
-                  {
-                    path: ":userId/edit/role",
-                    element: <EditUserForm type="role" />,
-                  },
-                  {
-                    path: ":userId/edit/organization",
-                    element: <EditUserForm type="organization" />,
-                  },
-                ],
-              },
-              {
-                path: "organizations",
-                element: <Organizations />,
-                children: [
-                  {
-                    index: true,
-                    element: <OrganizationsList />,
-                  },
-                  {
-                    path: "create",
-                    element: <OrganizationCreateForm />,
-                  },
-                  {
-                    path: ":organizationId",
-                    element: <OrganizationDetials />,
-                  },
-                  {
-                    path: ":organizationId/edit",
-                    element: <OrganizationEditForm />,
-                  },
-                  {
-                    path: ":organizationId/edit/admin",
-                    element: <OrganizationEditForm type="admin" />,
-                  },
-                  {
-                    path: ":organizationId/edit/users",
-                    element: <OrganizationEditForm type="users" />,
-                  },
-                  {
-                    path: ":organizationId/edit/courses",
-                    element: <OrganizationEditForm type="courses" />,
                   },
                 ],
               },
@@ -133,14 +85,6 @@ const router = createBrowserRouter([
                   {
                     index: true,
                     element: <CoursesList />,
-                  },
-                  {
-                    path: "create",
-                    element: <CrourseCreateForm />,
-                  },
-                  {
-                    path: ":courseId/edit",
-                    element: <CrourseCreateForm type="edit" />,
                   },
                 ],
               },
@@ -153,16 +97,8 @@ const router = createBrowserRouter([
                 element: <Lessons />,
                 children: [
                   {
-                    path: "create",
-                    element: <LessonCreateForm />,
-                  },
-                  {
                     path: ":lessonId",
                     element: <LessonDetails />,
-                  },
-                  {
-                    path: ":lessonId/edit",
-                    element: <LessonCreateForm type="edit" />,
                   },
                 ],
               },
@@ -171,16 +107,8 @@ const router = createBrowserRouter([
                 element: <Modules />,
                 children: [
                   {
-                    path: "create",
-                    element: <ModuleCreateForm />,
-                  },
-                  {
                     path: ":moduleId",
                     element: <ModuleDetails />,
-                  },
-                  {
-                    path: ":moduleId/edit",
-                    element: <ModuleCreateForm type="edit" />,
                   },
                 ],
               },
@@ -189,24 +117,8 @@ const router = createBrowserRouter([
                 element: <Quizzes />,
                 children: [
                   {
-                    path: "create",
-                    element: <QuizCreateForm />,
-                  },
-                  {
                     path: ":quizId",
                     element: <QuizDetails />,
-                  },
-                  {
-                    path: ":quizId/edit",
-                    element: <QuizCreateForm type="edit" />,
-                  },
-                  {
-                    path: ":quizId/questions/create",
-                    element: <QuestionCreateForm />,
-                  },
-                  {
-                    path: ":quizId/questions/:questionId/edit",
-                    element: <QuestionCreateForm type="edit" />,
                   },
                 ],
               },
@@ -215,30 +127,176 @@ const router = createBrowserRouter([
                 element: <CodeAssestments />,
                 children: [
                   {
-                    path: "create",
-                    element: <CodeAssessmentCreateForm />,
-                  },
-                  {
                     path: ":codeAssessmentId",
                     element: <CodeAssessmentDetails />,
                   },
+                ],
+              },
+              // Organization Admin Routes
+              {
+                path: "/",
+                element: <OrgAdminRoutes />,
+                children: [
                   {
-                    path: ":codeAssessmentId/edit",
-                    element: <CodeAssessmentCreateForm type="edit" />,
+                    path: "users",
+                    element: <Users />,
+                    children: [
+                      {
+                        index: true,
+                        element: <UsersList />,
+                      },
+                      {
+                        path: "create",
+                        element: <AddUserForm />,
+                      },
+                      {
+                        path: ":userId",
+                        element: <UserDetails />,
+                      },
+                      {
+                        path: ":userId/edit/role",
+                        element: <EditUserForm type="role" />,
+                      },
+                      {
+                        path: ":userId/edit/organization",
+                        element: <EditUserForm type="organization" />,
+                      },
+                    ],
                   },
                   {
-                    path: ":codeAssessmentId/test-cases/create",
-                    element: <TestCaseCreateForm />,
-                  },
-                  {
-                    path: ":codeAssessmentId/test-cases/:testCaseId/edit",
-                    element: <TestCaseCreateForm type="edit" />,
+                    path: "organizations",
+                    element: <Organizations />,
+                    children: [
+                      {
+                        path: ":organizationId",
+                        element: <OrganizationDetials />,
+                      },
+                      {
+                        path: ":organizationId/edit",
+                        element: <OrganizationEditForm />,
+                      },
+                      {
+                        path: ":organizationId/edit/admin",
+                        element: <OrganizationEditForm type="admin" />,
+                      },
+                      {
+                        path: ":organizationId/edit/users",
+                        element: <OrganizationEditForm type="users" />,
+                      },
+                    ],
                   },
                 ],
               },
+              // Admin Routes
               {
-                path: "profile",
-                element: <Profile />,
+                path: "/",
+                element: <AdminRoutes />,
+                children: [
+                  {
+                    path: "organizations",
+                    element: <Organizations />,
+                    children: [
+                      {
+                        index: true,
+                        element: <OrganizationsList />,
+                      },
+                      {
+                        path: "create",
+                        element: <OrganizationCreateForm />,
+                      },
+                      {
+                        path: ":organizationId/edit/courses",
+                        element: <OrganizationEditForm type="courses" />,
+                      },
+                    ],
+                  },
+                  {
+                    path: "courses",
+                    element: <Courses />,
+                    children: [
+                      {
+                        path: "create",
+                        element: <CrourseCreateForm />,
+                      },
+                      {
+                        path: ":courseId/edit",
+                        element: <CrourseCreateForm type="edit" />,
+                      },
+                    ],
+                  },
+                  {
+                    path: "courses/:courseId/lessons",
+                    element: <Lessons />,
+                    children: [
+                      {
+                        path: "create",
+                        element: <LessonCreateForm />,
+                      },
+                      {
+                        path: ":lessonId/edit",
+                        element: <LessonCreateForm type="edit" />,
+                      },
+                    ],
+                  },
+                  {
+                    path: "courses/:courseId/lessons/:lessonId/modules",
+                    element: <Modules />,
+                    children: [
+                      {
+                        path: "create",
+                        element: <ModuleCreateForm />,
+                      },
+                      {
+                        path: ":moduleId/edit",
+                        element: <ModuleCreateForm type="edit" />,
+                      },
+                    ],
+                  },
+                  {
+                    path: "courses/:courseId/quizzes",
+                    element: <Quizzes />,
+                    children: [
+                      {
+                        path: "create",
+                        element: <QuizCreateForm />,
+                      },
+                      {
+                        path: ":quizId/edit",
+                        element: <QuizCreateForm type="edit" />,
+                      },
+                      {
+                        path: ":quizId/questions/create",
+                        element: <QuestionCreateForm />,
+                      },
+                      {
+                        path: ":quizId/questions/:questionId/edit",
+                        element: <QuestionCreateForm type="edit" />,
+                      },
+                    ],
+                  },
+                  {
+                    path: "courses/:courseId/code-assessments",
+                    element: <CodeAssestments />,
+                    children: [
+                      {
+                        path: "create",
+                        element: <CodeAssessmentCreateForm />,
+                      },
+                      {
+                        path: ":codeAssessmentId/edit",
+                        element: <CodeAssessmentCreateForm type="edit" />,
+                      },
+                      {
+                        path: ":codeAssessmentId/test-cases/create",
+                        element: <TestCaseCreateForm />,
+                      },
+                      {
+                        path: ":codeAssessmentId/test-cases/:testCaseId/edit",
+                        element: <TestCaseCreateForm type="edit" />,
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },

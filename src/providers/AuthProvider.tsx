@@ -5,7 +5,7 @@ import { localStorageKeys } from "@/static-data/localStorage";
 import { userKeys } from "@/tanstack/keys/userKeys";
 import type { Role, User, UserLoginType } from "@/types/User";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as jwt from "jwt-decode";
 
 interface AuthProviderProps {
@@ -20,15 +20,17 @@ export interface TokenPayLoad {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem(localStorageKeys.ACCESS_TOKEN),
-  );
   const queryClient = useQueryClient();
-  const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem(localStorageKeys.ACCESS_TOKEN),
-  );
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  // Initialize auth state from localStorage
+  useEffect(() => {
+    const token = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
+    setAccessToken(token);
+    setInitializing(false);
+  }, []);
 
   const { mutate } = useMutation({
     mutationKey: userKeys.login(),
@@ -41,49 +43,43 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     },
     onSuccess: (data) => {
       localStorage.setItem(localStorageKeys.ACCESS_TOKEN, data.token);
-      setUser(null);
+      setUser(null); // Clear old user data
       setAccessToken(data.token);
     },
   });
+
   const tokenPayload = accessToken
-    ? (jwt.jwtDecode(accessToken || "") as TokenPayLoad | null)
+    ? (jwt.jwtDecode(accessToken) as TokenPayLoad | null)
     : null;
 
-  const { data, isFetching, isError } = useQuery({
+  const { data, isFetching, isError, error } = useQuery({
     queryKey: userKeys.getById(tokenPayload?.id || ""),
     queryFn: async () =>
       getUserById(axiosInstance, { id: tokenPayload?.id || "" }),
-    enabled: !!accessToken,
+    enabled: !!accessToken && !!tokenPayload?.id && !initializing,
+    retry: 1, // Limit retries for faster error handling
   });
 
-  const logoutHandler = () => {
+  const logoutHandler = useCallback(() => {
     logout();
+    localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
     setAccessToken(null);
-    setIsAuthenticated(false);
     setUser(null);
     queryClient.clear();
-  };
+  }, [queryClient]);
 
+  // Handle user data updates
   useEffect(() => {
-    if (isFetching) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-
-    if (accessToken) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-
-    if (data) {
+    if (data?.user) {
       setUser(data.user);
-    } else if (isError) {
+    } else if (isError && accessToken) {
       logoutHandler();
-      setUser(null);
     }
-  }, [data, isError, isFetching, accessToken]);
+  }, [data, isError, error, accessToken, logoutHandler]);
+
+  const isAuthenticated = !!accessToken;
+  const isUserLoading = isAuthenticated && (isFetching || (!user && !isError));
+  const loading = initializing || isUserLoading;
 
   return (
     <AuthContext.Provider

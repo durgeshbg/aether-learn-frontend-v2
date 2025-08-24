@@ -29,6 +29,7 @@ import {
   ArrowLeft,
   Settings,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 // Helper function to get dummy stats (replace with real data from backend)
 const getCourseStats = (
@@ -62,6 +63,7 @@ const getDifficultyColor = (difficulty: string) => {
 
 const CourseDetails = () => {
   const { courseId = "" } = useParams<{ courseId: string }>();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const { data: course } = useSuspenseQuery({
@@ -182,49 +184,53 @@ const CourseDetails = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
-          <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
-            <Settings className="h-5 w-5 text-blue-400" />
-            Course Management
-          </h2>
-          <div className="flex flex-wrap gap-3">
-            <Button
-              onClick={() => navigate(routes.COURSE_EDIT(course.id))}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-            >
-              <Edit3 className="h-4 w-4 mr-2" />
-              Edit Course
-            </Button>
-            <Button
-              onClick={() => deleteCourseMutation()}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete Course
-            </Button>
-            <Button
-              onClick={() => navigate(routes.LESSON_CREATE(course.id))}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Lesson
-            </Button>
-            <Button
-              onClick={() => navigate(routes.QUIZ_CREATE(course.id))}
-              className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Quiz
-            </Button>
-            <Button
-              onClick={() => navigate(routes.CODE_ASSESSMENT_CREATE(course.id))}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Assessment
-            </Button>
+        {user?.role === "ADMIN" && (
+          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
+            <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
+              <Settings className="h-5 w-5 text-blue-400" />
+              Course Management
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              <Button
+                onClick={() => navigate(routes.COURSE_EDIT(course.id))}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+              >
+                <Edit3 className="h-4 w-4 mr-2" />
+                Edit Course
+              </Button>
+              <Button
+                onClick={() => deleteCourseMutation()}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Course
+              </Button>
+              <Button
+                onClick={() => navigate(routes.LESSON_CREATE(course.id))}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Lesson
+              </Button>
+              <Button
+                onClick={() => navigate(routes.QUIZ_CREATE(course.id))}
+                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Quiz
+              </Button>
+              <Button
+                onClick={() =>
+                  navigate(routes.CODE_ASSESSMENT_CREATE(course.id))
+                }
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Assessment
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Content Sections */}

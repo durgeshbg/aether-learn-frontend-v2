@@ -180,7 +180,7 @@ function UserDashboard() {
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
       <h1 className="text-4xl font-extrabold mb-3 text-white">
-        Learning Dashboard
+        Your Learning Dashboard
       </h1>
       <p className="text-white/80 mb-8 text-lg">
         Welcome back! Continue your learning journey and track your progress.

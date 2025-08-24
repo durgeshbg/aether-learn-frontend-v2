@@ -1,5 +1,5 @@
 import { deleteQuestion, getQuestions } from "@/services/question";
-import { getQuiz } from "@/services/quiz";
+import { deleteQuiz, getQuiz } from "@/services/quiz";
 import { questionKeys } from "@/tanstack/keys/question";
 import { quizKeys } from "@/tanstack/keys/quizKeys";
 import type { Question } from "@/types/Question";
@@ -22,7 +22,6 @@ import {
   Users,
   Clock,
   Award,
-  AlertCircle,
 } from "lucide-react";
 
 interface AdminQuizDetailsProps {
@@ -50,6 +49,25 @@ export const AdminQuizDetails = ({
       return getQuestions(axiosInstance, { courseId, quizId });
     },
     select: (data: { questions: Question[] }) => data?.questions,
+  });
+
+  const handleEditQuiz = () => {
+    navigate(routes.QUIZ_EDIT(courseId, quizId));
+  };
+
+  const { mutate: deleteQuizMutation, isPending: isDeleting } = useMutation({
+    mutationKey: quizKeys.delete(courseId, quizId),
+    mutationFn: async () => {
+      return deleteQuiz(axiosInstance, { courseId, id: quizId });
+    },
+    onSuccess: () => {
+      navigate(routes.COURSE_DETAILS(courseId));
+    },
+    meta: {
+      notify: true,
+      successMessage: "Quiz deleted successfully",
+      invalidatesQueries: quizKeys.all(courseId),
+    },
   });
 
   const { mutate: deleteQuestionMutation, isPending: isDeletingQuestion } =
@@ -143,13 +161,29 @@ export const AdminQuizDetails = ({
             {/* Action Buttons */}
             <div className="flex gap-3">
               <Button
-                onClick={() =>
-                  navigate(routes.QUESTION_CREATE(courseId, quizId))
-                }
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+                onClick={handleEditQuiz}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Question
+                <Edit3 className="h-4 w-4 mr-2" />
+                Edit Quiz
+              </Button>
+
+              <Button
+                onClick={() => deleteQuizMutation()}
+                disabled={isDeleting}
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Quiz
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -322,43 +356,6 @@ export const AdminQuizDetails = ({
               </div>
             ))
           )}
-        </div>
-      </div>
-
-      {/* Management Tips */}
-      <div className="mt-8 rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-        <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-          <AlertCircle className="h-5 w-5 text-yellow-400" />
-          Quiz Management Tips
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <h4 className="text-white font-medium mb-2">Question Quality</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Write clear, unambiguous questions</li>
-              <li>• Provide plausible incorrect options</li>
-              <li>• Include helpful explanations</li>
-              <li>• Test different difficulty levels</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-medium mb-2">Assessment Design</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Align with learning objectives</li>
-              <li>• Balance knowledge and application</li>
-              <li>• Set appropriate time limits</li>
-              <li>• Review performance analytics</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-white font-medium mb-2">Student Experience</h4>
-            <ul className="space-y-1 text-white/70 text-sm">
-              <li>• Provide clear instructions</li>
-              <li>• Offer immediate feedback</li>
-              <li>• Allow multiple attempts if appropriate</li>
-              <li>• Track progress and completion</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>

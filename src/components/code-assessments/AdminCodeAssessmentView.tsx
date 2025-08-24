@@ -23,6 +23,8 @@ import {
   Bug,
   Globe,
 } from "lucide-react";
+import { deleteCodeAssessment } from "@/services/code-assesment";
+import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
 
 interface AdminCodeAssessmentViewProps {
   codeAssessment: CodeAssesment;
@@ -62,7 +64,30 @@ export const AdminCodeAssessmentView = ({
     },
   });
 
+  const { mutate: deleteCodeAssessmentMutation, isPending: isDeleting } =
+    useMutation({
+      mutationKey: codeAssessmentKeys.delete(courseId, codeAssessmentId),
+      mutationFn: async () => {
+        return deleteCodeAssessment(axiosInstance, {
+          courseId,
+          id: codeAssessmentId,
+        });
+      },
+      onSuccess: () => {
+        navigate(routes.COURSE_DETAILS(courseId));
+      },
+      meta: {
+        notify: true,
+        successMessage: "Code Assessment deleted successfully",
+        invalidatesQueries: codeAssessmentKeys.all(courseId),
+      },
+    });
+
   const language = LANGUAGES_MAP[codeAssessment.languageId];
+
+  const handleEditCodeAssessment = () => {
+    navigate(routes.CODE_ASSESSMENT_EDIT(courseId, codeAssessmentId));
+  };
 
   // Calculate assessment statistics
   const assessmentStats = {
@@ -134,24 +159,29 @@ export const AdminCodeAssessmentView = ({
             {/* Action Buttons */}
             <div className="flex gap-3">
               <Button
-                onClick={() =>
-                  navigate(
-                    routes.CODE_ASSESSMENT_EDIT(courseId, codeAssessmentId),
-                  )
-                }
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+                onClick={handleEditCodeAssessment}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
               >
                 <Edit3 className="h-4 w-4 mr-2" />
                 Edit Assessment
               </Button>
+
               <Button
-                onClick={() =>
-                  navigate(routes.TEST_CASE_CREATE(courseId, codeAssessmentId))
-                }
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+                onClick={() => deleteCodeAssessmentMutation()}
+                disabled={isDeleting}
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Test Case
+                {isDeleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Assessment
+                  </>
+                )}
               </Button>
             </div>
           </div>

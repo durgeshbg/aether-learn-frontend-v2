@@ -1,11 +1,10 @@
-import { AuthContext } from "@/context/AuthContext";
 import { routes } from "@/static-data/routes";
-import { useContext } from "react";
 import { Navigate, Outlet } from "react-router";
 import Loading from "../loading/loading";
+import { useAuth } from "@/hooks/useAuth";
 
 const AdminRoutes = () => {
-  const { isAuthenticated, user, loading } = useContext(AuthContext);
+  const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
     return <Loading />;
