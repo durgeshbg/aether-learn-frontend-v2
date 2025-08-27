@@ -2,7 +2,7 @@ import { deleteModule, getModuleById } from "@/services/module";
 import { moduleKeys } from "@/tanstack/keys/moduleKeys";
 import type { Module } from "@/types/Module";
 import { axiosInstance } from "@/utils/axiosInstance";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "../ui/button";
 import { routes } from "@/static-data/routes";
@@ -23,10 +23,17 @@ import {
   Bookmark,
   Settings,
   Loader2Icon,
+  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { bookmarkModule } from "@/services/user";
+import {
+  bookmarkModule,
+  getUserProgress,
+  markModuleAsComplete,
+} from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
+import type { UserProgress } from "@/types/User";
+import { useMemo } from "react";
 
 // Helper function to get dummy module stats (replace with real data from backend)
 const getModuleStats = () => ({
@@ -128,11 +135,46 @@ const ModuleDetails = () => {
         });
       },
       meta: {
-        notify: true,
-        successMessage: "Module bookmarked",
+        notify: false,
         invalidatesQueries: [moduleKeys.getById(courseId, lessonId, moduleId)],
       },
     });
+
+  const { mutate: markModuleComplete, isPending: isModuleMarkingPending } =
+    useMutation({
+      mutationKey: userKeys.markModuleAsComplete(),
+      mutationFn: async (complete: boolean) => {
+        return markModuleAsComplete(axiosInstance, {
+          courseId,
+          moduleId,
+          complete,
+        });
+      },
+      meta: {
+        notify: false,
+        invalidatesQueries: [
+          moduleKeys.getById(courseId, lessonId, moduleId),
+          userKeys.getProgress(user?.id || ""),
+        ],
+      },
+    });
+
+  const { data: completedModuleIds } = useQuery({
+    queryKey: userKeys.getProgress(user?.id || ""),
+    queryFn: async () => {
+      return getUserProgress(axiosInstance, { id: user?.id || "" });
+    },
+    enabled: !!user?.id,
+    select: (data: UserProgress) =>
+      data.progress
+        .find((p) => p.courseId === courseId)
+        ?.completedModules.map((m) => m.id) || [],
+  });
+
+  const isModuleCompleted = useMemo(
+    () => completedModuleIds?.includes(moduleId),
+    [completedModuleIds, moduleId],
+  );
 
   const handleBookmark = () => {
     bookmarkModuleMutation();
@@ -357,6 +399,22 @@ const ModuleDetails = () => {
             </div>
           </div>
         </section>
+      </div>
+      <div className="max-w-md mx-auto">
+        <Button
+          onClick={() => markModuleComplete(!isModuleCompleted)}
+          disabled={isModuleMarkingPending}
+          className={`w-full mt-8 ${isModuleCompleted ? "bg-emerald-500 hover:bg-emerald-600 text-white" : "bg-emerald-400/20 text-emerald-400 hover:bg-emerald-400/30 "} px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center`}
+        >
+          {isModuleMarkingPending ? (
+            <Loader2Icon className="animate-spin h-5 w-5 mr-2" />
+          ) : isModuleCompleted ? (
+            <CheckCircle className="h-5 w-5 mr-2" />
+          ) : (
+            <CheckCircle2 className="h-5 w-5 mr-2" />
+          )}
+          {isModuleCompleted ? "Module Completed" : "Mark as Complete"}
+        </Button>
       </div>
     </div>
   );
