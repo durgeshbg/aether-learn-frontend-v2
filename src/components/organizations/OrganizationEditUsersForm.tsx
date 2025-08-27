@@ -70,7 +70,10 @@ const OrganizationEditUsersForm = () => {
     meta: {
       notify: true,
       successMessage: "Users added successfully",
-      invalidatesQueries: userKeys.all(),
+      invalidatesQueries: [
+        userKeys.all(),
+        organizationKeys.getById(organizationId),
+      ],
     },
     onSettled: () => {
       form.reset();
@@ -90,7 +93,10 @@ const OrganizationEditUsersForm = () => {
     meta: {
       notify: true,
       successMessage: "Users removed successfully",
-      invalidatesQueries: userKeys.all(),
+      invalidatesQueries: [
+        userKeys.all(),
+        organizationKeys.getById(organizationId),
+      ],
     },
     onSettled: () => {
       form.reset();

@@ -15,6 +15,8 @@ export type Organization = {
   orgAdminId?: string;
   users?: User[];
   courses?: Course[];
+  usersCount?: number;
+  coursesCount?: number;
   createdAt: string;
   updatedAt: string;
 };

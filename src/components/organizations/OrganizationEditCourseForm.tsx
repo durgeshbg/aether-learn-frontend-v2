@@ -76,6 +76,7 @@ const OrganizationEditCourseForm = () => {
       invalidatesQueries: [
         courseKeys.getByOrganization(organizationId),
         courseKeys.allNonOrganization(organizationId),
+        organizationKeys.getById(organizationId),
       ],
     },
     onSettled: () => {
@@ -99,6 +100,7 @@ const OrganizationEditCourseForm = () => {
       invalidatesQueries: [
         courseKeys.getByOrganization(organizationId),
         courseKeys.allNonOrganization(organizationId),
+        organizationKeys.getById(organizationId),
       ],
     },
     onSettled: () => {
