@@ -41,9 +41,7 @@ const queryClient = new QueryClient({
     },
     onError: (error, _variables, _context, mutation) => {
       const meta = mutation.meta as QueryMeta;
-      if (meta?.notify) {
-        toast.error(getAxiosError(error) || meta?.errorMessage);
-      }
+      toast.error(getAxiosError(error) || meta?.errorMessage);
     },
     onMutate: (_variables, mutation) => {
       const meta = mutation.meta as QueryMeta;
