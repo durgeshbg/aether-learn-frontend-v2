@@ -1,6 +1,8 @@
 import { localStorageKeys } from "@/static-data/localStorage";
 import { apiRoutes } from "@/static-data/routes";
 import type {
+  UserBookMarkModuleUpdateType,
+  UserCourseEnrollmentUpdateType,
   UserCreateType,
   UserDetailsUpdateType,
   UserFilterQueryType,
@@ -17,6 +19,25 @@ export const login = async (
   data: UserLoginType,
 ) => {
   const response = await axiosInstance.post(apiRoutes.USER_LOGIN, data);
+  return response.data;
+};
+
+export const enrollUserInCourse = async (
+  axiosInstance: AxiosInstance,
+  data: UserCourseEnrollmentUpdateType,
+) => {
+  const response = await axiosInstance.put(apiRoutes.USER_ENROLL_COURSE, data);
+  return response.data;
+};
+
+export const bookmarkModule = async (
+  axiosInstance: AxiosInstance,
+  data: UserBookMarkModuleUpdateType,
+) => {
+  const response = await axiosInstance.put(
+    apiRoutes.USER_BOOKMARK_MODULE,
+    data,
+  );
   return response.data;
 };
 

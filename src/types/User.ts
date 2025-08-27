@@ -55,6 +55,16 @@ export const UserDetailsUpdateSchema = z.object({
     .optional(),
 });
 
+export const UserCourseEnrollmentUpdateSchema = z.object({
+  courseId: z.string().cuid("Invalid course ID format"),
+  enroll: z.boolean().default(true),
+});
+
+export const UserBookMarkModuleUpdateSchema = z.object({
+  moduleId: z.string().cuid("Invalid module ID format"),
+  bookmark: z.boolean().default(true),
+});
+
 export const UserOrganizationUpdateSchema = z.object({
   organizationId: z.string().cuid("Invalid organization ID format"),
 });
@@ -96,4 +106,10 @@ export type UserIdParamType = z.infer<typeof UserIdParamSchema>;
 export type UserFilterQueryType = z.infer<typeof UserFilterQuerySchema>;
 export type UserOrganizationIDQueryType = z.infer<
   typeof UserOrganizationIDQuerySchema
+>;
+export type UserCourseEnrollmentUpdateType = z.infer<
+  typeof UserCourseEnrollmentUpdateSchema
+>;
+export type UserBookMarkModuleUpdateType = z.infer<
+  typeof UserBookMarkModuleUpdateSchema
 >;

@@ -71,6 +71,8 @@ export const apiRoutes = {
   USERS: "/users",
   USERS_NON_ORGANIZATION: "/users/non-organization-users",
   USER_LOGIN: "/users/login",
+  USER_ENROLL_COURSE: "/users/enroll-course",
+  USER_BOOKMARK_MODULE: "/users/bookmark-module",
   USERS_ID: (id: string) => `/users/${id}`,
   USER_ID_ORGANIZATION: (id: string) => `/users/${id}/organization`,
   USER_ID_ROLE: (id: string) => `/users/${id}/role`,

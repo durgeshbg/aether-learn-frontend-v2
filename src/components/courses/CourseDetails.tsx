@@ -30,6 +30,8 @@ import {
   Settings,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { enrollUserInCourse } from "@/services/user";
+import { userKeys } from "@/tanstack/keys/userKeys";
 
 // Helper function to get dummy stats (replace with real data from backend)
 const getCourseStats = (
@@ -114,19 +116,42 @@ const CourseDetails = () => {
     },
   });
 
+  const { mutate: enrollCourseMutation } = useMutation({
+    mutationKey: userKeys.enrollCourse(),
+    mutationFn: async () => {
+      return enrollUserInCourse(axiosInstance, {
+        courseId,
+        enroll: !course.enrolled,
+      });
+    },
+    meta: {
+      notify: true,
+      successMessage: `${course.enrolled ? "Unenrolled" : "Enrolled"} in course successfully!`,
+      invalidatesQueries: [courseKeys.all()],
+    },
+  });
+
   const stats = getCourseStats(lessons, quizzes, codeAssessments);
 
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
       {/* Header Section */}
       <div className="mb-8">
-        <Button
-          onClick={() => navigate(routes.COURSES)}
-          className="mb-4 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Courses
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <Button
+            onClick={() => navigate(routes.COURSES)}
+            className="mb-4 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Courses
+          </Button>
+          <Button
+            onClick={() => enrollCourseMutation()}
+            className={`mb-4 ${course.enrolled ? "bg-red-500 hover:bg-red-600" : "bg-emerald-500 hover:bg-emerald-600"} text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold`}
+          >
+            {course.enrolled ? "Unenroll" : "Enroll"}
+          </Button>
+        </div>
 
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
           <div className="flex items-start justify-between mb-6">

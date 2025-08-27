@@ -4,8 +4,8 @@ import { routes } from "@/static-data/routes";
 import { courseKeys } from "@/tanstack/keys/courseKeys";
 import type { Course } from "@/types/Course";
 import { axiosInstance } from "@/utils/axiosInstance";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link } from "react-router";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router";
 import {
   BookOpen,
   Clock,
@@ -17,6 +17,8 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { enrollUserInCourse } from "@/services/user";
+import { userKeys } from "@/tanstack/keys/userKeys";
 
 // Dummy data for enhanced features (replace with real data from your backend)
 const getEnhancedCourseData = (course: Course) => ({
@@ -52,6 +54,7 @@ const getDifficultyColor = (difficulty: string) => {
 
 const CoursesList = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { data: courses } = useSuspenseQuery({
     queryKey: courseKeys.all(),
     queryFn: async () => {
@@ -62,7 +65,27 @@ const CoursesList = () => {
     select: (data: { courses: Course[] }) => data.courses,
   });
 
+  const { mutate: enrollCourseMutation } = useMutation({
+    mutationKey: userKeys.enrollCourse(),
+    mutationFn: async (courseId: string) => {
+      return enrollUserInCourse(axiosInstance, { courseId, enroll: true });
+    },
+    meta: {
+      notify: true,
+      successMessage: "Enrolled in course successfully!",
+      invalidatesQueries: [courseKeys.all()],
+    },
+  });
+
   const enhancedCourses = courses.map(getEnhancedCourseData);
+
+  const handleCourseClick = (courseId: string) => {
+    if (courses.find((c) => c.id === courseId)?.enrolled) {
+      navigate(routes.COURSE_DETAILS(courseId));
+    } else {
+      enrollCourseMutation(courseId);
+    }
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8 px-4">
@@ -103,11 +126,9 @@ const CoursesList = () => {
             </div>
 
             {/* Course Title */}
-            <Link to={routes.COURSE_DETAILS(course.id)}>
-              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors line-clamp-2">
-                {course.name}
-              </h3>
-            </Link>
+            <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-300 transition-colors line-clamp-2">
+              {course.name}
+            </h3>
 
             {/* Course Description */}
             <p className="text-white/70 text-sm mb-4 line-clamp-2">
@@ -175,12 +196,13 @@ const CoursesList = () => {
             </div>
 
             {/* Action Button */}
-            <Link to={routes.COURSE_DETAILS(course.id)} className="block">
-              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg">
-                <Play className="h-4 w-4 mr-2" />
-                {course.progress > 0 ? "Continue Learning" : "Start Course"}
-              </Button>
-            </Link>
+            <Button
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2.5 rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg"
+              onClick={() => handleCourseClick(course.id)}
+            >
+              <Play className="h-4 w-4 mr-2" />
+              {course.enrolled ? "Continue Learning" : "Start Course"}
+            </Button>
           </div>
         ))}
       </div>

@@ -22,8 +22,11 @@ import {
   Play,
   Bookmark,
   Settings,
+  Loader2Icon,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { bookmarkModule } from "@/services/user";
+import { userKeys } from "@/tanstack/keys/userKeys";
 
 // Helper function to get dummy module stats (replace with real data from backend)
 const getModuleStats = () => ({
@@ -115,8 +118,32 @@ const ModuleDetails = () => {
     },
   });
 
+  const { mutate: bookmarkModuleMutation, isPending: isBookmarking } =
+    useMutation({
+      mutationKey: userKeys.bookMarkModule(),
+      mutationFn: async () => {
+        return bookmarkModule(axiosInstance, {
+          moduleId,
+          bookmark: !module.isBookmarked,
+        });
+      },
+      meta: {
+        notify: true,
+        successMessage: "Module bookmarked",
+        invalidatesQueries: [moduleKeys.getById(courseId, lessonId, moduleId)],
+      },
+    });
+
+  const handleBookmark = () => {
+    bookmarkModuleMutation();
+  };
+
   const stats = getModuleStats();
   const language = LANGUAGES_MAP[module.languageId];
+  const getBookmarkButtonClass = (isBookmarked: boolean) =>
+    isBookmarked
+      ? "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300"
+      : "bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 px-4 py-2 rounded-lg text-sm transition-all duration-300";
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8 px-4">
@@ -163,9 +190,17 @@ const ModuleDetails = () => {
 
             {/* Action Buttons */}
             <div className="flex gap-3">
-              <Button className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 px-4 py-2 rounded-lg text-sm transition-all duration-300">
-                <Bookmark className="h-3 w-3 mr-2" />
-                Bookmark
+              <Button
+                onClick={handleBookmark}
+                disabled={isBookmarking}
+                className={getBookmarkButtonClass(module.isBookmarked)}
+              >
+                {isBookmarking ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : (
+                  <Bookmark className="h-3 w-3 mr-2" />
+                )}
+                {module.isBookmarked ? "Bookmarked" : "Bookmark"}
               </Button>
               {user?.role === "ADMIN" && (
                 <>

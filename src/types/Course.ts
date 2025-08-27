@@ -12,6 +12,7 @@ export type Course = {
   lessons?: Lesson[];
   quizzes?: Quiz[];
   codeAssessments?: CodeAssesment[];
+  enrolled: boolean;
   createdAt: string;
   updatedAt: string;
 };

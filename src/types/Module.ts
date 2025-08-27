@@ -9,6 +9,7 @@ export type Module = {
   languageId: number;
   createdAt: string;
   updatedAt: string;
+  isBookmarked: boolean;
 };
 
 export const ModuleCreateSchema = z.object({

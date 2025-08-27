@@ -2,6 +2,8 @@ export const userKeys = {
   all: () => ["users"] as const,
   getByOrganization: (organizationId: string) =>
     [...userKeys.all(), organizationId] as const,
+  bookMarkModule: () => [...userKeys.all(), "bookmark-module"] as const,
+  enrollCourse: () => [...userKeys.all(), "enroll-course"] as const,
   allNonOrganization: () =>
     [...userKeys.all(), "non-organization-users"] as const,
   login: () => [...userKeys.all(), "login"] as const,
