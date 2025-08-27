@@ -19,6 +19,25 @@ export type User = {
   updatedAt: string;
 };
 
+export type IDObject = {
+  id: string;
+};
+
+export type CourseProgress = {
+  userId: string;
+  courseId: string;
+  completedModules: IDObject[];
+  completedQuizzes: IDObject[];
+  completedAssessments: IDObject[];
+  nextModuleId?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UserProgress = {
+  progress: CourseProgress[];
+};
+
 export const UserLoginSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -63,6 +82,12 @@ export const UserCourseEnrollmentUpdateSchema = z.object({
 export const UserBookMarkModuleUpdateSchema = z.object({
   moduleId: z.string().cuid("Invalid module ID format"),
   bookmark: z.boolean().default(true),
+});
+
+export const UserMarkAsCompleteUpdateSchema = z.object({
+  courseId: z.string().cuid("Invalid course ID"),
+  moduleId: z.string().cuid("Invalid module ID").optional(),
+  complete: z.boolean(),
 });
 
 export const UserOrganizationUpdateSchema = z.object({
@@ -112,4 +137,7 @@ export type UserCourseEnrollmentUpdateType = z.infer<
 >;
 export type UserBookMarkModuleUpdateType = z.infer<
   typeof UserBookMarkModuleUpdateSchema
+>;
+export type UserMarkAsCompleteUpdateType = z.infer<
+  typeof UserMarkAsCompleteUpdateSchema
 >;

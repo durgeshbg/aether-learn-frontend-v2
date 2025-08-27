@@ -9,6 +9,7 @@ import type {
   UserIdParamType,
   UserLoginType,
   UserOrganizationIDQueryType,
+  UserMarkAsCompleteUpdateType,
   UserOrganizationUpdateType,
   UserRoleUpdateType,
 } from "@/types/User";
@@ -41,6 +42,17 @@ export const bookmarkModule = async (
   return response.data;
 };
 
+export const markModuleAsComplete = async (
+  axiosInstance: AxiosInstance,
+  data: UserMarkAsCompleteUpdateType,
+) => {
+  const response = await axiosInstance.put(
+    apiRoutes.USER_MARK_MODULE_AS_COMPLETE,
+    data,
+  );
+  return response.data;
+};
+
 export const getUsers = async (
   axiosInstance: AxiosInstance,
   query?: UserOrganizationIDQueryType,
@@ -48,6 +60,14 @@ export const getUsers = async (
   const response = await axiosInstance.get(apiRoutes.USERS, {
     params: query,
   });
+  return response.data;
+};
+
+export const getUserProgress = async (
+  axiosInstance: AxiosInstance,
+  params: UserIdParamType,
+) => {
+  const response = await axiosInstance.get(apiRoutes.USER_PROGRESS(params.id));
   return response.data;
 };
 
