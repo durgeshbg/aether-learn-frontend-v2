@@ -38,6 +38,21 @@ export type UserProgress = {
   progress: CourseProgress[];
 };
 
+export type Bookmark = {
+  moduleId: string;
+  module: {
+    title: string;
+    lessonId: string;
+    lesson: {
+      courseId: string;
+    };
+  };
+};
+
+export type UserBookmarks = {
+  bookmarks: Bookmark[];
+};
+
 export const UserLoginSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",

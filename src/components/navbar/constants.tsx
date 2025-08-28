@@ -11,6 +11,10 @@ const navLinks = [
     title: "Courses",
     url: routes.COURSES,
   },
+  {
+    title: "Bookmarks",
+    url: routes.BOOKMARKED_MODULES,
+  },
 ];
 
 export const navbarConstants = {

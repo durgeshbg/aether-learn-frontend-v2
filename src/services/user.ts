@@ -12,6 +12,7 @@ import type {
   UserMarkAsCompleteUpdateType,
   UserOrganizationUpdateType,
   UserRoleUpdateType,
+  UserBookmarks,
 } from "@/types/User";
 import type { AxiosInstance } from "axios";
 
@@ -28,6 +29,13 @@ export const enrollUserInCourse = async (
   data: UserCourseEnrollmentUpdateType,
 ) => {
   const response = await axiosInstance.put(apiRoutes.USER_ENROLL_COURSE, data);
+  return response.data;
+};
+
+export const getBookmarkedModules = async (
+  axiosInstance: AxiosInstance,
+): Promise<UserBookmarks> => {
+  const response = await axiosInstance.get(apiRoutes.USER_BOOKMARKED_MODULES);
   return response.data;
 };
 

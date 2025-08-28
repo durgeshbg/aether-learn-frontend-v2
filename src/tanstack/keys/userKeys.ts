@@ -9,6 +9,7 @@ export const userKeys = {
   enrollCourse: () => [...userKeys.all(), "enroll-course"] as const,
   allNonOrganization: () =>
     [...userKeys.all(), "non-organization-users"] as const,
+  bookmarkedModules: () => [...userKeys.all(), "bookmarked-modules"] as const,
   login: () => [...userKeys.all(), "login"] as const,
   create: () => [...userKeys.all(), "create"] as const,
   getById: (userId: string) => [...userKeys.all(), userId] as const,

@@ -42,6 +42,7 @@ import TestCaseCreateForm from "./components/code-assessments/TestCaseCreateForm
 import Dashboard from "./components/Dashboard/Dashboard.tsx";
 import OrgAdminRoutes from "./containers/Routes/OrgAdminRoutes.tsx";
 import AdminRoutes from "./containers/Routes/AdminRoutes.tsx";
+import BookMarkedModules from "./components/modules/BookMarkedModules.tsx";
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
                     element: <CoursesList />,
                   },
                 ],
+              },
+              {
+                path: "bookmarked-modules",
+                element: <BookMarkedModules />,
               },
               {
                 path: "courses/:courseId",
