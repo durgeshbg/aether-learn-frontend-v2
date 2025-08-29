@@ -32,6 +32,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { enrollUserInCourse } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
+import { FeedbackDialog } from "./FeedbackDialog";
 
 // Helper function to get dummy stats (replace with real data from backend)
 const getCourseStats = (
@@ -206,6 +207,11 @@ const CourseDetails = () => {
               <div className="text-white/70 text-sm">Enrolled</div>
             </div>
           </div>
+          {!course?.feedbackSubmitted && (
+            <div className="mt-6">
+              <FeedbackDialog courseId={courseId} />
+            </div>
+          )}
         </div>
 
         {/* Action Buttons */}
