@@ -26,6 +26,7 @@ export const routes = {
 
   COURSES: "/courses",
   COURSE_CREATE: "/courses/create",
+  COURSE_FEEDBACKS: (id: string) => `/courses/${id}/feedbacks`,
   COURSE_DETAILS: (id: string) => `/courses/${id}`,
   COURSE_EDIT: (id: string) => `/courses/${id}/edit`,
 
@@ -92,6 +93,7 @@ export const apiRoutes = {
   COURSES: "/courses",
   COURSES_NON_ORGANIZATION: "/courses/non-organization-courses",
   COURSE_ID: (id: string) => `/courses/${id}`,
+  COURSE_FEEDBACK: (id: string) => `/courses/${id}/feedbacks`,
 
   // Lessons
   LESSONS: (courseId: string) => `/courses/${courseId}/lessons`,
