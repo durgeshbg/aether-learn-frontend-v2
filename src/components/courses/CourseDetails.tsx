@@ -253,6 +253,13 @@ const CourseDetails = () => {
                 <Plus className="h-4 w-4 mr-2" />
                 Add Assessment
               </Button>
+              <Button
+                onClick={() => navigate(routes.COURSE_FEEDBACKS(course.id))}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                View Feedbacks
+              </Button>
             </div>
           </div>
         )}

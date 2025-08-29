@@ -43,6 +43,7 @@ import Dashboard from "./components/Dashboard/Dashboard.tsx";
 import OrgAdminRoutes from "./containers/Routes/OrgAdminRoutes.tsx";
 import AdminRoutes from "./containers/Routes/AdminRoutes.tsx";
 import BookMarkedModules from "./components/modules/BookMarkedModules.tsx";
+import CourseFeedbacks from "./components/courses/CourseFeedbacks.tsx";
 
 const router = createBrowserRouter([
   {
@@ -226,6 +227,10 @@ const router = createBrowserRouter([
                       {
                         path: ":courseId/edit",
                         element: <CrourseCreateForm type="edit" />,
+                      },
+                      {
+                        path: ":courseId/feedbacks",
+                        element: <CourseFeedbacks />,
                       },
                     ],
                   },

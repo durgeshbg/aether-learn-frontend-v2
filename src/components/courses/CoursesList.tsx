@@ -80,7 +80,10 @@ const CoursesList = () => {
   const enhancedCourses = courses.map(getEnhancedCourseData);
 
   const handleCourseClick = (courseId: string) => {
-    if (courses.find((c) => c.id === courseId)?.enrolled) {
+    if (
+      user?.role === "ADMIN" ||
+      courses.find((c) => c.id === courseId)?.enrolled
+    ) {
       navigate(routes.COURSE_DETAILS(courseId));
     } else {
       enrollCourseMutation(courseId);
