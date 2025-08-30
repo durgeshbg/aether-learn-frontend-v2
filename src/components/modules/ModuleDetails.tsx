@@ -155,6 +155,7 @@ const ModuleDetails = () => {
         invalidatesQueries: [
           moduleKeys.getById(courseId, lessonId, moduleId),
           userKeys.getProgress(user?.id || ""),
+          userKeys.getById(user?.id || ""),
         ],
       },
     });
