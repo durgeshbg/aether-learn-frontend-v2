@@ -3,7 +3,7 @@ import { getModules } from "@/services/module";
 import { routes } from "@/static-data/routes";
 import { lessonKeys } from "@/tanstack/keys/lessonKeys";
 import { moduleKeys } from "@/tanstack/keys/moduleKeys";
-import type { Lesson } from "@/types/Lesson";
+import { DifficultyLevel, type Lesson } from "@/types/Lesson";
 import type { Module } from "@/types/Module";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -17,7 +17,6 @@ import {
   Layers,
   ArrowLeft,
   Clock,
-  BookOpen,
   Edit3,
   Plus,
   Eye,
@@ -35,19 +34,16 @@ const getLessonStats = (modules: Module[]) => ({
   estimatedDuration: `${Math.floor(Math.random() * 30) + 10} min`,
   completionRate: Math.floor(Math.random() * 40) + 60, // 60-100%
   enrolledStudents: Math.floor(Math.random() * 200) + 50,
-  difficulty: ["Beginner", "Intermediate", "Advanced"][
-    Math.floor(Math.random() * 3)
-  ],
   lastUpdated: new Date().toLocaleDateString(),
 });
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
-    case "Beginner":
+    case DifficultyLevel.BEGINNER:
       return "text-green-400 bg-green-400/20 border-green-400/30";
-    case "Intermediate":
+    case DifficultyLevel.INTERMEDIATE:
       return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
-    case "Advanced":
+    case DifficultyLevel.ADVANCED:
       return "text-red-400 bg-red-400/20 border-red-400/30";
     default:
       return "text-white/60 bg-white/10 border-white/20";
@@ -126,9 +122,9 @@ const LessonDetails = () => {
                 </h1>
                 <div className="flex items-center gap-4 mb-4">
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(stats.difficulty)}`}
+                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(lesson.difficulty)}`}
                   >
-                    {stats.difficulty}
+                    {lesson.difficulty}
                   </div>
                   <div className="flex items-center gap-1 text-white/70 text-sm">
                     <Clock className="h-4 w-4" />
@@ -235,6 +231,19 @@ const LessonDetails = () => {
               </p>
             </div>
           </div>
+          {/* Lesson Objectives */}
+          {lesson.objectives && lesson.objectives.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold text-white mb-3">
+                Learning Objectives
+              </h3>
+              <ul className="list-disc list-inside text-white/80 space-y-1">
+                {lesson.objectives.map((obj, index) => (
+                  <li key={index}>{obj}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
 
         {/* Modules Section */}

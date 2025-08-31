@@ -1,5 +1,9 @@
 import { useForm } from "react-hook-form";
-import { getLessonFormData, type LessonFormType } from "./constants";
+import {
+  difficultyLevels,
+  getLessonFormData,
+  type LessonFormType,
+} from "./constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   LessonCreateSchema,
@@ -36,6 +40,13 @@ import {
   Clock,
   Users,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
   const { courseId = "", lessonId = "" } = useParams<{
@@ -62,6 +73,8 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
         ? {
             title: lesson.title,
             content: lesson.content,
+            difficulty: (lesson as Lesson).difficulty,
+            objectives: lesson.objectives?.join(", ") || "",
           }
         : {}),
     },
@@ -70,7 +83,10 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
   const { mutate: createLessonMutation, isPending: isCreating } = useMutation({
     mutationKey: lessonKeys.create(courseId),
     mutationFn: async (data: z.infer<typeof LessonCreateSchema>) => {
-      return createLesson(axiosInstance, { courseId }, data);
+      const objectives = data.objectives
+        ? data.objectives.split(",").map((obj) => obj.trim())
+        : undefined;
+      return createLesson(axiosInstance, { courseId }, { ...data, objectives });
     },
     onSuccess: () => {
       form.reset();
@@ -86,7 +102,14 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
   const { mutate: updateLessonMutation, isPending: isUpdating } = useMutation({
     mutationKey: lessonKeys.update(courseId, lessonId),
     mutationFn: async (data: z.infer<typeof LessonUpdateSchema>) => {
-      return updateLesson(axiosInstance, { courseId, id: lessonId }, data);
+      const objectives = data.objectives
+        ? data.objectives.split(",").map((obj) => obj.trim())
+        : undefined;
+      return updateLesson(
+        axiosInstance,
+        { courseId, id: lessonId },
+        { ...data, objectives },
+      );
     },
     onSuccess: () => {
       form.reset();
@@ -222,6 +245,77 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
                           clear explanations, examples, and step-by-step
                           instructions. Consider adding interactive elements and
                           practical exercises to enhance learning.
+                        </p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Lesson Difficulty */}
+                <FormField
+                  control={form.control}
+                  name="difficulty"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Difficulty Level
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
+                            <SelectValue placeholder="Difficulty level" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-card/95 backdrop-blur-md border-border/40">
+                          {difficultyLevels.map((level) => {
+                            return (
+                              <SelectItem
+                                key={level.value}
+                                value={level.value}
+                                className="focus:bg-primary/10"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div>
+                                    <p className="font-medium">{level.label}</p>
+                                  </div>
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Lesson Objectives */}
+                <FormField
+                  control={form.control}
+                  name="objectives"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Learning Objectives
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Textarea
+                            placeholder="List the key learning objectives for this lesson, separated by commas (e.g., Understand React Hooks, Build functional components)"
+                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[100px] resize-y"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-sm" />
+                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
+                        <p className="text-white/60 text-sm">
+                          <strong className="text-white/80">Tip:</strong> Clear
+                          objectives help students understand what they will
+                          learn and achieve by the end of the lesson.
                         </p>
                       </div>
                     </FormItem>

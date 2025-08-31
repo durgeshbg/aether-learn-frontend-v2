@@ -7,18 +7,51 @@ export type Lesson = {
   content: string;
   courseId: string;
   modules?: Module[];
+  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+  objectives?: string[];
   createdAt: string;
   updatedAt: string;
+};
+
+export const DifficultyLevel = {
+  BEGINNER: "BEGINNER",
+  INTERMEDIATE: "INTERMEDIATE",
+  ADVANCED: "ADVANCED",
 };
 
 export const LessonCreateSchema = z.object({
   title: z.string().min(1, "Title is required"),
   content: z.string().min(1, "Content is required"),
+  difficulty: z.enum(
+    [
+      DifficultyLevel.BEGINNER,
+      DifficultyLevel.INTERMEDIATE,
+      DifficultyLevel.ADVANCED,
+    ],
+    {
+      required_error: "Difficulty level is required",
+      invalid_type_error: "Invalid difficulty level",
+    },
+  ),
+  objectives: z.string().optional(),
 });
 
 export const LessonUpdateSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
   content: z.string().min(1, "Content is required").optional(),
+  difficulty: z
+    .enum(
+      [
+        DifficultyLevel.BEGINNER,
+        DifficultyLevel.INTERMEDIATE,
+        DifficultyLevel.ADVANCED,
+      ],
+      {
+        invalid_type_error: "Invalid difficulty level",
+      },
+    )
+    .optional(),
+  objectives: z.string().optional(),
 });
 
 export const LessonIdParamsSchema = z.object({
@@ -31,7 +64,15 @@ export const LessonCourseIdParamsSchema = z.object({
 });
 
 export type LessonCreateType = z.infer<typeof LessonCreateSchema>;
+export type DBLessonCreateType = Omit<LessonCreateType, "objectives"> & {
+  objectives?: string[];
+};
 export type LessonUpdateType = z.infer<typeof LessonUpdateSchema>;
+export type DBLessonUpdateType = Partial<
+  Omit<LessonUpdateType, "objectives">
+> & {
+  objectives?: string[];
+};
 export type LessonIdParamsType = z.infer<typeof LessonIdParamsSchema>;
 export type LessonCourseIdParamsType = z.infer<
   typeof LessonCourseIdParamsSchema

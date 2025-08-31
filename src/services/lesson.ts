@@ -1,9 +1,9 @@
 import { apiRoutes } from "@/static-data/routes";
 import type {
   LessonCourseIdParamsType,
-  LessonCreateType,
-  LessonUpdateType,
   LessonIdParamsType,
+  DBLessonCreateType,
+  DBLessonUpdateType,
 } from "@/types/Lesson";
 import type { AxiosInstance } from "axios";
 
@@ -18,7 +18,7 @@ export const getLessons = async (
 export const createLesson = async (
   axiosInstance: AxiosInstance,
   params: LessonCourseIdParamsType,
-  data: LessonCreateType,
+  data: DBLessonCreateType,
 ) => {
   const response = await axiosInstance.post(
     apiRoutes.LESSONS(params.courseId),
@@ -40,7 +40,7 @@ export const getLessonById = async (
 export const updateLesson = async (
   axiosInstance: AxiosInstance,
   params: LessonIdParamsType,
-  data: LessonUpdateType,
+  data: DBLessonUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.LESSON_ID(params.courseId, params.id),
