@@ -56,6 +56,8 @@ import {
   Clock,
   Users,
 } from "lucide-react";
+import { difficultyLevels } from "../lessons/constants";
+import { DifficultyLevel } from "@/types/Lesson";
 
 const CodeAssessmentCreateForm = ({
   type = "create",
@@ -90,12 +92,10 @@ const CodeAssessmentCreateForm = ({
             instructions: assessment.instructions,
             starterCode: assessment.starterCode,
             languageId: parseInt(assessment.languageId),
+            durationMinutes: assessment.durationMinutes,
+            difficulty: assessment.difficulty ?? DifficultyLevel.BEGINNER,
           }
         : {
-            title: "",
-            description: "",
-            instructions: "",
-            starterCode: "",
             languageId: languages[7].value,
           }),
     },
@@ -282,6 +282,68 @@ const CodeAssessmentCreateForm = ({
                           constraints or edge cases.
                         </p>
                       </div>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Duration in minutes */}
+                <FormField
+                  control={form.control}
+                  name="durationMinutes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Duration (minutes)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., 30"
+                          className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-sm" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Difficulty Level */}
+                <FormField
+                  control={form.control}
+                  name="difficulty"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Difficulty Level
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
+                            <SelectValue placeholder="Difficulty level" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-card/95 backdrop-blur-md border-border/40">
+                          {difficultyLevels.map((level) => {
+                            return (
+                              <SelectItem
+                                key={level.value}
+                                value={level.value}
+                                className="focus:bg-primary/10"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div>
+                                    <p className="font-medium">{level.label}</p>
+                                  </div>
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

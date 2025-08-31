@@ -1,14 +1,3 @@
-import { useNavigate, useParams } from "react-router";
-import { getQuizFormData, type QuizFormType } from "./constants";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { quizKeys } from "@/tanstack/keys/quizKeys";
-import { axiosInstance } from "@/utils/axiosInstance";
-import { createQuiz, getQuiz, updateQuiz } from "@/services/quiz";
-import { QuizCreateSchema, QuizUpdateSchema, type Quiz } from "@/types/Quiz";
-import { routes } from "@/static-data/routes";
-import type z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -19,23 +8,42 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "../ui/button";
+import { createQuiz, getQuiz, updateQuiz } from "@/services/quiz";
+import { routes } from "@/static-data/routes";
+import { quizKeys } from "@/tanstack/keys/quizKeys";
+import { QuizCreateSchema, QuizUpdateSchema, type Quiz } from "@/types/Quiz";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import {
-  Brain,
-  Save,
   ArrowLeft,
-  Edit3,
-  Plus,
-  FileText,
-  Target,
-  Sparkles,
+  Award,
   BookOpen,
+  Brain,
+  CheckCircle,
+  Edit3,
+  FileText,
+  HelpCircle,
+  Plus,
+  Save,
+  Sparkles,
+  Target,
   Timer,
   Users,
-  Award,
-  CheckCircle,
-  HelpCircle,
 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
+import type z from "zod";
+import { difficultyLevels } from "../lessons/constants";
+import { Button } from "../ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { getQuizFormData, type QuizFormType } from "./constants";
 
 const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
   const { title, buttonText } = getQuizFormData(type);
@@ -62,6 +70,9 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
         ? {
             title: quiz.title,
             description: quiz.description,
+            difficulty: quiz.difficulty,
+            durationMinutes: quiz.durationMinutes,
+            passPercentage: quiz.passPercentage,
           }
         : {}),
     },
@@ -218,6 +229,92 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
                           help students prepare effectively.
                         </p>
                       </div>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Duration in minutes */}
+                <FormField
+                  control={form.control}
+                  name="durationMinutes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Duration (minutes)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., 30"
+                          className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-sm" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Pass Percentage */}
+                <FormField
+                  control={form.control}
+                  name="passPercentage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Pass Percentage (%)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={100}
+                          placeholder="e.g., 70"
+                          className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-sm" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Difficulty Level */}
+                <FormField
+                  control={form.control}
+                  name="difficulty"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Difficulty Level
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
+                            <SelectValue placeholder="Difficulty level" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="bg-card/95 backdrop-blur-md border-border/40">
+                          {difficultyLevels.map((level) => {
+                            return (
+                              <SelectItem
+                                key={level.value}
+                                value={level.value}
+                                className="focus:bg-primary/10"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div>
+                                    <p className="font-medium">{level.label}</p>
+                                  </div>
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

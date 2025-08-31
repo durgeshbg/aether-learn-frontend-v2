@@ -373,8 +373,6 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          min={1}
                           placeholder="e.g., 30"
                           className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
                           {...field}

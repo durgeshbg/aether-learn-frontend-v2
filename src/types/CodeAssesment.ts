@@ -1,4 +1,5 @@
 import type { CodeSolution } from "./CodeSolution";
+import { DifficultyLevel } from "./Lesson";
 import type { TestCase } from "./TestCase";
 import { z } from "zod";
 
@@ -10,6 +11,8 @@ export type CodeAssesment = {
   starterCode: string;
   languageId: string;
   courseId: string;
+  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+  durationMinutes?: number;
   codeSolutions?: CodeSolution[];
   testCases?: TestCase[];
   createdAt: string;
@@ -25,6 +28,22 @@ export const CodeAssessmentCreateSchema = z.object({
     .number()
     .int()
     .positive("Language ID must be a positive integer"),
+  difficulty: z.enum(
+    [
+      DifficultyLevel.BEGINNER,
+      DifficultyLevel.INTERMEDIATE,
+      DifficultyLevel.ADVANCED,
+    ],
+    {
+      required_error: "Difficulty level is required",
+      invalid_type_error: "Invalid difficulty level",
+    },
+  ),
+  durationMinutes: z.coerce
+    .number()
+    .int()
+    .positive("Duration must be a positive integer")
+    .optional(),
 });
 
 export const CodeAssessmentUpdateSchema = z.object({
@@ -36,6 +55,23 @@ export const CodeAssessmentUpdateSchema = z.object({
     .number()
     .int()
     .positive("Language ID must be a positive integer")
+    .optional(),
+  difficulty: z
+    .enum(
+      [
+        DifficultyLevel.BEGINNER,
+        DifficultyLevel.INTERMEDIATE,
+        DifficultyLevel.ADVANCED,
+      ],
+      {
+        invalid_type_error: "Invalid difficulty level",
+      },
+    )
+    .optional(),
+  durationMinutes: z.coerce
+    .number()
+    .int()
+    .positive("Duration must be a positive integer")
     .optional(),
 });
 
