@@ -76,12 +76,9 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
             description: testCase.description,
             input: testCase.input,
             expected: testCase.expected,
+            weight: testCase.weight,
           }
-        : {
-            description: "",
-            input: "",
-            expected: "",
-          },
+        : {},
   });
 
   const { mutate: createTestCaseMutation, isPending: isCreating } = useMutation(
@@ -220,6 +217,37 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
                           descriptive names that explain what this test case
                           validates. This helps with debugging and understanding
                           test failures.
+                        </p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Test weight */}
+                <FormField
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
+                        <CheckCircle className="h-5 w-5 text-yellow-400" />
+                        Test Case Weight
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            placeholder="Enter test case weight (e.g., 1)"
+                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-sm" />
+                      <div className="mt-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-400/30">
+                        <p className="text-yellow-200 text-sm">
+                          <strong>Weight:</strong> Determines the importance of
+                          this test case in the overall assessment. Higher
+                          weight means more impact on the final score.
                         </p>
                       </div>
                     </FormItem>
