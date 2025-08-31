@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DifficultyLevel } from "./Lesson";
 
 export type Module = {
   id: string;
@@ -7,6 +8,9 @@ export type Module = {
   lessonId: string;
   code?: string;
   languageId: number;
+  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+  objectives?: string[];
+  durationMinutes?: number;
   createdAt: string;
   updatedAt: string;
   isBookmarked: boolean;
@@ -20,6 +24,25 @@ export const ModuleCreateSchema = z.object({
     .number()
     .int()
     .positive("Language ID must be a positive integer"),
+  difficulty: z
+    .enum(
+      [
+        DifficultyLevel.BEGINNER,
+        DifficultyLevel.INTERMEDIATE,
+        DifficultyLevel.ADVANCED,
+      ],
+      {
+        required_error: "Difficulty level is required",
+        invalid_type_error: "Invalid difficulty level",
+      },
+    )
+    .optional(),
+  objectives: z.string().optional(),
+  durationMinutes: z.coerce
+    .number()
+    .int()
+    .positive("Duration must be a positive integer")
+    .optional(),
 });
 
 export const ModuleUpdateSchema = z.object({
@@ -30,6 +53,24 @@ export const ModuleUpdateSchema = z.object({
     .number()
     .int()
     .positive("Language ID must be a positive integer")
+    .optional(),
+  difficulty: z
+    .enum(
+      [
+        DifficultyLevel.BEGINNER,
+        DifficultyLevel.INTERMEDIATE,
+        DifficultyLevel.ADVANCED,
+      ],
+      {
+        invalid_type_error: "Invalid difficulty level",
+      },
+    )
+    .optional(),
+  objectives: z.string().optional(),
+  durationMinutes: z.coerce
+    .number()
+    .int()
+    .positive("Duration must be a positive integer")
     .optional(),
 });
 
@@ -45,7 +86,13 @@ export const ModuleIdParamsSchema = z.object({
 });
 
 export type ModuleCreateType = z.infer<typeof ModuleCreateSchema>;
+export type DBModuleCreateType = Omit<ModuleCreateType, "objectives"> & {
+  objectives?: string[];
+};
 export type ModuleUpdateType = z.infer<typeof ModuleUpdateSchema>;
+export type DBModuleUpdateType = Omit<ModuleUpdateType, "objectives"> & {
+  objectives?: string[];
+};
 export type ModuleIdParamsType = z.infer<typeof ModuleIdParamsSchema>;
 export type ModuleLessonCourseIdParamsType = z.infer<
   typeof ModuleLessonCourseIdParamSchema

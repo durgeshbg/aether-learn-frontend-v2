@@ -34,6 +34,7 @@ import {
 import { userKeys } from "@/tanstack/keys/userKeys";
 import type { UserProgress } from "@/types/User";
 import { useMemo } from "react";
+import { DifficultyLevel } from "@/types/Lesson";
 
 // Helper function to get dummy module stats (replace with real data from backend)
 const getModuleStats = () => ({
@@ -41,9 +42,6 @@ const getModuleStats = () => ({
   completionRate: Math.floor(Math.random() * 40) + 60, // 60-100%
   viewCount: Math.floor(Math.random() * 500) + 100,
   studentsCompleted: Math.floor(Math.random() * 100) + 20,
-  difficulty: ["Beginner", "Intermediate", "Advanced"][
-    Math.floor(Math.random() * 3)
-  ],
   lastUpdated: new Date().toLocaleDateString(),
   moduleType: ["Text", "Video", "Interactive", "Code"][
     Math.floor(Math.random() * 4)
@@ -52,11 +50,11 @@ const getModuleStats = () => ({
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
-    case "Beginner":
+    case DifficultyLevel.BEGINNER:
       return "text-green-400 bg-green-400/20 border-green-400/30";
-    case "Intermediate":
+    case DifficultyLevel.INTERMEDIATE:
       return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
-    case "Advanced":
+    case DifficultyLevel.ADVANCED:
       return "text-red-400 bg-red-400/20 border-red-400/30";
     default:
       return "text-white/60 bg-white/10 border-white/20";
@@ -215,9 +213,9 @@ const ModuleDetails = () => {
                 </h1>
                 <div className="flex items-center gap-4 mb-4">
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(stats.difficulty)}`}
+                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty)}`}
                   >
-                    {stats.difficulty}
+                    {module.difficulty}
                   </div>
 
                   <div className="flex items-center gap-1 text-white/70 text-sm">
@@ -327,6 +325,19 @@ const ModuleDetails = () => {
               </p>
             </div>
           </div>
+          {/* Module Objectives */}
+          {module.objectives && module.objectives.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold text-white mb-3">
+                Learning Objectives
+              </h3>
+              <ul className="list-disc list-inside text-white/80 space-y-1">
+                {module.objectives.map((obj, index) => (
+                  <li key={index}>{obj}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
 
         {/* Code and Technical Details */}
@@ -384,9 +395,9 @@ const ModuleDetails = () => {
               <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
                 <span className="text-white/70">Difficulty Level</span>
                 <div
-                  className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(stats.difficulty)}`}
+                  className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty)}`}
                 >
-                  {stats.difficulty}
+                  {module.difficulty}
                 </div>
               </div>
 
@@ -394,7 +405,7 @@ const ModuleDetails = () => {
                 <span className="text-white/70">Estimated Duration</span>
                 <div className="flex items-center gap-2 text-white font-medium">
                   <Clock className="h-4 w-4 text-purple-400" />
-                  {stats.estimatedDuration}
+                  {module.durationMinutes}m
                 </div>
               </div>
             </div>
