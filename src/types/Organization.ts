@@ -1,6 +1,5 @@
 import { z } from "zod";
-import type { Course } from "./Course";
-import type { User } from "./User";
+import type { Role } from "./User";
 
 export type Organization = {
   id: string;
@@ -11,15 +10,49 @@ export type Organization = {
   address?: string;
   phone?: string;
   email?: string;
-  orgAdmin?: User;
+  orgAdmin?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  } | null;
   orgAdminId?: string;
-  users?: User[];
-  courses?: Course[];
-  usersCount?: number;
-  coursesCount?: number;
+  usersCount: number;
+  coursesCount: number;
   createdAt: string;
   updatedAt: string;
 };
+
+// export type OrganizationUser = {
+//   id: string;
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   role: Role;
+//   createdAt: string;
+//   updatedAt: string;
+// };
+//
+// export type OrganizationCourse = {
+//   id: string;
+//   name: string;
+//   description: string;
+//   thumbnailUrl: string;
+//   rating: number;
+//   codeAssessmentsCount: number;
+//   lessonsCount: number;
+//   quizzesCount: number;
+//   createdAt: string;
+//   updatedAt: string;
+// };
+//
+// export type OrganizationUsers = {
+//   users: OrganizationUser[];
+// };
+//
+// export type OrganizationCourses = {
+//   courses: OrganizationCourse[];
+// };
 
 export const OrganizationCreateSchema = z.object({
   name: z.string().min(1, "Organization name is required"),

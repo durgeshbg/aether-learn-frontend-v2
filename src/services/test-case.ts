@@ -1,5 +1,6 @@
 import { apiRoutes } from "@/static-data/routes";
 import type {
+  TestCase,
   TestCaseCourseCodeAssessmentIdParamsType,
   TestCaseCreateType,
   TestCaseIdParamsType,
@@ -14,7 +15,7 @@ export const getTestCases = async (
   const response = await axiosInstance.get(
     apiRoutes.TEST_CASES(params.courseId, params.codeAssessmentId),
   );
-  return response.data;
+  return response.data as { testCases: TestCase[] };
 };
 
 export const createTestCase = async (
@@ -36,7 +37,7 @@ export const getTestCaseById = async (
   const response = await axiosInstance.get(
     apiRoutes.TEST_CASE_ID(params.courseId, params.codeAssessmentId, params.id),
   );
-  return response.data;
+  return response.data as { testCase: TestCase };
 };
 
 export const updateTestCase = async (

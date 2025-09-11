@@ -63,7 +63,7 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
         ? getLessonById(axiosInstance, { courseId, id: lessonId })
         : null;
     },
-    select: (data: { lesson: Lesson }) => data?.lesson,
+    select: (data) => data?.lesson,
   });
 
   const form = useForm<z.infer<typeof LessonCreateSchema>>({

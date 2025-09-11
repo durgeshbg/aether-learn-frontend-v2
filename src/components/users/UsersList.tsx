@@ -42,7 +42,7 @@ const UsersList = () => {
     queryFn: async () => {
       return getUsers(axiosInstance);
     },
-    select: (data: { users: User[] }) => data.users?.map(enhanceUserData) || [],
+    select: (data) => data.users?.map(enhanceUserData) || [],
   });
 
   const getStatusColor = (status: string) => {

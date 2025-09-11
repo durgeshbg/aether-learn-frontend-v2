@@ -1,18 +1,17 @@
-import { DifficultyLevel } from "./Lesson";
+import { DifficultyLevel, type DifficultyLevelType } from "./Lesson";
 import type { Question } from "./Question";
-import type { QuizResult } from "./QuizResult";
 import { z } from "zod";
 
 export type Quiz = {
   id: string;
   title: string;
+
   description?: string;
-  courseId: string;
-  questions: Question[];
-  quizResults: QuizResult[];
-  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
-  durationMinutes: number;
-  passPercentage: number;
+  difficulty?: DifficultyLevelType;
+  durationMinutes?: number;
+  passPercentage?: number;
+  questions?: Question[];
+
   createdAt: string;
   updatedAt: string;
 };

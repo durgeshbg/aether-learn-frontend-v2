@@ -2,6 +2,7 @@ import { apiRoutes } from "@/static-data/routes";
 import type {
   DBModuleCreateType,
   DBModuleUpdateType,
+  Module,
   ModuleIdParamsType,
   ModuleLessonCourseIdParamsType,
 } from "@/types/Module";
@@ -14,7 +15,7 @@ export const getModules = async (
   const response = await axiosInstance.get(
     apiRoutes.MODULES(params.courseId, params.lessonId),
   );
-  return response.data;
+  return response.data as { modules: Module[] };
 };
 
 export const createModule = async (
@@ -36,7 +37,7 @@ export const getModuleById = async (
   const response = await axiosInstance.get(
     apiRoutes.MODULE_ID(params.courseId, params.lessonId, params.id),
   );
-  return response.data;
+  return response.data as { module: Module };
 };
 
 export const updateModule = async (

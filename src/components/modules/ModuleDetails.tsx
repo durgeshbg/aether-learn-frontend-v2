@@ -1,6 +1,5 @@
 import { deleteModule, getModuleById } from "@/services/module";
 import { moduleKeys } from "@/tanstack/keys/moduleKeys";
-import type { Module } from "@/types/Module";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
@@ -32,7 +31,6 @@ import {
   markModuleAsComplete,
 } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
-import type { UserProgress } from "@/types/User";
 import { useMemo } from "react";
 import { DifficultyLevel } from "@/types/Lesson";
 
@@ -105,7 +103,7 @@ const ModuleDetails = () => {
     queryFn: async () => {
       return getModuleById(axiosInstance, { courseId, lessonId, id: moduleId });
     },
-    select: (data: { module: Module }) => data.module,
+    select: (data) => data.module,
   });
 
   const { mutate: deleteModuleMutation, isPending: isDeleting } = useMutation({
@@ -164,9 +162,9 @@ const ModuleDetails = () => {
       return getUserProgress(axiosInstance, { id: user?.id || "" });
     },
     enabled: !!user?.id,
-    select: (data: UserProgress) =>
+    select: (data) =>
       data.progress
-        .find((p) => p.courseId === courseId)
+        .find((p) => p.course.id === courseId)
         ?.completedModules.map((m) => m.id) || [],
   });
 
@@ -180,7 +178,7 @@ const ModuleDetails = () => {
   };
 
   const stats = getModuleStats();
-  const language = LANGUAGES_MAP[module.languageId];
+  const language = LANGUAGES_MAP[module.languageId!];
   const getBookmarkButtonClass = (isBookmarked: boolean) =>
     isBookmarked
       ? "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300"
@@ -213,7 +211,7 @@ const ModuleDetails = () => {
                 </h1>
                 <div className="flex items-center gap-4 mb-4">
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty)}`}
+                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty!)}`}
                   >
                     {module.difficulty}
                   </div>
@@ -395,7 +393,7 @@ const ModuleDetails = () => {
               <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
                 <span className="text-white/70">Difficulty Level</span>
                 <div
-                  className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty)}`}
+                  className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty!)}`}
                 >
                   {module.difficulty}
                 </div>

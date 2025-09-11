@@ -8,11 +8,30 @@ export type Role = "ADMIN" | "USER";
 export type User = {
   id: string;
   email: string;
+  role: Role;
+  firstName: string;
+  lastName: string;
+  orgAdminOf: {
+    select: {
+      id: string;
+      name: string;
+    };
+  };
+};
+
+export type UserWithDetails = {
+  id: string;
+  email: string;
   firstName: string;
   lastName: string;
   role: Role;
-  organization?: Organization;
-  orgAdminOf?: Organization;
+  organization: Organization | null;
+  orgAdminOf: {
+    id: string;
+    name: string;
+  } | null;
+  lastActiveAt: string;
+  streakCount: number;
   codeSolutions?: CodeSolution[];
   quizResults?: QuizResult[];
   createdAt: string;
@@ -21,11 +40,16 @@ export type User = {
 
 export type IDObject = {
   id: string;
+  title: string;
 };
 
 export type CourseProgress = {
+  id: string;
   userId: string;
-  courseId: string;
+  course: {
+    id: string;
+    name: string;
+  };
   completedModules: IDObject[];
   completedQuizzes: IDObject[];
   completedAssessments: IDObject[];
@@ -39,14 +63,20 @@ export type UserProgress = {
 };
 
 export type Bookmark = {
-  moduleId: string;
+  id: string;
   module: {
+    id: string;
     title: string;
-    lessonId: string;
     lesson: {
-      courseId: string;
+      id: string;
+      title: string;
+      course: {
+        id: string;
+        name: string;
+      };
     };
   };
+  createdAt: string;
 };
 
 export type UserBookmarks = {

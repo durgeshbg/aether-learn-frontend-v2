@@ -1,10 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { getQuestionFormData, type QuestionFormType } from "./constants";
-import {
-  QuestionCreateSchema,
-  QuestionUpdateSchema,
-  type Question,
-} from "@/types/Question";
+import { QuestionCreateSchema, QuestionUpdateSchema } from "@/types/Question";
 import { routes } from "@/static-data/routes";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -65,7 +61,7 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
         ? getQuestions(axiosInstance, { courseId, quizId })
         : null;
     },
-    select: (data: { questions: Question[] }) => {
+    select: (data) => {
       return data?.questions.find((q) => q.id === questionId) || null;
     },
   });

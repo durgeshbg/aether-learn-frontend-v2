@@ -2,7 +2,6 @@ import { deleteCourse, getCourseById } from "@/services/course";
 import { getLessons } from "@/services/lesson";
 import { courseKeys } from "@/tanstack/keys/courseKeys";
 import { lessonKeys } from "@/tanstack/keys/lessonKeys";
-import type { Course } from "@/types/Course";
 import type { Lesson } from "@/types/Lesson";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -11,7 +10,7 @@ import { Button } from "../ui/button";
 import { routes } from "@/static-data/routes";
 import { quizKeys } from "@/tanstack/keys/quizKeys";
 import type { Quiz } from "@/types/Quiz";
-import { getQuizzez } from "@/services/quiz";
+import { getQuizzes } from "@/services/quiz";
 import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
 import { getCodeAssessments } from "@/services/code-assesment";
 import type { CodeAssesment } from "@/types/CodeAssesment";
@@ -74,7 +73,7 @@ const CourseDetails = () => {
     queryFn: async () => {
       return getCourseById(axiosInstance, { id: courseId });
     },
-    select: (data: { course: Course }) => data.course,
+    select: (data) => data.course,
   });
 
   const { data: lessons } = useSuspenseQuery({
@@ -82,15 +81,15 @@ const CourseDetails = () => {
     queryFn: async () => {
       return getLessons(axiosInstance, { courseId });
     },
-    select: (data: { lessons: Lesson[] }) => data.lessons,
+    select: (data) => data.lessons,
   });
 
   const { data: quizzes } = useSuspenseQuery({
     queryKey: quizKeys.all(courseId),
     queryFn: async () => {
-      return getQuizzez(axiosInstance, { courseId });
+      return getQuizzes(axiosInstance, { courseId });
     },
-    select: (data: { quizzes: Quiz[] }) => data.quizzes,
+    select: (data) => data.quizzes,
   });
 
   const { data: codeAssessments } = useSuspenseQuery({
@@ -98,8 +97,7 @@ const CourseDetails = () => {
     queryFn: async () => {
       return getCodeAssessments(axiosInstance, { courseId });
     },
-    select: (data: { codeAssessments: CodeAssesment[] }) =>
-      data.codeAssessments,
+    select: (data) => data.codeAssessments,
   });
 
   const { mutate: deleteCourseMutation } = useMutation({

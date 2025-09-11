@@ -1,5 +1,6 @@
 import { apiRoutes } from "@/static-data/routes";
 import type {
+  CodeAssesment,
   CodeAssessmentCourseIdParamsType,
   CodeAssessmentCreateType,
   CodeAssessmentIdParamsType,
@@ -14,7 +15,7 @@ export const getCodeAssessments = async (
   const response = await axiosInstance.get(
     apiRoutes.CODE_ASSESSMENTS(params.courseId),
   );
-  return response.data;
+  return response.data as { codeAssessments: CodeAssesment[] };
 };
 
 export const createCodeAssessment = async (
@@ -36,7 +37,7 @@ export const getCodeAssessmentById = async (
   const response = await axiosInstance.get(
     apiRoutes.CODE_ASSESSMENT_ID(params.courseId, params.id),
   );
-  return response.data;
+  return response.data as { codeAssessment: CodeAssesment };
 };
 
 export const updateCodeAssessment = async (

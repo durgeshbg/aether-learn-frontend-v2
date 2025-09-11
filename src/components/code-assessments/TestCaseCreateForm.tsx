@@ -1,10 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { getTestCaseFormData, type TestCaseFormType } from "./constants";
-import {
-  TestCaseCreateSchema,
-  TestCaseUpdateSchema,
-  type TestCase,
-} from "@/types/TestCase";
+import { TestCaseCreateSchema, TestCaseUpdateSchema } from "@/types/TestCase";
 import { routes } from "@/static-data/routes";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -64,8 +60,7 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
         ? getTestCases(axiosInstance, { courseId, codeAssessmentId })
         : null;
     },
-    select: (data: { testCases: TestCase[] }) =>
-      data?.testCases.find((t) => t.id === testCaseId) || null,
+    select: (data) => data?.testCases.find((t) => t.id === testCaseId) || null,
   });
 
   const form = useForm<z.infer<typeof TestCaseCreateSchema>>({

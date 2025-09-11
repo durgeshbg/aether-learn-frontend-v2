@@ -4,9 +4,7 @@ import {
   Clock,
   Award,
   TrendingUp,
-  AlertCircle,
   Target,
-  Calendar,
   FileText,
   Code,
   Brain,
@@ -363,45 +361,6 @@ function UserDashboard() {
           </div>
         </section>
       </div>
-
-      {/* Upcoming Deadlines */}
-      <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-        <h2 className="flex items-center gap-2 text-xl font-semibold mb-6 text-white">
-          <Calendar className="h-5 w-5 text-red-400" />
-          Upcoming Deadlines
-        </h2>
-        <div className="grid md:grid-cols-2 gap-4">
-          {upcomingDeadlines.map((deadline, index) => (
-            <div
-              key={index}
-              className={`p-4 rounded-xl bg-white/5 border ${getPriorityColor(deadline.priority)}`}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                {deadline.type === "quiz" ? (
-                  <Brain className="h-4 w-4" />
-                ) : (
-                  <FileText className="h-4 w-4" />
-                )}
-                <span className="text-xs uppercase font-semibold tracking-wide opacity-80">
-                  {deadline.type}
-                </span>
-              </div>
-              <h3 className="font-semibold text-white mb-1">
-                {deadline.title}
-              </h3>
-              <p className="text-sm text-white/70 mb-2">{deadline.course}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-white/60">
-                  Due in {deadline.dueDate}
-                </span>
-                {deadline.priority === "high" && (
-                  <AlertCircle className="h-4 w-4 text-red-400" />
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

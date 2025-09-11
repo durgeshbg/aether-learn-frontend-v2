@@ -3,10 +3,7 @@ import {
   updateOrganization,
 } from "@/services/organization";
 import { organizationKeys } from "@/tanstack/keys/organizationKeys";
-import {
-  OrganizationUpdateSchema,
-  type Organization,
-} from "@/types/Organization";
+import { OrganizationUpdateSchema } from "@/types/Organization";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -47,7 +44,7 @@ const OrganizationEditDetailsForm = () => {
     queryFn: async () => {
       return getOrganizationById(axiosInstance, { id: organizationId || "" });
     },
-    select: (data: { organization: Organization }) => data.organization,
+    select: (data) => data.organization,
   });
 
   const form = useForm<z.infer<typeof OrganizationUpdateSchema>>({

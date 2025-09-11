@@ -4,11 +4,7 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { moduleKeys } from "@/tanstack/keys/moduleKeys";
 import { createModule, getModuleById, updateModule } from "@/services/module";
 import { axiosInstance } from "@/utils/axiosInstance";
-import {
-  ModuleCreateSchema,
-  ModuleUpdateSchema,
-  type Module,
-} from "@/types/Module";
+import { ModuleCreateSchema, ModuleUpdateSchema } from "@/types/Module";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type z from "zod";
@@ -68,7 +64,7 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
         ? getModuleById(axiosInstance, { courseId, lessonId, id: moduleId })
         : null;
     },
-    select: (data: { module: Module }) => data?.module,
+    select: (data) => data?.module,
   });
 
   const form = useForm<z.infer<typeof ModuleCreateSchema>>({

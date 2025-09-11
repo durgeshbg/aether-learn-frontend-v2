@@ -4,6 +4,7 @@ import type {
   QuestionCreateType,
   QuestionIdParamsType,
   QuestionUpdateType,
+  Question,
 } from "@/types/Question";
 import type { AxiosInstance } from "axios";
 
@@ -14,7 +15,7 @@ export const getQuestions = async (
   const response = await axiosInstance.get(
     apiRoutes.QUESTIONS(params.courseId, params.quizId),
   );
-  return response.data;
+  return response.data as { questions: Question[] };
 };
 
 export const createQuestion = async (
@@ -36,7 +37,7 @@ export const getQuestion = async (
   const response = await axiosInstance.get(
     apiRoutes.QUESTION_ID(params.courseId, params.quizId, params.id),
   );
-  return response.data;
+  return response.data as { question: Question };
 };
 
 export const updateQuestion = async (

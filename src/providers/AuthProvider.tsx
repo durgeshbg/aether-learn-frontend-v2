@@ -3,7 +3,7 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { getUserById, login, logout } from "@/services/user";
 import { localStorageKeys } from "@/static-data/localStorage";
 import { userKeys } from "@/tanstack/keys/userKeys";
-import type { Role, User, UserLoginType } from "@/types/User";
+import type { Role, UserLoginType, UserWithDetails } from "@/types/User";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import * as jwt from "jwt-decode";
@@ -22,7 +22,7 @@ export interface TokenPayLoad {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const queryClient = useQueryClient();
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserWithDetails | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
   // Initialize auth state from localStorage

@@ -1,5 +1,6 @@
 import { apiRoutes } from "@/static-data/routes";
 import type {
+  Course,
   CourseCreateType,
   CourseFeebacks,
   CourseFeedbackType,
@@ -17,7 +18,7 @@ export const getCourses = async (
   const response = await axiosInstance.get(apiRoutes.COURSES, {
     params: query,
   });
-  return response.data;
+  return response.data as { courses: Course[] };
 };
 
 export const getNonOrganizationCourses = async (
@@ -27,7 +28,7 @@ export const getNonOrganizationCourses = async (
   const response = await axiosInstance.get(apiRoutes.COURSES_NON_ORGANIZATION, {
     params: query,
   });
-  return response.data;
+  return response.data as { courses: Course[] };
 };
 
 export const createCourse = async (
@@ -65,7 +66,7 @@ export const getCourseById = async (
   params: CourseIdParamType,
 ) => {
   const response = await axiosInstance.get(apiRoutes.COURSE_ID(params.id));
-  return response.data;
+  return response.data as { course: Course };
 };
 
 export const updateCourse = async (

@@ -23,7 +23,6 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { routes } from "@/static-data/routes";
 import { getCourses, getNonOrganizationCourses } from "@/services/course";
-import type { Course } from "@/types/Course";
 import { courseKeys } from "@/tanstack/keys/courseKeys";
 import {
   getOrganizationCoursesEditFormData,
@@ -58,7 +57,7 @@ const OrganizationEditCourseForm = () => {
         ? getNonOrganizationCourses(axiosInstance, { organizationId })
         : getCourses(axiosInstance, { organizationId });
     },
-    select: (data: { courses: Course[] }) => data.courses,
+    select: (data) => data.courses,
   });
 
   const { mutate: addCourses, isPending: adding } = useMutation({

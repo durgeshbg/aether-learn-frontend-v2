@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { getUserById, updateUserRole } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
-import { UserRoleUpdateSchema, type User } from "@/types/User";
+import { UserRoleUpdateSchema } from "@/types/User";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -87,7 +87,7 @@ const EditUserRoleForm = () => {
     queryFn: async () => {
       return getUserById(axiosInstance, { id: userId });
     },
-    select: (data: { user: User }) => data.user,
+    select: (data) => data.user,
   });
 
   const form = useForm<z.infer<typeof UserRoleUpdateSchema>>({

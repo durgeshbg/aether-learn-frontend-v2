@@ -1,6 +1,7 @@
 import { apiRoutes } from "@/static-data/routes";
 import type {
   OrgAdminUpdateType,
+  Organization,
   OrganizationCourseUpdateType,
   OrganizationCreateType,
   OrganizationIdParamType,
@@ -11,7 +12,7 @@ import type { AxiosInstance } from "axios";
 
 export const getOrganizations = async (axiosInstance: AxiosInstance) => {
   const response = await axiosInstance.get(apiRoutes.ORGANIZATIONS);
-  return response.data;
+  return response.data as { organizations: Organization[] };
 };
 
 export const creatOrganization = async (
@@ -31,7 +32,7 @@ export const searchOrganizations = async (
   const response = await axiosInstance.get(
     apiRoutes.ORGANIZATIONS_SEARCH(query.name),
   );
-  return response.data;
+  return response.data as { organizations: Organization[] };
 };
 
 export const getOrganizationById = async (
@@ -41,7 +42,7 @@ export const getOrganizationById = async (
   const response = await axiosInstance.get(
     `${apiRoutes.ORGANIZATION_ID(params.id)}`,
   );
-  return response.data;
+  return response.data as { organization: Organization };
 };
 
 export const updateOrganization = async (

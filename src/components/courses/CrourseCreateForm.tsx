@@ -1,10 +1,6 @@
 import { useForm } from "react-hook-form";
 import { getCourseFormData, type CourseFormType } from "./constants";
-import {
-  CourseCreateSchema,
-  CourseUpdateSchema,
-  type Course,
-} from "@/types/Course";
+import { CourseCreateSchema, CourseUpdateSchema } from "@/types/Course";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 import { courseKeys } from "@/tanstack/keys/courseKeys";
@@ -46,7 +42,7 @@ const CourseCreateForm = ({ type = "create" }: CourseFormType) => {
         ? getCourseById(axiosInstance, { id: courseId })
         : null;
     },
-    select: (data: { course: Course }) => data?.course,
+    select: (data) => data?.course,
   });
 
   const createOrUpdateForm = useForm<z.infer<typeof CourseCreateSchema>>({

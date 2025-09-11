@@ -60,7 +60,7 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
         ? getQuiz(axiosInstance, { courseId, id: quizId })
         : null;
     },
-    select: (data: { quiz: Quiz }) => data?.quiz,
+    select: (data) => data?.quiz,
   });
 
   const form = useForm<z.infer<typeof QuizCreateSchema>>({

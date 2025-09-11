@@ -1,5 +1,3 @@
-import type { TestCase } from "@/types/TestCase";
-import type { CodeAssesment } from "@/types/CodeAssesment";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
@@ -25,7 +23,7 @@ const CodeAssessmentDetails = () => {
         courseId,
         id: codeAssessmentId,
       }),
-    select: (data: { codeAssessment: CodeAssesment }) => data.codeAssessment,
+    select: (data) => data.codeAssessment,
   });
 
   const { data: testCases } = useSuspenseQuery({
@@ -35,7 +33,7 @@ const CodeAssessmentDetails = () => {
         courseId,
         codeAssessmentId,
       }),
-    select: (data: { testCases: TestCase[] }) => data?.testCases || [],
+    select: (data) => data?.testCases || [],
   });
 
   // Determine if user is admin/instructor

@@ -4,6 +4,7 @@ import type {
   LessonIdParamsType,
   DBLessonCreateType,
   DBLessonUpdateType,
+  Lesson,
 } from "@/types/Lesson";
 import type { AxiosInstance } from "axios";
 
@@ -12,7 +13,7 @@ export const getLessons = async (
   params: LessonCourseIdParamsType,
 ) => {
   const response = await axiosInstance.get(apiRoutes.LESSONS(params.courseId));
-  return response.data;
+  return response.data as { lessons: Lesson[] };
 };
 
 export const createLesson = async (
@@ -34,7 +35,7 @@ export const getLessonById = async (
   const response = await axiosInstance.get(
     apiRoutes.LESSON_ID(params.courseId, params.id),
   );
-  return response.data;
+  return response.data as { lesson: Lesson };
 };
 
 export const updateLesson = async (

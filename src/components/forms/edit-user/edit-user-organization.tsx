@@ -2,7 +2,7 @@ import { getOrganizations } from "@/services/organization";
 import { getUserById, updateUserOrganization } from "@/services/user";
 import { organizationKeys } from "@/tanstack/keys/organizationKeys";
 import { userKeys } from "@/tanstack/keys/userKeys";
-import { UserOrganizationUpdateSchema, type User } from "@/types/User";
+import { UserOrganizationUpdateSchema } from "@/types/User";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -46,7 +46,7 @@ const EditUserOrganizationForm = () => {
     queryFn: async () => {
       return getUserById(axiosInstance, { id: userId });
     },
-    select: (data: { user: User }) => data.user,
+    select: (data) => data.user,
   });
 
   const form = useForm<z.infer<typeof UserOrganizationUpdateSchema>>({

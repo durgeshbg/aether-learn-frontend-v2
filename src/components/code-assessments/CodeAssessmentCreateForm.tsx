@@ -25,7 +25,6 @@ import { routes } from "@/static-data/routes";
 import {
   CodeAssessmentCreateSchema,
   CodeAssessmentUpdateSchema,
-  type CodeAssesment,
 } from "@/types/CodeAssesment";
 import {
   getCodeAssessmentFormData,
@@ -79,7 +78,7 @@ const CodeAssessmentCreateForm = ({
           })
         : null;
     },
-    select: (data: { codeAssessment: CodeAssesment }) => data?.codeAssessment,
+    select: (data) => data?.codeAssessment,
   });
 
   const form = useForm<z.infer<typeof CodeAssessmentCreateSchema>>({
@@ -91,7 +90,7 @@ const CodeAssessmentCreateForm = ({
             description: assessment.description,
             instructions: assessment.instructions,
             starterCode: assessment.starterCode,
-            languageId: parseInt(assessment.languageId),
+            languageId: parseInt(assessment?.languageId),
             durationMinutes: assessment.durationMinutes,
             difficulty: assessment.difficulty ?? DifficultyLevel.BEGINNER,
           }

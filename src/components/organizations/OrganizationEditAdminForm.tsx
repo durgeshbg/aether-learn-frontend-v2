@@ -21,8 +21,7 @@ import {
 import { getUsers } from "@/services/user";
 import { organizationKeys } from "@/tanstack/keys/organizationKeys";
 import { userKeys } from "@/tanstack/keys/userKeys";
-import { OrgAdminUpdateScehma, type Organization } from "@/types/Organization";
-import type { User } from "@/types/User";
+import { OrgAdminUpdateScehma } from "@/types/Organization";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -49,7 +48,7 @@ const OrganizationEditAdminForm = () => {
     queryFn: async () => {
       return getOrganizationById(axiosInstance, { id: organizationId || "" });
     },
-    select: (data: { organization: Organization }) => data.organization,
+    select: (data) => data.organization,
   });
 
   const { data: users } = useSuspenseQuery({
@@ -57,7 +56,7 @@ const OrganizationEditAdminForm = () => {
     queryFn: async () => {
       return getUsers(axiosInstance, { organizationId });
     },
-    select: (data: { users: User[] }) => data.users,
+    select: (data) => data.users,
   });
 
   const form = useForm<z.infer<typeof OrgAdminUpdateScehma>>({

@@ -4,11 +4,12 @@ export type Question = {
   id: string;
   text: string;
   options: string[];
-  quizId: string;
+
+  answer?: number;
+  explaination?: string;
+
   createdAt: string;
   updatedAt: string;
-  answer: number;
-  explaination: string;
 };
 
 export const QuestionCreateSchema = z

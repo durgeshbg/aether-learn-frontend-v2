@@ -1,20 +1,20 @@
-import type { CodeSolution } from "./CodeSolution";
-import { DifficultyLevel } from "./Lesson";
+import { DifficultyLevel, type DifficultyLevelType } from "./Lesson";
 import type { TestCase } from "./TestCase";
 import { z } from "zod";
 
 export type CodeAssesment = {
   id: string;
   title: string;
-  description: string;
-  instructions: string;
-  starterCode: string;
-  languageId: string;
-  courseId: string;
-  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+
+  description?: string;
   durationMinutes?: number;
-  codeSolutions?: CodeSolution[];
+  instructions?: string;
+  languageId?: string;
+  starterCode?: string;
+  courseId: string;
   testCases?: TestCase[];
+  difficulty?: DifficultyLevelType;
+
   createdAt: string;
   updatedAt: string;
 };

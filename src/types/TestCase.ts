@@ -2,11 +2,12 @@ import { z } from "zod";
 
 export type TestCase = {
   id: string;
-  input: string;
-  expected: string;
   description: string;
-  assesmentId: string;
-  weight: number;
+
+  input?: string;
+  expected?: string;
+  weight?: number;
+
   createdAt: string;
   updatedAt: string;
 };

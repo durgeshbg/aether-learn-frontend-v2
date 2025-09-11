@@ -3,7 +3,6 @@ import { getModules } from "@/services/module";
 import { routes } from "@/static-data/routes";
 import { lessonKeys } from "@/tanstack/keys/lessonKeys";
 import { moduleKeys } from "@/tanstack/keys/moduleKeys";
-import { DifficultyLevel, type Lesson } from "@/types/Lesson";
 import type { Module } from "@/types/Module";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -27,6 +26,7 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { DifficultyLevel, type DifficultyLevelType } from "@/types/Lesson";
 
 // Helper function to get dummy lesson stats (replace with real data from backend)
 const getLessonStats = (modules: Module[]) => ({
@@ -37,7 +37,7 @@ const getLessonStats = (modules: Module[]) => ({
   lastUpdated: new Date().toLocaleDateString(),
 });
 
-const getDifficultyColor = (difficulty: string) => {
+const getDifficultyColor = (difficulty?: DifficultyLevelType) => {
   switch (difficulty) {
     case DifficultyLevel.BEGINNER:
       return "text-green-400 bg-green-400/20 border-green-400/30";
@@ -63,7 +63,7 @@ const LessonDetails = () => {
     queryFn: async () => {
       return getLessonById(axiosInstance, { courseId, id: lessonId });
     },
-    select: (data: { lesson: Lesson }) => data.lesson,
+    select: (data) => data.lesson,
   });
 
   const { data: modules } = useSuspenseQuery({
@@ -71,7 +71,7 @@ const LessonDetails = () => {
     queryFn: async () => {
       return getModules(axiosInstance, { courseId, lessonId });
     },
-    select: (data: { modules: Module[] }) => data.modules,
+    select: (data) => data.modules,
   });
 
   const handleEditLesson = () => {

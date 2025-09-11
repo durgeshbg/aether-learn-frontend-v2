@@ -8,8 +8,6 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "../ui/button";
-import type { Course } from "@/types/Course";
-import type { User } from "@/types/User";
 import { getNonOrganizationUsers, getUsers } from "@/services/user";
 import { getCourses, getNonOrganizationCourses } from "@/services/course";
 import { userKeys } from "@/tanstack/keys/userKeys";
@@ -43,13 +41,12 @@ const OrganizationDetails = () => {
   const navigate = useNavigate();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const {
-    data: { organization },
-  } = useSuspenseQuery({
+  const { data: organization } = useSuspenseQuery({
     queryKey: organizationKeys.getById(organizationId),
     queryFn: async () => {
       return getOrganizationById(axiosInstance, { id: organizationId || "" });
     },
+    select: (data) => data.organization,
   });
 
   const { data: users } = useSuspenseQuery({
@@ -57,7 +54,7 @@ const OrganizationDetails = () => {
     queryFn: async () => {
       return getUsers(axiosInstance, { organizationId });
     },
-    select: (data: { users: User[] }) => data.users,
+    select: (data) => data.users,
   });
 
   const { data: nonOrgUsers } = useSuspenseQuery({
@@ -65,7 +62,7 @@ const OrganizationDetails = () => {
     queryFn: async () => {
       return getNonOrganizationUsers(axiosInstance);
     },
-    select: (data: { users: User[] }) => data.users,
+    select: (data) => data.users,
   });
 
   const { data: courses } = useSuspenseQuery({
@@ -73,7 +70,7 @@ const OrganizationDetails = () => {
     queryFn: async () => {
       return getCourses(axiosInstance, { organizationId });
     },
-    select: (data: { courses: Course[] }) => data.courses,
+    select: (data) => data.courses,
   });
 
   const { data: nonOrgCourses } = useSuspenseQuery({
@@ -81,7 +78,7 @@ const OrganizationDetails = () => {
     queryFn: async () => {
       return getNonOrganizationCourses(axiosInstance, { organizationId });
     },
-    select: (data: { courses: Course[] }) => data.courses,
+    select: (data) => data.courses,
   });
 
   const { mutate: deleteOrganizationMutation, isPending } = useMutation({

@@ -18,9 +18,9 @@ function BookMarkedModules() {
   const bookmarkedModuleURLs = bookmarks?.map((b) => ({
     title: b.module.title,
     url: routes.MODULE_DETAILS(
-      b.module.lesson.courseId,
-      b.module.lessonId,
-      b.moduleId,
+      b.module.lesson.course.id,
+      b.module.lesson.id,
+      b.module.id,
     ),
   }));
 

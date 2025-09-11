@@ -8,12 +8,17 @@ export type Course = {
   name: string;
   description?: string;
   thumbnailUrl?: string;
-
+  rating: number;
+  lessonsCount: number;
+  quizzesCount: number;
+  codeAssessmentsCount: number;
   lessons?: Lesson[];
   quizzes?: Quiz[];
   codeAssessments?: CodeAssesment[];
+
   feedbackSubmitted?: boolean;
   enrolled: boolean;
+
   createdAt: string;
   updatedAt: string;
 };
@@ -22,7 +27,7 @@ export type CourseFeedback = {
   id: string;
   rating: number;
   comment?: string;
-  user: {
+  user?: {
     id: string;
     firstName: string;
     lastName?: string;

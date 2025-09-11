@@ -1,14 +1,13 @@
-import type Module from "module";
 import { z } from "zod";
+import type { Module } from "./Module";
 
 export type Lesson = {
   id: string;
   title: string;
-  content: string;
-  courseId: string;
-  modules?: Module[];
-  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+  content?: string;
   objectives?: string[];
+  modules?: Module[];
+  difficulty?: DifficultyLevelType;
   createdAt: string;
   updatedAt: string;
 };
@@ -18,6 +17,9 @@ export const DifficultyLevel = {
   INTERMEDIATE: "INTERMEDIATE",
   ADVANCED: "ADVANCED",
 };
+
+export type DifficultyLevelType =
+  (typeof DifficultyLevel)[keyof typeof DifficultyLevel];
 
 export const LessonCreateSchema = z.object({
   title: z.string().min(1, "Title is required"),

@@ -13,6 +13,9 @@ import type {
   UserOrganizationUpdateType,
   UserRoleUpdateType,
   UserBookmarks,
+  User,
+  UserProgress,
+  UserWithDetails,
 } from "@/types/User";
 import type { AxiosInstance } from "axios";
 
@@ -36,7 +39,7 @@ export const getBookmarkedModules = async (
   axiosInstance: AxiosInstance,
 ): Promise<UserBookmarks> => {
   const response = await axiosInstance.get(apiRoutes.USER_BOOKMARKED_MODULES);
-  return response.data;
+  return response.data as UserBookmarks;
 };
 
 export const bookmarkModule = async (
@@ -68,7 +71,7 @@ export const getUsers = async (
   const response = await axiosInstance.get(apiRoutes.USERS, {
     params: query,
   });
-  return response.data;
+  return response.data as { users: User[] };
 };
 
 export const getUserProgress = async (
@@ -76,12 +79,12 @@ export const getUserProgress = async (
   params: UserIdParamType,
 ) => {
   const response = await axiosInstance.get(apiRoutes.USER_PROGRESS(params.id));
-  return response.data;
+  return response.data as UserProgress;
 };
 
 export const getNonOrganizationUsers = async (axiosInstance: AxiosInstance) => {
   const response = await axiosInstance.get(apiRoutes.USERS_NON_ORGANIZATION);
-  return response.data;
+  return response.data as { users: User[] };
 };
 
 export const createUser = async (
@@ -100,7 +103,7 @@ export const getUserById = async (
   const response = await axiosInstance.get(apiRoutes.USERS_ID(params.id), {
     params: query,
   });
-  return response.data;
+  return response.data as { user: UserWithDetails };
 };
 
 export const upadteUserDetails = async (

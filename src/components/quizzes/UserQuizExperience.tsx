@@ -4,7 +4,6 @@ import { getQuiz } from "@/services/quiz";
 import { questionKeys } from "@/tanstack/keys/question";
 import { quizKeys } from "@/tanstack/keys/quizKeys";
 import type { Question } from "@/types/Question";
-import type { Quiz } from "@/types/Quiz";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
@@ -50,7 +49,7 @@ export const UserQuizExperience = ({
     queryFn: async () => {
       return getQuiz(axiosInstance, { courseId, id: quizId });
     },
-    select: (data: { quiz: Quiz }) => data.quiz,
+    select: (data) => data.quiz,
   });
 
   const { data: questions } = useSuspenseQuery({
@@ -58,7 +57,7 @@ export const UserQuizExperience = ({
     queryFn: async () => {
       return getQuestions(axiosInstance, { courseId, quizId });
     },
-    select: (data: { questions: Question[] }) => data?.questions || [],
+    select: (data) => data?.questions || [],
   });
 
   // Timer effect

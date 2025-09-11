@@ -1,19 +1,21 @@
 import { z } from "zod";
-import { DifficultyLevel } from "./Lesson";
+import { DifficultyLevel, type DifficultyLevelType } from "./Lesson";
 
 export type Module = {
   id: string;
   title: string;
-  content: string;
-  lessonId: string;
-  code?: string;
-  languageId: number;
-  difficulty: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+
+  content?: string;
+  languageId?: number;
+  difficulty?: DifficultyLevelType;
   objectives?: string[];
+  code?: string;
   durationMinutes?: number;
+
+  isBookmarked: boolean;
+
   createdAt: string;
   updatedAt: string;
-  isBookmarked: boolean;
 };
 
 export const ModuleCreateSchema = z.object({

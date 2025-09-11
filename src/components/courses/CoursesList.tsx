@@ -62,7 +62,7 @@ const CoursesList = () => {
         organizationId: user?.organization?.id,
       });
     },
-    select: (data: { courses: Course[] }) => data.courses,
+    select: (data) => data.courses,
   });
 
   const { mutate: enrollCourseMutation } = useMutation({

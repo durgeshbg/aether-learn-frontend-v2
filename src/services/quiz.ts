@@ -1,5 +1,6 @@
 import { apiRoutes } from "@/static-data/routes";
 import type {
+  Quiz,
   QuizCourseIdParamsType,
   QuizCreateType,
   QuizIdParamsType,
@@ -7,12 +8,12 @@ import type {
 } from "@/types/Quiz";
 import type { AxiosInstance } from "axios";
 
-export const getQuizzez = async (
+export const getQuizzes = async (
   axiosInstance: AxiosInstance,
   params: QuizCourseIdParamsType,
 ) => {
   const response = await axiosInstance.get(apiRoutes.QUIZZES(params.courseId));
-  return response.data;
+  return response.data as { quizzes: Quiz[] };
 };
 
 export const createQuiz = async (
@@ -34,7 +35,7 @@ export const getQuiz = async (
   const response = await axiosInstance.get(
     apiRoutes.QUIZ_ID(params.courseId, params.id),
   );
-  return response.data;
+  return response.data as { quiz: Quiz };
 };
 
 export const updateQuiz = async (
