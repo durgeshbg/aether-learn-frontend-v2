@@ -5,61 +5,38 @@ import {
   Users,
   BookOpen,
   TrendingUp,
-  Activity,
   Award,
   Clock,
-  Target,
   BarChart3,
-  UserCheck,
 } from "lucide-react";
-
-const orgStats = {
-  totalUsers: 127,
-  activeCourses: 8,
-  completionRate: 73,
-  avgProgress: 68,
-  activeUsers: 89,
-  totalLessons: 156,
-  completedLessons: 1142,
-  avgTimeSpent: "4.2h",
-};
-
-const recentActivity = [
-  {
-    user: "Sarah Johnson",
-    course: "React Fundamentals",
-    progress: 85,
-    lastActive: "2 hours ago",
-  },
-  {
-    user: "Mike Chen",
-    course: "JavaScript Advanced",
-    progress: 92,
-    lastActive: "5 hours ago",
-  },
-  {
-    user: "Emma Davis",
-    course: "Node.js Backend",
-    progress: 67,
-    lastActive: "1 day ago",
-  },
-  {
-    user: "Alex Rivera",
-    course: "React Fundamentals",
-    progress: 45,
-    lastActive: "3 days ago",
-  },
-];
-
-const topPerformingCourses = [
-  { name: "React Fundamentals", enrolled: 45, completion: 78, avgScore: 87 },
-  { name: "JavaScript Advanced", enrolled: 32, completion: 85, avgScore: 91 },
-  { name: "Node.js Backend", enrolled: 28, completion: 65, avgScore: 82 },
-  { name: "Python Basics", enrolled: 22, completion: 90, avgScore: 88 },
-];
+import { useQuery } from "@tanstack/react-query";
+import { userKeys } from "@/tanstack/keys/userKeys";
+import { getDashboardStats } from "@/services/user";
+import { axiosInstance } from "@/utils/axiosInstance";
+import lastTimeAgo from "@/utils/lastTimeAgo";
 
 function OrganizationAdminDashboard() {
   const navigate = useNavigate();
+
+  const { data: dashboardData } = useQuery({
+    queryKey: userKeys.dashBoardStats(),
+    queryFn: async () => {
+      return getDashboardStats(axiosInstance);
+    },
+    select: (data) => data.dashboardData,
+  });
+
+  const totalAverageCompletionRate =
+    dashboardData?.top5CompletedCourses?.reduce(
+      (acc, course) => acc + course.averageCompletionRate,
+      0,
+    );
+  const averageCompletionRate = totalAverageCompletionRate
+    ? (
+        totalAverageCompletionRate /
+        (dashboardData?.top5CompletedCourses?.length || 1)
+      ).toFixed(2)
+    : "0";
 
   const handleManageUsers = () => {
     navigate(routes.USERS);
@@ -82,17 +59,16 @@ function OrganizationAdminDashboard() {
       </p>
 
       {/* Organization Overview Stats */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <div className="flex items-center justify-between mb-3">
             <Users className="h-8 w-8 text-blue-400" />
             <span className="text-sm text-white/70">Total</span>
           </div>
           <div className="text-3xl font-bold text-white mb-1">
-            {orgStats.totalUsers}
+            {dashboardData?.usersCount}
           </div>
           <div className="text-white/80 text-sm">Organization Users</div>
-          <div className="text-green-400 text-xs mt-1">+12 this month</div>
         </div>
 
         <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
@@ -101,12 +77,9 @@ function OrganizationAdminDashboard() {
             <span className="text-sm text-white/70">Active</span>
           </div>
           <div className="text-3xl font-bold text-white mb-1">
-            {orgStats.activeCourses}
+            {dashboardData?.coursesCount}
           </div>
           <div className="text-white/80 text-sm">Assigned Courses</div>
-          <div className="text-blue-400 text-xs mt-1">
-            {orgStats.totalLessons} total lessons
-          </div>
         </div>
 
         <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
@@ -115,24 +88,9 @@ function OrganizationAdminDashboard() {
             <span className="text-sm text-white/70">Rate</span>
           </div>
           <div className="text-3xl font-bold text-white mb-1">
-            {orgStats.completionRate}%
+            {averageCompletionRate}%
           </div>
           <div className="text-white/80 text-sm">Completion Rate</div>
-          <div className="text-green-400 text-xs mt-1">+5% from last month</div>
-        </div>
-
-        <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center justify-between mb-3">
-            <Activity className="h-8 w-8 text-emerald-400" />
-            <span className="text-sm text-white/70">Active</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-1">
-            {orgStats.activeUsers}
-          </div>
-          <div className="text-white/80 text-sm">Active Learners</div>
-          <div className="text-white/60 text-xs mt-1">
-            Avg: {orgStats.avgTimeSpent}/week
-          </div>
         </div>
       </section>
 
@@ -173,23 +131,20 @@ function OrganizationAdminDashboard() {
             Top Performing Courses
           </h2>
           <div className="space-y-4">
-            {topPerformingCourses.map((course, index) => (
+            {dashboardData?.top5CompletedCourses?.map((course) => (
               <div
-                key={index}
+                key={course.id}
                 className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10"
               >
                 <div>
                   <div className="font-medium text-white">{course.name}</div>
                   <div className="text-sm text-white/70">
-                    {course.enrolled} enrolled
+                    {course.totalEnrollments} enrolled
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-green-400 font-semibold">
-                    {course.completion}% completion
-                  </div>
-                  <div className="text-xs text-white/60">
-                    Avg score: {course.avgScore}%
+                    {course.averageCompletionRate}% completion
                   </div>
                 </div>
               </div>
@@ -204,57 +159,28 @@ function OrganizationAdminDashboard() {
             Recent User Activity
           </h2>
           <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
+            {dashboardData?.recentlyUpdatedCourses?.map((activity) => (
               <div
-                key={index}
+                key={activity.id}
                 className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10"
               >
                 <div>
-                  <div className="font-medium text-white">{activity.user}</div>
-                  <div className="text-sm text-white/70">{activity.course}</div>
+                  <div className="font-medium text-white">{`${activity.user.firstName} ${activity.user.lastName}`}</div>
+                  <div className="text-sm text-white/70">
+                    {activity.course.name}
+                  </div>
                 </div>
                 <div className="text-right">
                   <div className="text-emerald-400 font-semibold">
-                    {activity.progress}% progress
+                    {activity.completionRate}% progress
                   </div>
                   <div className="text-xs text-white/60">
-                    {activity.lastActive}
+                    {lastTimeAgo(activity.updatedAt)}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </section>
-      </div>
-
-      {/* Management Sections */}
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* User Management */}
-        <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <h2 className="flex items-center gap-2 text-lg font-semibold mb-3 text-white">
-            <UserCheck className="h-5 w-5 text-blue-400" />
-            User Management
-          </h2>
-          <ul className="list-disc list-inside text-white/80 ml-6 space-y-2">
-            <li>Add or remove organization members</li>
-            <li>Assign course access and permissions</li>
-            <li>View individual user progress and performance</li>
-            <li>Send notifications and announcements</li>
-          </ul>
-        </section>
-
-        {/* Analytics & Monitoring */}
-        <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <h2 className="flex items-center gap-2 text-lg font-semibold mb-3 text-white">
-            <Target className="h-5 w-5 text-emerald-400" />
-            Analytics & Monitoring
-          </h2>
-          <ul className="list-disc list-inside text-white/80 ml-6 space-y-2">
-            <li>Track organization-wide performance metrics</li>
-            <li>Monitor user engagement and activity patterns</li>
-            <li>Generate progress reports and completion certificates</li>
-            <li>Identify learning trends and areas for improvement</li>
-          </ul>
         </section>
       </div>
     </div>

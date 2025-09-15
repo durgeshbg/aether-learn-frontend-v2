@@ -7,6 +7,7 @@ export const userKeys = {
   getProgress: (userId: string) =>
     [...userKeys.getById(userId), "progress"] as const,
   enrollCourse: () => [...userKeys.all(), "enroll-course"] as const,
+  dashBoardStats: () => [...userKeys.all(), "dashboard-stats"] as const,
   allNonOrganization: () =>
     [...userKeys.all(), "non-organization-users"] as const,
   bookmarkedModules: () => [...userKeys.all(), "bookmarked-modules"] as const,

@@ -77,6 +77,7 @@ export const apiRoutes = {
   USER_BOOKMARK_MODULE: "/users/bookmark-module",
   USER_MARK_MODULE_AS_COMPLETE: "/users/mark-module-as-complete",
   USER_BOOKMARKED_MODULES: "/users/bookmarked-modules",
+  USER_DASHBOARD_STATS: "/users/dashboard-stats",
   USERS_ID: (id: string) => `/users/${id}`,
   USER_PROGRESS: (id: string) => `/users/${id}/progress`,
   USER_ID_ORGANIZATION: (id: string) => `/users/${id}/organization`,

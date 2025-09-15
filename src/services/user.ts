@@ -16,6 +16,7 @@ import type {
   User,
   UserProgress,
   UserWithDetails,
+  UserDashboardStats,
 } from "@/types/User";
 import type { AxiosInstance } from "axios";
 
@@ -80,6 +81,11 @@ export const getUserProgress = async (
 ) => {
   const response = await axiosInstance.get(apiRoutes.USER_PROGRESS(params.id));
   return response.data as UserProgress;
+};
+
+export const getDashboardStats = async (axiosInstance: AxiosInstance) => {
+  const response = await axiosInstance.get(apiRoutes.USER_DASHBOARD_STATS);
+  return response.data as UserDashboardStats;
 };
 
 export const getNonOrganizationUsers = async (axiosInstance: AxiosInstance) => {

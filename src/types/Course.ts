@@ -11,6 +11,7 @@ export type Course = {
   rating: number;
   lessonsCount: number;
   quizzesCount: number;
+  modulesCount: number;
   codeAssessmentsCount: number;
   lessons?: Lesson[];
   quizzes?: Quiz[];

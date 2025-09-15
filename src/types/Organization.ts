@@ -41,6 +41,7 @@ export type Organization = {
 //   rating: number;
 //   codeAssessmentsCount: number;
 //   lessonsCount: number;
+//   modulesCount: number;
 //   quizzesCount: number;
 //   createdAt: string;
 //   updatedAt: string;

@@ -38,6 +38,35 @@ export type UserWithDetails = {
   updatedAt: string;
 };
 
+export type UserDashboardStats = {
+  dashboardData: {
+    organizationsCount?: number;
+    usersCount: number;
+    coursesCount: number;
+    enrolledCoursesCount?: number;
+    top5CompletedCourses?: {
+      id: string;
+      name: string;
+      totalEnrollments: number;
+      averageCompletionRate: number;
+    }[];
+    recentlyUpdatedCourses?: {
+      id: string;
+      course: {
+        id: string;
+        name: string;
+      };
+      user: {
+        id: string;
+        firstName: string;
+        lastName: string;
+      };
+      completionRate: number;
+      updatedAt: string;
+    }[];
+  };
+};
+
 export type IDObject = {
   id: string;
   title: string;
@@ -50,10 +79,12 @@ export type CourseProgress = {
     id: string;
     name: string;
   };
+  completionRate: number;
   completedModules: IDObject[];
   completedQuizzes: IDObject[];
   completedAssessments: IDObject[];
   nextModuleId?: string;
+  nextModule: ModuleLink | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -62,20 +93,22 @@ export type UserProgress = {
   progress: CourseProgress[];
 };
 
-export type Bookmark = {
+export type ModuleLink = {
   id: string;
-  module: {
+  title: string;
+  lesson: {
     id: string;
     title: string;
-    lesson: {
+    course: {
       id: string;
-      title: string;
-      course: {
-        id: string;
-        name: string;
-      };
+      name: string;
     };
   };
+};
+
+export type Bookmark = {
+  id: string;
+  module: ModuleLink;
   createdAt: string;
 };
 

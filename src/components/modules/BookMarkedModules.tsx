@@ -1,7 +1,7 @@
 import { getBookmarkedModules } from "@/services/user";
-import { routes } from "@/static-data/routes";
 import { userKeys } from "@/tanstack/keys/userKeys";
 import { axiosInstance } from "@/utils/axiosInstance";
+import { getModuleLink } from "@/utils/getModuleLink";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
@@ -17,11 +17,7 @@ function BookMarkedModules() {
 
   const bookmarkedModuleURLs = bookmarks?.map((b) => ({
     title: b.module.title,
-    url: routes.MODULE_DETAILS(
-      b.module.lesson.course.id,
-      b.module.lesson.id,
-      b.module.id,
-    ),
+    url: getModuleLink(b.module),
   }));
 
   const handleModuleClick = (url: string) => {
