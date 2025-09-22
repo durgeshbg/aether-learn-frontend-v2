@@ -21,6 +21,7 @@ import {
   Clock,
   Award,
 } from "lucide-react";
+import { getDifficultyColor } from "@/utils/getDifficultyColor";
 
 interface AdminQuizDetailsProps {
   courseId: string;
@@ -99,19 +100,6 @@ export const AdminQuizDetails = ({
 
   const stats = getQuizStats();
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Beginner":
-        return "text-green-400 bg-green-400/20 border-green-400/30";
-      case "Intermediate":
-        return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
-      case "Advanced":
-        return "text-red-400 bg-red-400/20 border-red-400/30";
-      default:
-        return "text-white/60 bg-white/10 border-white/20";
-    }
-  };
-
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
       {/* Header Section */}
@@ -140,7 +128,7 @@ export const AdminQuizDetails = ({
                 <p className="text-white/80 text-lg mb-4">{quiz.description}</p>
                 <div className="flex items-center gap-4">
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(stats.difficulty)}`}
+                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(quiz.difficulty)}`}
                   >
                     {stats.difficulty}
                   </div>

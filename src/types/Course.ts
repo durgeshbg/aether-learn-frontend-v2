@@ -1,5 +1,5 @@
 import type { CodeAssesment } from "./CodeAssesment";
-import type { Lesson } from "./Lesson";
+import type { DifficultyLevelType, Lesson } from "./Lesson";
 import type { Quiz } from "./Quiz";
 import { z } from "zod";
 
@@ -9,6 +9,7 @@ export type Course = {
   description?: string;
   thumbnailUrl?: string;
   rating: number;
+  difficulty: DifficultyLevelType;
   lessonsCount: number;
   quizzesCount: number;
   modulesCount: number;

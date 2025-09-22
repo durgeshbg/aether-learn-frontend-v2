@@ -32,7 +32,7 @@ import {
 } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
 import { useMemo } from "react";
-import { DifficultyLevel } from "@/types/Lesson";
+import { getDifficultyColor } from "@/utils/getDifficultyColor";
 
 // Helper function to get dummy module stats (replace with real data from backend)
 const getModuleStats = () => ({
@@ -45,19 +45,6 @@ const getModuleStats = () => ({
     Math.floor(Math.random() * 4)
   ],
 });
-
-const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case DifficultyLevel.BEGINNER:
-      return "text-green-400 bg-green-400/20 border-green-400/30";
-    case DifficultyLevel.INTERMEDIATE:
-      return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
-    case DifficultyLevel.ADVANCED:
-      return "text-red-400 bg-red-400/20 border-red-400/30";
-    default:
-      return "text-white/60 bg-white/10 border-white/20";
-  }
-};
 
 const getModuleTypeIcon = (type: string) => {
   switch (type) {
@@ -211,7 +198,7 @@ const ModuleDetails = () => {
                 </h1>
                 <div className="flex items-center gap-4 mb-4">
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty!)}`}
+                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty)}`}
                   >
                     {module.difficulty}
                   </div>
@@ -393,7 +380,7 @@ const ModuleDetails = () => {
               <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
                 <span className="text-white/70">Difficulty Level</span>
                 <div
-                  className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty!)}`}
+                  className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(module.difficulty)}`}
                 >
                   {module.difficulty}
                 </div>

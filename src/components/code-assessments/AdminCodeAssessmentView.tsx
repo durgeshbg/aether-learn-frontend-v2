@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { deleteCodeAssessment } from "@/services/code-assesment";
 import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
+import { getDifficultyColor } from "@/utils/getDifficultyColor";
 
 interface AdminCodeAssessmentViewProps {
   codeAssessment: CodeAssesment;
@@ -97,19 +98,6 @@ export const AdminCodeAssessmentView = ({
     successRate: Math.floor(Math.random() * 40) + 50, // Mock data - replace with real
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy":
-        return "text-green-400 bg-green-400/20 border-green-400/30";
-      case "Medium":
-        return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
-      case "Hard":
-        return "text-red-400 bg-red-400/20 border-red-400/30";
-      default:
-        return "text-white/60 bg-white/10 border-white/20";
-    }
-  };
-
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
       {/* Header Section */}
@@ -140,7 +128,7 @@ export const AdminCodeAssessmentView = ({
                 </p>
                 <div className="flex items-center gap-4">
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(assessmentStats.difficulty)}`}
+                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(codeAssessment.difficulty)}`}
                   >
                     {assessmentStats.difficulty}
                   </div>
