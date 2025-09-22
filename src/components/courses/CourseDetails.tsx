@@ -1,28 +1,15 @@
 import { deleteCourse, getCourseById } from "@/services/course";
-import { getLessons } from "@/services/lesson";
 import { courseKeys } from "@/tanstack/keys/courseKeys";
-import { lessonKeys } from "@/tanstack/keys/lessonKeys";
-import type { Lesson } from "@/types/Lesson";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router";
 import { Button } from "../ui/button";
 import { routes } from "@/static-data/routes";
-import { quizKeys } from "@/tanstack/keys/quizKeys";
-import type { Quiz } from "@/types/Quiz";
-import { getQuizzes } from "@/services/quiz";
-import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
-import { getCodeAssessments } from "@/services/code-assesment";
-import type { CodeAssesment } from "@/types/CodeAssesment";
 import {
   BookOpen,
-  Edit3,
-  Trash2,
-  Plus,
   Brain,
   Code,
   Play,
-  Users,
   Target,
   FileText,
   ArrowLeft,
@@ -32,36 +19,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { enrollUserInCourse } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
 import { FeedbackDialog } from "./FeedbackDialog";
-
-// Helper function to get dummy stats (replace with real data from backend)
-const getCourseStats = (
-  lessons: Lesson[],
-  quizzes: Quiz[],
-  codeAssessments: CodeAssesment[],
-) => ({
-  totalLessons: lessons.length,
-  totalQuizzes: quizzes.length,
-  totalAssessments: codeAssessments.length,
-  estimatedDuration: `${Math.floor(Math.random() * 20) + 5}h ${Math.floor(Math.random() * 60)}m`,
-  difficulty: ["Beginner", "Intermediate", "Advanced"][
-    Math.floor(Math.random() * 3)
-  ],
-  enrolledStudents: Math.floor(Math.random() * 500) + 50,
-  completionRate: Math.floor(Math.random() * 40) + 60, // 60-100%
-});
-
-const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case "Beginner":
-      return "text-green-400 bg-green-400/20 border-green-400/30";
-    case "Intermediate":
-      return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
-    case "Advanced":
-      return "text-red-400 bg-red-400/20 border-red-400/30";
-    default:
-      return "text-white/60 bg-white/10 border-white/20";
-  }
-};
+import { getDifficultyColor } from "@/utils/getDifficultyColor";
+import { COURSE_ACTIONS } from "./constants";
 
 const CourseDetails = () => {
   const { courseId = "" } = useParams<{ courseId: string }>();
@@ -74,30 +33,6 @@ const CourseDetails = () => {
       return getCourseById(axiosInstance, { id: courseId });
     },
     select: (data) => data.course,
-  });
-
-  const { data: lessons } = useSuspenseQuery({
-    queryKey: lessonKeys.all(courseId),
-    queryFn: async () => {
-      return getLessons(axiosInstance, { courseId });
-    },
-    select: (data) => data.lessons,
-  });
-
-  const { data: quizzes } = useSuspenseQuery({
-    queryKey: quizKeys.all(courseId),
-    queryFn: async () => {
-      return getQuizzes(axiosInstance, { courseId });
-    },
-    select: (data) => data.quizzes,
-  });
-
-  const { data: codeAssessments } = useSuspenseQuery({
-    queryKey: codeAssessmentKeys.all(courseId),
-    queryFn: async () => {
-      return getCodeAssessments(axiosInstance, { courseId });
-    },
-    select: (data) => data.codeAssessments,
   });
 
   const { mutate: deleteCourseMutation } = useMutation({
@@ -130,7 +65,13 @@ const CourseDetails = () => {
     },
   });
 
-  const stats = getCourseStats(lessons, quizzes, codeAssessments);
+  const handleAction = (url?: string) => {
+    if (url) {
+      navigate(url);
+    } else {
+      deleteCourseMutation();
+    }
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
@@ -152,6 +93,30 @@ const CourseDetails = () => {
           </Button>
         </div>
 
+        {/* Action Buttons */}
+        {user?.role === "ADMIN" && (
+          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
+            <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
+              <Settings className="h-5 w-5 text-blue-400" />
+              Course Management
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              {COURSE_ACTIONS.map((action) => (
+                <Button
+                  key={action.label}
+                  onClick={() =>
+                    handleAction(action.url ? action.url(courseId) : undefined)
+                  }
+                  className={`bg-${action.color}-500 hover:bg-${action.color}-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold`}
+                >
+                  <action.icon className="h-4 w-4 mr-2" />
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
           <div className="flex items-start justify-between mb-6">
             <div>
@@ -162,47 +127,48 @@ const CourseDetails = () => {
 
               {/* Difficulty Badge */}
               <div
-                className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(stats.difficulty)}`}
+                className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(course.difficulty)}`}
               >
-                {stats.difficulty}
+                {course.difficulty}
               </div>
             </div>
 
             {/* Course Thumbnail */}
             <div className="w-32 h-32 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/20">
-              <BookOpen className="h-16 w-16 text-white/60" />
+              {course.thumbnailUrl ? (
+                <img
+                  src={course.thumbnailUrl}
+                  alt={course.name}
+                  className="w-full h-full object-cover rounded-xl opacity-40"
+                />
+              ) : (
+                <BookOpen className="h-12 w-12 text-white/60" />
+              )}
             </div>
           </div>
 
           {/* Course Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
               <BookOpen className="h-6 w-6 text-blue-400 mx-auto mb-2" />
               <div className="text-xl font-bold text-white">
-                {stats.totalLessons}
+                {course.lessonsCount}
               </div>
               <div className="text-white/70 text-sm">Lessons</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
               <Brain className="h-6 w-6 text-purple-400 mx-auto mb-2" />
               <div className="text-xl font-bold text-white">
-                {stats.totalQuizzes}
+                {course.quizzesCount}
               </div>
               <div className="text-white/70 text-sm">Quizzes</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
               <Code className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
               <div className="text-xl font-bold text-white">
-                {stats.totalAssessments}
+                {course.codeAssessmentsCount}
               </div>
               <div className="text-white/70 text-sm">Assessments</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Users className="h-6 w-6 text-yellow-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.enrolledStudents}
-              </div>
-              <div className="text-white/70 text-sm">Enrolled</div>
             </div>
           </div>
           {!course?.feedbackSubmitted && (
@@ -211,62 +177,6 @@ const CourseDetails = () => {
             </div>
           )}
         </div>
-
-        {/* Action Buttons */}
-        {user?.role === "ADMIN" && (
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
-            <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
-              <Settings className="h-5 w-5 text-blue-400" />
-              Course Management
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                onClick={() => navigate(routes.COURSE_EDIT(course.id))}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-              >
-                <Edit3 className="h-4 w-4 mr-2" />
-                Edit Course
-              </Button>
-              <Button
-                onClick={() => deleteCourseMutation()}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete Course
-              </Button>
-              <Button
-                onClick={() => navigate(routes.LESSON_CREATE(course.id))}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Lesson
-              </Button>
-              <Button
-                onClick={() => navigate(routes.QUIZ_CREATE(course.id))}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Quiz
-              </Button>
-              <Button
-                onClick={() =>
-                  navigate(routes.CODE_ASSESSMENT_CREATE(course.id))
-                }
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Assessment
-              </Button>
-              <Button
-                onClick={() => navigate(routes.COURSE_FEEDBACKS(course.id))}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-              >
-                <Users className="h-4 w-4 mr-2" />
-                View Feedbacks
-              </Button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Content Sections */}
@@ -275,10 +185,10 @@ const CourseDetails = () => {
         <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
             <BookOpen className="h-5 w-5 text-blue-400" />
-            Lessons ({lessons.length})
+            Lessons
           </h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
-            {lessons.length === 0 ? (
+            {course.lessonsCount === 0 ? (
               <div className="text-center py-8">
                 <BookOpen className="h-12 w-12 text-white/30 mx-auto mb-3" />
                 <p className="text-white/60">No lessons available</p>
@@ -287,7 +197,7 @@ const CourseDetails = () => {
                 </p>
               </div>
             ) : (
-              lessons.map((lesson, index) => (
+              course.lessons?.map((lesson, index) => (
                 <Link
                   key={lesson.id}
                   to={routes.LESSON_DETAILS(courseId, lesson.id)}
@@ -295,7 +205,7 @@ const CourseDetails = () => {
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 font-semibold text-sm">
-                      {index + 1}
+                      L{index + 1}
                     </div>
                     <div className="flex-1">
                       <div className="font-medium text-white group-hover:text-blue-300 transition-colors">
@@ -317,10 +227,10 @@ const CourseDetails = () => {
         <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
             <Brain className="h-5 w-5 text-purple-400" />
-            Quizzes ({quizzes.length})
+            Quizzes
           </h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
-            {quizzes.length === 0 ? (
+            {course.quizzesCount === 0 ? (
               <div className="text-center py-8">
                 <Brain className="h-12 w-12 text-white/30 mx-auto mb-3" />
                 <p className="text-white/60">No quizzes available</p>
@@ -329,7 +239,7 @@ const CourseDetails = () => {
                 </p>
               </div>
             ) : (
-              quizzes.map((quiz, index) => (
+              course.quizzes?.map((quiz, index) => (
                 <Link
                   key={quiz.id}
                   to={routes.QUIZ_DETAILS(courseId, quiz.id)}
@@ -359,17 +269,17 @@ const CourseDetails = () => {
         <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
             <Code className="h-5 w-5 text-emerald-400" />
-            Code Assessments ({codeAssessments.length})
+            Code Assessments
           </h2>
           <div className="space-y-3 max-h-96 overflow-y-auto">
-            {codeAssessments.length === 0 ? (
+            {course.codeAssessmentsCount === 0 ? (
               <div className="text-center py-8">
                 <Code className="h-12 w-12 text-white/30 mx-auto mb-3" />
                 <p className="text-white/60">No assessments available</p>
                 <p className="text-white/40 text-sm">Add coding challenges</p>
               </div>
             ) : (
-              codeAssessments.map((assessment, index) => (
+              course.codeAssessments?.map((assessment, index) => (
                 <Link
                   key={assessment.id}
                   to={routes.CODE_ASSESSMENT_DETAILS(courseId, assessment.id)}

@@ -109,11 +109,17 @@ const CourseCreateForm = ({ type = "create" }: CourseFormType) => {
       {/* Header Section */}
       <div className="mb-8">
         <Button
-          onClick={() => navigate(routes.COURSES)}
+          onClick={() =>
+            navigate(
+              type === "edit"
+                ? routes.COURSE_DETAILS(courseId)
+                : routes.COURSES,
+            )
+          }
           className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Courses
+          {type === "edit" ? "Back to Course" : "Back to Courses"}
         </Button>
 
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
@@ -262,47 +268,8 @@ const CourseCreateForm = ({ type = "create" }: CourseFormType) => {
                 )}
               </Button>
             </div>
-
-            {/* Form Footer */}
-            <div className="pt-4 text-center">
-              <p className="text-white/50 text-sm">
-                {type === "edit"
-                  ? "Changes will be saved immediately and visible to all enrolled students"
-                  : "Once created, you can add lessons, quizzes, and assessments to your course"}
-              </p>
-            </div>
           </form>
         </Form>
-      </div>
-
-      {/* Additional Info Section */}
-      <div className="mt-8 rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-        <h3 className="text-lg font-semibold text-white mb-3">
-          {type === "edit" ? "Editing Tips" : "Next Steps"}
-        </h3>
-        <ul className="space-y-2 text-white/70 text-sm">
-          {type === "edit" ? (
-            <>
-              <li>
-                • Changes to course name and description are immediately visible
-              </li>
-              <li>
-                • Update the thumbnail to keep your course visually appealing
-              </li>
-              <li>
-                • Consider notifying enrolled students about significant changes
-              </li>
-            </>
-          ) : (
-            <>
-              <li>
-                • After creating, you can add lessons to build your curriculum
-              </li>
-              <li>• Create quizzes to test student understanding</li>
-              <li>• Add code assessments for hands-on practice</li>
-            </>
-          )}
-        </ul>
       </div>
     </div>
   );
