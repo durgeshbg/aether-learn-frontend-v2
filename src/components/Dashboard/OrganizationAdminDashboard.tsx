@@ -7,7 +7,7 @@ import {
   TrendingUp,
   Award,
   Clock,
-  BarChart3,
+  // BarChart3,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { userKeys } from "@/tanstack/keys/userKeys";
@@ -46,7 +46,7 @@ function OrganizationAdminDashboard() {
     navigate(routes.COURSES);
   };
 
-  const handleViewAnalytics = () => {};
+  // const handleViewAnalytics = () => {};
 
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
@@ -112,13 +112,13 @@ function OrganizationAdminDashboard() {
             <BookOpen className="h-4 w-4 mr-2" />
             Assign Courses
           </Button>
-          <Button
-            onClick={handleViewAnalytics}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            View Analytics
-          </Button>
+          {/* <Button */}
+          {/*   onClick={handleViewAnalytics} */}
+          {/*   className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-105" */}
+          {/* > */}
+          {/*   <BarChart3 className="h-4 w-4 mr-2" /> */}
+          {/*   View Analytics */}
+          {/* </Button> */}
         </div>
       </section>
 

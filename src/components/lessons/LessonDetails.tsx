@@ -1,9 +1,6 @@
 import { getLessonById } from "@/services/lesson";
-import { getModules } from "@/services/module";
 import { routes } from "@/static-data/routes";
 import { lessonKeys } from "@/tanstack/keys/lessonKeys";
-import { moduleKeys } from "@/tanstack/keys/moduleKeys";
-import type { Module } from "@/types/Module";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router";
@@ -20,35 +17,13 @@ import {
   Plus,
   Eye,
   CheckCircle,
-  Users,
-  Target,
   Trash2,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { DifficultyLevel, type DifficultyLevelType } from "@/types/Lesson";
-
-// Helper function to get dummy lesson stats (replace with real data from backend)
-const getLessonStats = (modules: Module[]) => ({
-  totalModules: modules.length,
-  estimatedDuration: `${Math.floor(Math.random() * 30) + 10} min`,
-  completionRate: Math.floor(Math.random() * 40) + 60, // 60-100%
-  enrolledStudents: Math.floor(Math.random() * 200) + 50,
-  lastUpdated: new Date().toLocaleDateString(),
-});
-
-const getDifficultyColor = (difficulty?: DifficultyLevelType) => {
-  switch (difficulty) {
-    case DifficultyLevel.BEGINNER:
-      return "text-green-400 bg-green-400/20 border-green-400/30";
-    case DifficultyLevel.INTERMEDIATE:
-      return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
-    case DifficultyLevel.ADVANCED:
-      return "text-red-400 bg-red-400/20 border-red-400/30";
-    default:
-      return "text-white/60 bg-white/10 border-white/20";
-  }
-};
+import { getDifficultyColor } from "@/utils/getDifficultyColor";
+import { getLessonStats } from "./helper";
+import { useMemo } from "react";
 
 const LessonDetails = () => {
   const { courseId = "", lessonId = "" } = useParams<{
@@ -64,14 +39,6 @@ const LessonDetails = () => {
       return getLessonById(axiosInstance, { courseId, id: lessonId });
     },
     select: (data) => data.lesson,
-  });
-
-  const { data: modules } = useSuspenseQuery({
-    queryKey: moduleKeys.all(courseId, lessonId),
-    queryFn: async () => {
-      return getModules(axiosInstance, { courseId, lessonId });
-    },
-    select: (data) => data.modules,
   });
 
   const handleEditLesson = () => {
@@ -93,7 +60,7 @@ const LessonDetails = () => {
     },
   });
 
-  const stats = getLessonStats(modules);
+  const stats = useMemo(() => getLessonStats(lesson), [lesson]);
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8 px-4">
@@ -126,18 +93,7 @@ const LessonDetails = () => {
                   >
                     {lesson.difficulty}
                   </div>
-                  <div className="flex items-center gap-1 text-white/70 text-sm">
-                    <Clock className="h-4 w-4" />
-                    <span>{stats.estimatedDuration}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-white/70 text-sm">
-                    <Layers className="h-4 w-4" />
-                    <span>{stats.totalModules} modules</span>
-                  </div>
                 </div>
-                <p className="text-white/70 text-sm">
-                  Last updated: {stats.lastUpdated}
-                </p>
               </div>
             </div>
 
@@ -168,22 +124,12 @@ const LessonDetails = () => {
                     </>
                   )}
                 </Button>
-
-                <Button
-                  onClick={() =>
-                    navigate(routes.MODULE_CREATE(courseId, lessonId))
-                  }
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Module
-                </Button>
               </div>
             )}
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
             <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
               <Layers className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
               <div className="text-xl font-bold text-white">
@@ -197,20 +143,6 @@ const LessonDetails = () => {
                 {stats.estimatedDuration}
               </div>
               <div className="text-white/70 text-sm">Duration</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Users className="h-6 w-6 text-purple-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.enrolledStudents}
-              </div>
-              <div className="text-white/70 text-sm">Students</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Target className="h-6 w-6 text-yellow-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.completionRate}%
-              </div>
-              <div className="text-white/70 text-sm">Completion</div>
             </div>
           </div>
         </div>
@@ -251,7 +183,7 @@ const LessonDetails = () => {
           <div className="flex items-center justify-between mb-6">
             <h2 className="flex items-center gap-2 text-2xl font-semibold text-white">
               <Layers className="h-6 w-6 text-emerald-400" />
-              Modules ({modules.length})
+              Modules ({stats.totalModules})
             </h2>
             {user?.role === "ADMIN" && (
               <Button
@@ -267,7 +199,7 @@ const LessonDetails = () => {
           </div>
 
           <div className="space-y-3 max-h-96 overflow-y-auto">
-            {modules.length === 0 ? (
+            {lesson.modules?.length === 0 ? (
               <div className="text-center py-12">
                 <Layers className="h-16 w-16 text-white/20 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-white/60 mb-2">
@@ -287,7 +219,7 @@ const LessonDetails = () => {
                 </Button>
               </div>
             ) : (
-              modules.map((module, index) => (
+              lesson.modules?.map((module, index) => (
                 <Link
                   key={module.id}
                   to={routes.MODULE_DETAILS(courseId, lessonId, module.id)}

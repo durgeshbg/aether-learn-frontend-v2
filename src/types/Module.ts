@@ -10,7 +10,7 @@ export type Module = {
   difficulty?: DifficultyLevelType;
   objectives?: string[];
   code?: string;
-  durationMinutes?: number;
+  durationMinutes: number;
 
   isBookmarked: boolean;
 

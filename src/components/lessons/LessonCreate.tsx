@@ -28,18 +28,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../ui/button";
-import {
-  PlayCircle,
-  Save,
-  ArrowLeft,
-  Edit3,
-  Plus,
-  BookOpen,
-  FileText,
-  Sparkles,
-  Clock,
-  Users,
-} from "lucide-react";
+import { PlayCircle, Save, ArrowLeft, BookOpen, FileText } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -53,7 +42,17 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
     courseId: string;
     lessonId: string;
   }>();
-  const { title, buttonText } = getLessonFormData(type);
+  const {
+    title,
+    buttonText,
+    subtitle,
+    icon,
+    contentTip,
+    objectivesTip,
+    buttonLoadingText,
+    guidelines,
+    backLinkText,
+  } = getLessonFormData(type);
   const navigate = useNavigate();
 
   const { data: lesson } = useSuspenseQuery({
@@ -151,36 +150,18 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
           className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          {type === "edit" ? "Back to Lesson" : "Back to Course"}
+          {backLinkText}
         </Button>
 
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
-              {type === "edit" ? (
-                <Edit3 className="h-8 w-8 text-white/80" />
-              ) : (
-                <Plus className="h-8 w-8 text-white/80" />
-              )}
+              {icon}
             </div>
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">
-                {type === "edit"
-                  ? "Update lesson content and settings"
-                  : "Create engaging lesson content for your students"}
-              </p>
+              <p className="text-white/70 text-lg">{subtitle}</p>
             </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mt-6">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
-            <span className="text-white/70 text-sm">
-              {type === "edit"
-                ? "Make your changes and save to update the lesson"
-                : "Fill in the lesson details to create engaging content"}
-            </span>
           </div>
         </div>
       </div>
@@ -240,12 +221,7 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
                       </FormControl>
                       <FormMessage className="text-red-400 text-sm" />
                       <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong> Use
-                          clear explanations, examples, and step-by-step
-                          instructions. Consider adding interactive elements and
-                          practical exercises to enhance learning.
-                        </p>
+                        <p className="text-white/60 text-sm">{contentTip}</p>
                       </div>
                     </FormItem>
                   )}
@@ -312,11 +288,7 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
                       </FormControl>
                       <FormMessage className="text-red-400 text-sm" />
                       <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong> Clear
-                          objectives help students understand what they will
-                          learn and achieve by the end of the lesson.
-                        </p>
+                        <p className="text-white/60 text-sm">{objectivesTip}</p>
                       </div>
                     </FormItem>
                   )}
@@ -336,11 +308,7 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
                     {isSubmitting ? (
                       <div className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>
-                          {type === "edit"
-                            ? "Updating Lesson..."
-                            : "Creating Lesson..."}
-                        </span>
+                        <span>{buttonLoadingText}</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-2">
@@ -349,15 +317,6 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
                       </div>
                     )}
                   </Button>
-                </div>
-
-                {/* Form Footer */}
-                <div className="pt-4 text-center">
-                  <p className="text-white/50 text-sm">
-                    {type === "edit"
-                      ? "Changes will be saved immediately and visible to all students"
-                      : "Once created, you can add modules and interactive content to your lesson"}
-                  </p>
                 </div>
               </form>
             </Form>
@@ -373,67 +332,12 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
               Lesson Guidelines
             </h3>
             <ul className="space-y-3 text-white/70 text-sm">
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Start with clear learning objectives</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Break content into digestible sections</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Include practical examples and exercises</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-2 flex-shrink-0" />
-                <span>End with a summary and next steps</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Estimated Metrics */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Clock className="h-5 w-5 text-blue-400" />
-              Estimated Metrics
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-sm">Reading Time</span>
-                <span className="text-white font-medium">~15 min</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-sm">Difficulty</span>
-                <span className="text-emerald-400 font-medium">Beginner</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70 text-sm">Completion</span>
-                <span className="text-white font-medium">~20 min</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Next Steps */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-3">
-              <Users className="h-5 w-5 text-yellow-400" />
-              {type === "edit" ? "After Updating" : "Next Steps"}
-            </h3>
-            <ul className="space-y-2 text-white/70 text-sm">
-              {type === "edit" ? (
-                <>
-                  <li>• Review the updated content for clarity</li>
-                  <li>• Notify students about significant changes</li>
-                  <li>• Consider updating related modules</li>
-                </>
-              ) : (
-                <>
-                  <li>• Add interactive modules to enhance learning</li>
-                  <li>• Create quizzes to test understanding</li>
-                  <li>• Include multimedia content for engagement</li>
-                </>
-              )}
+              {guidelines.map((line, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
+                  <span>{line}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
