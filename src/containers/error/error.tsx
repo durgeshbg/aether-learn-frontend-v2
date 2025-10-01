@@ -1,14 +1,6 @@
 import { routes } from "@/static-data/routes";
 import { Link } from "react-router";
-import {
-  Home,
-  ArrowLeft,
-  AlertTriangle,
-  Search,
-  RefreshCw,
-  MapPin,
-  Compass,
-} from "lucide-react";
+import { Home, ArrowLeft, AlertTriangle, Search, MapPin } from "lucide-react";
 
 export default function Error({
   resetErrorBoundry,
@@ -47,23 +39,17 @@ export default function Error({
 
           {/* Helpful Suggestions */}
           <div className="grid md:grid-cols-2 gap-4 mb-6">
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-4">
               <Search className="h-5 w-5 text-blue-400 mb-2" />
-              <h3 className="text-white font-medium text-sm mb-1">
+              <h3 className="text-white font-medium text-md mb-1">
                 Double-check the URL
               </h3>
-              <p className="text-white/60 text-xs">
-                Make sure the web address is correct
-              </p>
             </div>
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center gap-4">
               <MapPin className="h-5 w-5 text-emerald-400 mb-2" />
-              <h3 className="text-white font-medium text-sm mb-1">
+              <h3 className="text-white font-medium text-md mb-1">
                 Navigate from Home
               </h3>
-              <p className="text-white/60 text-xs">
-                Start fresh from our homepage
-              </p>
             </div>
           </div>
         </div>
@@ -86,39 +72,6 @@ export default function Error({
             <ArrowLeft className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
             Go Back
           </button>
-        </div>
-
-        {/* Additional Options */}
-        <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-          <h3 className="text-white font-semibold mb-4">Still need help?</h3>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => window.location.reload()}
-              className="inline-flex items-center px-6 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-400/30 font-medium transition-all duration-300 hover:scale-105 text-sm group"
-            >
-              <RefreshCw className="h-4 w-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
-              Refresh Page
-            </button>
-
-            <Link
-              to="/help"
-              className="inline-flex items-center px-6 py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 font-medium transition-all duration-300 hover:scale-105 text-sm group"
-            >
-              <Compass className="h-4 w-4 mr-2 group-hover:scale-110 transition-transform" />
-              Get Help
-            </Link>
-          </div>
-        </div>
-
-        {/* Footer Message */}
-        <div className="mt-8">
-          <p className="text-white/50 text-sm">
-            Error Code: 404 • Page Not Found •
-            <span className="text-white/70">
-              {" "}
-              Don't worry, it happens to the best of us!
-            </span>
-          </p>
         </div>
       </div>
 
