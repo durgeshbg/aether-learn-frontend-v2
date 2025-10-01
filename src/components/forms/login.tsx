@@ -207,9 +207,6 @@ export default function LoginForm() {
 
             {/* Footer Links */}
             <div className="mt-6 text-center space-y-2">
-              <button className="text-sm text-primary hover:text-primary/80 transition-colors">
-                Forgot your password?
-              </button>
               <p className="text-xs text-muted-foreground">
                 Need help? Contact your institution's IT support
               </p>

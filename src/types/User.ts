@@ -12,11 +12,16 @@ export type User = {
   firstName: string;
   lastName: string;
   orgAdminOf: {
-    select: {
-      id: string;
-      name: string;
-    };
-  };
+    id: string;
+    name: string;
+  } | null;
+  organization: {
+    id: string;
+    name: string;
+  } | null;
+  year?: number | null;
+  branch?: string | null;
+  uniqueId?: string | null;
 };
 
 export type UserWithDetails = {
@@ -34,6 +39,9 @@ export type UserWithDetails = {
   streakCount: number;
   codeSolutions?: CodeSolution[];
   quizResults?: QuizResult[];
+  year?: number | null;
+  branch?: string | null;
+  uniqueId?: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -131,6 +139,9 @@ export const UserCreateSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   organizationId: z.string().cuid("Invalid organization ID format").optional(),
+  branch: z.string().optional(),
+  uniqueId: z.string().optional(),
+  year: z.number().int().min(1900).max(2100).optional(),
   orgAdmin: z.boolean().default(false).optional(),
   role: z
     .enum(["ADMIN", "USER"], {
@@ -146,6 +157,9 @@ export const UserDetailsUpdateSchema = z.object({
   firstName: z.string().min(1, "First name is required").optional(),
   lastName: z.string().min(1, "Last name is required").optional(),
   email: z.string().email().optional(),
+  branch: z.string().optional(),
+  uniqueId: z.string().optional(),
+  year: z.number().int().min(1900).max(2100).optional(),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters long")

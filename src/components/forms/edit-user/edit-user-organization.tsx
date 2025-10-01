@@ -31,7 +31,6 @@ import {
   Building2,
   School,
   Save,
-  Sparkles,
   CheckCircle,
   MapPin,
 } from "lucide-react";
@@ -87,10 +86,10 @@ const EditUserOrganizationForm = () => {
   }
 
   // Enhanced user data for display
-  const enhancedUser = {
-    ...user,
-    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
-  };
+  // const enhancedUser = {
+  //   ...user,
+  //   avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
+  // };
 
   const currentOrganization = organizations.find(
     (org: Organization) => org.id === user.organization?.id,
@@ -119,10 +118,6 @@ const EditUserOrganizationForm = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               Change Organization
             </h1>
-            <p className="text-muted-foreground">
-              Update institutional affiliation for {user.firstName}{" "}
-              {user.lastName}
-            </p>
           </div>
         </div>
 
@@ -132,16 +127,16 @@ const EditUserOrganizationForm = () => {
           <div className="relative p-6 bg-gradient-to-br from-secondary/10 to-primary/10 border-b border-border/20">
             <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent" />
             <div className="relative flex items-center gap-4">
-              <div className="relative">
-                <img
-                  src={enhancedUser.avatar}
-                  alt={`${user.firstName} ${user.lastName}`}
-                  className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg"
-                />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-secondary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-secondary/30">
-                  <Building2 className="h-3 w-3 text-secondary" />
-                </div>
-              </div>
+              {/* <div className="relative"> */}
+              {/*   <img */}
+              {/*     src={enhancedUser.avatar} */}
+              {/*     alt={`${user.firstName} ${user.lastName}`} */}
+              {/*     className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg" */}
+              {/*   /> */}
+              {/*   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-secondary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-secondary/30"> */}
+              {/*     <Building2 className="h-3 w-3 text-secondary" /> */}
+              {/*   </div> */}
+              {/* </div> */}
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-foreground">
                   {user.firstName} {user.lastName}
@@ -313,25 +308,6 @@ const EditUserOrganizationForm = () => {
 
           {/* Subtle glow effect */}
           <div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-secondary/5 to-primary/5 blur-xl" />
-        </div>
-
-        {/* Warning Card */}
-        <div className="mt-6 rounded-xl bg-yellow-500/10 backdrop-blur-sm border border-yellow-500/20 p-4">
-          <div className="flex items-start gap-3">
-            <div className="p-1 bg-yellow-500/20 rounded-lg">
-              <Sparkles className="h-4 w-4 text-yellow-600" />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-yellow-800 mb-1">
-                Organization Transfer
-              </h4>
-              <p className="text-sm text-yellow-700">
-                Changing the organization will transfer the student's access and
-                permissions to the new institution. This action will notify both
-                the student and the organization administrators.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -30,22 +30,9 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { UserCreateSchema } from "@/types/User";
 import { organizationKeys } from "@/tanstack/keys/organizationKeys";
 import { getOrganizations } from "@/services/organization";
-import {
-  UserPlus,
-  User,
-  Mail,
-  Lock,
-  Building2,
-  Shield,
-  ArrowLeft,
-  Sparkles,
-} from "lucide-react";
-import { useNavigate } from "react-router";
-import { routes } from "@/static-data/routes";
+import { UserPlus, User, Mail, Lock, Building2, Shield } from "lucide-react";
 
 export default function AddUserForm() {
-  const navigate = useNavigate();
-
   const form = useForm<z.infer<typeof UserCreateSchema>>({
     resolver: zodResolver(UserCreateSchema),
     defaultValues: {
@@ -54,6 +41,9 @@ export default function AddUserForm() {
       firstName: "",
       lastName: "",
       organizationId: "",
+      year: undefined,
+      branch: "",
+      uniqueId: "",
       orgAdmin: false,
       role: "USER",
     },
@@ -94,13 +84,6 @@ export default function AddUserForm() {
       <div className="relative max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(routes.USERS)}
-            className="p-2 hover:bg-card/40 backdrop-blur-sm"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               Create New Student
@@ -245,6 +228,81 @@ export default function AddUserForm() {
                   </div>
                 </div>
 
+                {/* Academic Year */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <User className="h-5 w-5 text-primary" />
+                    Academic Information
+                  </h3>
+
+                  {/* Unique ID, branch and year */}
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="uniqueId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Unique ID
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="University Roll Number or ID"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="branch"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Branch
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Computer Science"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="year"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Year
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min={1900}
+                              max={2100}
+                              placeholder="Year of graduation (e.g., 2024)"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
                 {/* Organization & Role Section */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
@@ -358,7 +416,6 @@ export default function AddUserForm() {
                     type="submit"
                     className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 backdrop-blur-sm transition-all duration-200 hover:shadow-xl hover:shadow-primary/30"
                   >
-                    <Sparkles className="h-4 w-4 mr-2" />
                     Create Student
                   </Button>
 

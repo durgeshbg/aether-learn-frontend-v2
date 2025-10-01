@@ -31,7 +31,6 @@ import {
   User as UserIcon,
   Crown,
   Save,
-  CheckCircle,
   AlertTriangle,
   Users,
 } from "lucide-react";
@@ -47,20 +46,6 @@ const getRoleIcon = (roleValue: string) => {
       return UserIcon;
     default:
       return Users;
-  }
-};
-
-// Role description mapping
-const getRoleDescription = (roleValue: string) => {
-  switch (roleValue) {
-    case "ADMIN":
-      return "Full system access with all administrative privileges";
-    case "ORG_ADMIN":
-      return "Organization-level administration with user management";
-    case "USER":
-      return "Standard student access with course and assignment features";
-    default:
-      return "Standard user access";
   }
 };
 
@@ -118,17 +103,13 @@ const EditUserRoleForm = () => {
   }
 
   // Enhanced user data for display
-  const enhancedUser = {
-    ...user,
-    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
-  };
+  // const enhancedUser = {
+  //   ...user,
+  //   avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
+  // };
 
   const currentRole = roles.find((role) => role.value === user.role);
-  const selectedRole = roles.find((role) => role.value === form.watch("role"));
   const CurrentRoleIcon = getRoleIcon(user.role);
-  const SelectedRoleIcon = selectedRole
-    ? getRoleIcon(selectedRole.value)
-    : UserIcon;
 
   return (
     <div className="min-h-screen bg-background/50 backdrop-blur-sm p-6">
@@ -146,14 +127,9 @@ const EditUserRoleForm = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              Update User Role
-            </h1>
-            <p className="text-muted-foreground">
-              Change access permissions for {user.firstName} {user.lastName}
-            </p>
-          </div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Update User Role
+          </h1>
         </div>
 
         {/* Main Form Card */}
@@ -162,16 +138,16 @@ const EditUserRoleForm = () => {
           <div className="relative p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-b border-border/20">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <div className="relative flex items-center gap-4">
-              <div className="relative">
-                <img
-                  src={enhancedUser.avatar}
-                  alt={`${user.firstName} ${user.lastName}`}
-                  className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg"
-                />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/30">
-                  <CurrentRoleIcon className="h-3 w-3 text-primary" />
-                </div>
-              </div>
+              {/* <div className="relative"> */}
+              {/*   <img */}
+              {/*     src={enhancedUser.avatar} */}
+              {/*     alt={`${user.firstName} ${user.lastName}`} */}
+              {/*     className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg" */}
+              {/*   /> */}
+              {/*   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/30"> */}
+              {/*     <CurrentRoleIcon className="h-3 w-3 text-primary" /> */}
+              {/*   </div> */}
+              {/* </div> */}
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-foreground">
                   {user.firstName} {user.lastName}
@@ -196,29 +172,6 @@ const EditUserRoleForm = () => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6"
               >
-                {/* Current Role Display */}
-                <div className="p-4 rounded-xl bg-muted/10 border border-border/20">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                    <Shield className="h-4 w-4" />
-                    Current Role
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`p-2 rounded-lg ${getRoleColor(user.role).replace("text-", "text-").replace("bg-", "bg-").replace("border-", "")}`}
-                    >
-                      <CurrentRoleIcon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {currentRole?.label || user.role}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {getRoleDescription(user.role)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Role Selection */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
@@ -258,9 +211,6 @@ const EditUserRoleForm = () => {
                                       <p className="font-medium">
                                         {role.label}
                                       </p>
-                                      <p className="text-xs text-muted-foreground">
-                                        {getRoleDescription(role.value)}
-                                      </p>
                                     </div>
                                   </div>
                                 </SelectItem>
@@ -272,29 +222,6 @@ const EditUserRoleForm = () => {
                       </FormItem>
                     )}
                   />
-
-                  {/* Preview Selected Role */}
-                  {selectedRole && selectedRole.value !== user.role && (
-                    <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20">
-                      <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4" />
-                        New Role Assignment
-                      </h4>
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg bg-green-500/20`}>
-                          <SelectedRoleIcon className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-green-800">
-                            {selectedRole.label}
-                          </p>
-                          <p className="text-sm text-green-700">
-                            {getRoleDescription(selectedRole.value)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Actions */}
@@ -360,10 +287,8 @@ const EditUserRoleForm = () => {
                 Role Change Impact
               </h4>
               <p className="text-sm text-orange-700">
-                Changing user roles will immediately affect their access
-                permissions and available features. The user will receive a
-                notification about their role change and may need to log in
-                again.
+                Please log out and log back in for the role changes to take full
+                effect.
               </p>
             </div>
           </div>

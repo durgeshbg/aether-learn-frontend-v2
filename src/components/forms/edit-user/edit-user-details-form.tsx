@@ -23,11 +23,9 @@ import {
   User as UserIcon,
   Mail,
   Lock,
-  Edit3,
   Save,
   Eye,
   EyeOff,
-  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -50,6 +48,10 @@ const EditUserDetailsForm = () => {
       ...(user.firstName && { firstName: user.firstName }),
       ...(user.lastName && { lastName: user.lastName }),
       ...(user.email && { email: user.email }),
+      ...(user.branch && { branch: user.branch }),
+      ...(user.year && { year: user.year }),
+      ...(user.uniqueId && { uniqueId: user.uniqueId }),
+      // Leave password blank for security reasons
       // password: '',
     },
   });
@@ -82,10 +84,10 @@ const EditUserDetailsForm = () => {
   }
 
   // Enhanced user data for display
-  const enhancedUser = {
-    ...user,
-    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
-  };
+  // const enhancedUser = {
+  //   ...user,
+  //   avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
+  // };
 
   return (
     <div className="min-h-screen bg-background/50 backdrop-blur-sm p-6">
@@ -103,14 +105,9 @@ const EditUserDetailsForm = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              Edit Student Details
-            </h1>
-            <p className="text-muted-foreground">
-              Update personal information for {user.firstName} {user.lastName}
-            </p>
-          </div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Edit Student Details
+          </h1>
         </div>
 
         {/* Main Form Card */}
@@ -119,16 +116,16 @@ const EditUserDetailsForm = () => {
           <div className="relative p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-b border-border/20">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <div className="relative flex items-center gap-4">
-              <div className="relative">
-                <img
-                  src={enhancedUser.avatar}
-                  alt={`${user.firstName} ${user.lastName}`}
-                  className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg"
-                />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/30">
-                  <Edit3 className="h-3 w-3 text-primary" />
-                </div>
-              </div>
+              {/* <div className="relative"> */}
+              {/*   <img */}
+              {/*     src={enhancedUser.avatar} */}
+              {/*     alt={`${user.firstName} ${user.lastName}`} */}
+              {/*     className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg" */}
+              {/*   /> */}
+              {/*   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/30"> */}
+              {/*     <Edit3 className="h-3 w-3 text-primary" /> */}
+              {/*   </div> */}
+              {/* </div> */}
               <div>
                 <h2 className="text-xl font-semibold text-foreground">
                   {user.firstName} {user.lastName}
@@ -269,6 +266,77 @@ const EditUserDetailsForm = () => {
                   </div>
                 </div>
 
+                {/* Academic info */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <UserIcon className="h-5 w-5 text-primary" />
+                    Academic Information
+                  </h3>
+
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="branch"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Branch
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Computer Science"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="year"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Year
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="2026"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="uniqueId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-foreground font-medium">
+                            Unique ID
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="U20261001"
+                              className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
                 {/* Actions */}
                 <div className="flex gap-4 pt-6 border-t border-border/20">
                   <Button
@@ -315,25 +383,6 @@ const EditUserDetailsForm = () => {
 
           {/* Subtle glow effect */}
           <div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 blur-xl" />
-        </div>
-
-        {/* Info Card */}
-        <div className="mt-6 rounded-xl bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 p-4">
-          <div className="flex items-start gap-3">
-            <div className="p-1 bg-blue-500/20 rounded-lg">
-              <Sparkles className="h-4 w-4 text-blue-600" />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-blue-800 mb-1">
-                Update Information
-              </h4>
-              <p className="text-sm text-blue-700">
-                Changes will be saved immediately and the student will be
-                notified via email. Leave the password field blank if you don't
-                want to change it.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
