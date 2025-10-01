@@ -143,16 +143,9 @@ const OrganizationEditCourseForm = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              {title}
-            </h1>
-            <p className="text-muted-foreground">
-              {formType === "add"
-                ? "Assign courses to this college"
-                : "Remove courses from this college"}
-            </p>
-          </div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            {title}
+          </h1>
         </div>
 
         {/* Card */}

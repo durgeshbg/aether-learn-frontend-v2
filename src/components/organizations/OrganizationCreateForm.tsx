@@ -1,11 +1,24 @@
 import { creatOrganization } from "@/services/organization";
+import { routes } from "@/static-data/routes";
 import { organizationKeys } from "@/tanstack/keys/organizationKeys";
 import { OrganizationCreateSchema } from "@/types/Organization";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import {
+  Building2,
+  Globe,
+  GraduationCap,
+  Image,
+  Mail,
+  MapPin,
+  Phone,
+  Save,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import z from "zod";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -15,31 +28,12 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { routes } from "@/static-data/routes";
-import { useNavigate } from "react-router";
-import {
-  ArrowLeft,
-  Building2,
-  GraduationCap,
-  Mail,
-  Phone,
-  MapPin,
-  Globe,
-  Image,
-  Save,
-  Sparkles,
-} from "lucide-react";
 
 const OrganizationCreateForm = () => {
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof OrganizationCreateSchema>>({
     resolver: zodResolver(OrganizationCreateSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-    },
   });
 
   const { mutate, isPending } = useMutation({
@@ -85,24 +79,9 @@ const OrganizationCreateForm = () => {
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--primary)_0%,_transparent_50%)] opacity-10" />
 
       <div className="relative max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(routes.ORGANIZATIONS)}
-            className="p-2 hover:bg-card/40 backdrop-blur-sm"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              Create New College
-            </h1>
-            <p className="text-muted-foreground">
-              Add a new educational institution to the network
-            </p>
-          </div>
-        </div>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          Create New College
+        </h1>
 
         {/* Main Form Card */}
         <div className="rounded-2xl bg-card/40 backdrop-blur-md border border-border/20 shadow-2xl overflow-hidden">
@@ -113,14 +92,9 @@ const OrganizationCreateForm = () => {
               <div className="p-3 bg-primary/20 rounded-xl backdrop-blur-sm border border-primary/30">
                 <GraduationCap className="h-6 w-6 text-primary" />
               </div>
-              <div>
-                <h2 className="text-xl font-semibold text-foreground">
-                  College Information
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  Fill in the details to create a new college profile
-                </p>
-              </div>
+              <h2 className="text-xl font-semibold text-foreground">
+                College Information
+              </h2>
             </div>
           </div>
 
@@ -362,25 +336,6 @@ const OrganizationCreateForm = () => {
 
           {/* Subtle glow effect */}
           <div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 blur-xl" />
-        </div>
-
-        {/* Info Card */}
-        <div className="mt-6 rounded-xl bg-blue-500/10 backdrop-blur-sm border border-blue-500/20 p-4">
-          <div className="flex items-start gap-3">
-            <div className="p-1 bg-blue-500/20 rounded-lg">
-              <Sparkles className="h-4 w-4 text-blue-600" />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-blue-800 mb-1">
-                College Creation
-              </h4>
-              <p className="text-sm text-blue-700">
-                All fields except name and description are optional. You can
-                always edit the college information later. The college will be
-                created with default settings and ready for student enrollment.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

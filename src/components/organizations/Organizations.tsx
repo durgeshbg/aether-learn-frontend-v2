@@ -2,10 +2,12 @@ import { Outlet, useNavigate, useLocation } from "react-router";
 import { Button } from "../ui/button";
 import { routes } from "@/static-data/routes";
 import { Building2, Plus, Eye } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Organizations = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const handleAddOrganization = () => {
     navigate(routes.ORGANIZATION_CREATE);
@@ -29,23 +31,18 @@ const Organizations = () => {
               <div className="p-2 rounded-xl bg-primary/10 backdrop-blur-sm">
                 <Building2 className="h-6 w-6 text-primary" />
               </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                  Organizations
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Manage educational institutions and their settings
-                </p>
-              </div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                Organizations
+              </h1>
             </div>
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex gap-3 mt-6">
-            <Button
-              onClick={handleViewOrganizations}
-              variant={isViewOrganizationsActive ? "default" : "outline"}
-              className={`
+          {user?.role === "ADMIN" && (
+            <div className="flex gap-3 mt-6">
+              <Button
+                onClick={handleViewOrganizations}
+                variant={isViewOrganizationsActive ? "default" : "outline"}
+                className={`
                 relative overflow-hidden backdrop-blur-sm transition-all duration-300
                 ${
                   isViewOrganizationsActive
@@ -53,18 +50,18 @@ const Organizations = () => {
                     : "bg-card/40 border-border/40 hover:bg-card/60 hover:border-border/60"
                 }
               `}
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              View Organizations
-              {isViewOrganizationsActive && (
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5 animate-pulse" />
-              )}
-            </Button>
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                View Organizations
+                {isViewOrganizationsActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5 animate-pulse" />
+                )}
+              </Button>
 
-            <Button
-              onClick={handleAddOrganization}
-              variant={isAddOrganizationActive ? "default" : "outline"}
-              className={`
+              <Button
+                onClick={handleAddOrganization}
+                variant={isAddOrganizationActive ? "default" : "outline"}
+                className={`
                 relative overflow-hidden backdrop-blur-sm transition-all duration-300
                 ${
                   isAddOrganizationActive
@@ -72,14 +69,15 @@ const Organizations = () => {
                     : "bg-card/40 border-border/40 hover:bg-card/60 hover:border-border/60 hover:shadow-md"
                 }
               `}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Organization
-              {isAddOrganizationActive && (
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5 animate-pulse" />
-              )}
-            </Button>
-          </div>
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Organization
+                {isAddOrganizationActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/5 animate-pulse" />
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

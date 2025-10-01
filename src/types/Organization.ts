@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Role } from "./User";
+// import type { Role } from "./User";
 
 export type Organization = {
   id: string;

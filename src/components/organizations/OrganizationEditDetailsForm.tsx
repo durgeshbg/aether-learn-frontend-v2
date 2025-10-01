@@ -24,7 +24,6 @@ import { routes } from "@/static-data/routes";
 import {
   ArrowLeft,
   Building2,
-  GraduationCap,
   Mail,
   Phone,
   MapPin,
@@ -32,7 +31,6 @@ import {
   Image,
   Save,
   Sparkles,
-  Edit3,
 } from "lucide-react";
 
 const OrganizationEditDetailsForm = () => {
@@ -82,14 +80,6 @@ const OrganizationEditDetailsForm = () => {
     mutate(data);
   };
 
-  // Enhanced college data for display
-  const enhancedCollege = {
-    ...organization,
-    logo:
-      organization.logoUrl ||
-      `https://api.dicebear.com/7.x/initials/svg?seed=${organization.name}&backgroundColor=random`,
-  };
-
   return (
     <div className="min-h-screen bg-background/50 backdrop-blur-sm p-6">
       {/* Background Effects */}
@@ -124,16 +114,11 @@ const OrganizationEditDetailsForm = () => {
           <div className="relative p-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-b border-border/20">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <div className="relative flex items-center gap-4">
-              <div className="relative">
-                <img
-                  src={enhancedCollege.logo}
-                  alt={organization.name}
-                  className="w-16 h-16 rounded-2xl bg-muted border-3 border-background shadow-lg"
-                />
-                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/30">
-                  <Edit3 className="h-3 w-3 text-primary" />
-                </div>
-              </div>
+              <img
+                src={organization.logoUrl}
+                alt={organization.name}
+                className="w-16 h-16 rounded-2xl bg-muted border-3 border-background shadow-lg"
+              />
               <div>
                 <h2 className="text-xl font-semibold text-foreground">
                   {organization.name}
@@ -141,10 +126,6 @@ const OrganizationEditDetailsForm = () => {
                 <p className="text-sm text-muted-foreground">
                   {organization.description}
                 </p>
-                <div className="mt-1 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-700 border border-blue-500/30">
-                  <GraduationCap className="h-3 w-3 mr-1" />
-                  College
-                </div>
               </div>
             </div>
           </div>
