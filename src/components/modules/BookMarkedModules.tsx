@@ -17,6 +17,7 @@ function BookMarkedModules() {
 
   const bookmarkedModuleURLs = bookmarks?.map((b) => ({
     title: b.module.title,
+    lessonTitle: b.module.lesson.title,
     url: getModuleLink(b.module),
   }));
 
@@ -72,7 +73,9 @@ function BookMarkedModules() {
                   {/* URL indicator */}
                   <div className="flex items-center gap-2 text-muted-foreground text-sm">
                     <div className="w-2 h-2 bg-ring/60 rounded-full" />
-                    <span className="font-mono opacity-75">Module Link</span>
+                    <span className="font-mono opacity-75">
+                      {module.lessonTitle}
+                    </span>
                   </div>
                 </div>
 

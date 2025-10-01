@@ -15,10 +15,7 @@ import {
   Code2,
   Globe,
   Clock,
-  Eye,
-  Users,
   CheckCircle,
-  Play,
   Bookmark,
   Settings,
   Loader2Icon,
@@ -33,44 +30,7 @@ import {
 import { userKeys } from "@/tanstack/keys/userKeys";
 import { useMemo } from "react";
 import { getDifficultyColor } from "@/utils/getDifficultyColor";
-
-// Helper function to get dummy module stats (replace with real data from backend)
-const getModuleStats = () => ({
-  estimatedDuration: `${Math.floor(Math.random() * 15) + 5} min`,
-  completionRate: Math.floor(Math.random() * 40) + 60, // 60-100%
-  viewCount: Math.floor(Math.random() * 500) + 100,
-  studentsCompleted: Math.floor(Math.random() * 100) + 20,
-  lastUpdated: new Date().toLocaleDateString(),
-  moduleType: ["Text", "Video", "Interactive", "Code"][
-    Math.floor(Math.random() * 4)
-  ],
-});
-
-const getModuleTypeIcon = (type: string) => {
-  switch (type) {
-    case "Video":
-      return <Play className="h-5 w-5" />;
-    case "Interactive":
-      return <Settings className="h-5 w-5" />;
-    case "Code":
-      return <Code2 className="h-5 w-5" />;
-    default:
-      return <FileText className="h-5 w-5" />;
-  }
-};
-
-const getModuleTypeColor = (type: string) => {
-  switch (type) {
-    case "Video":
-      return "text-purple-400 bg-purple-400/20";
-    case "Interactive":
-      return "text-emerald-400 bg-emerald-400/20";
-    case "Code":
-      return "text-blue-400 bg-blue-400/20";
-    default:
-      return "text-white/80 bg-white/10";
-  }
-};
+import { getModuleStats } from "./constants";
 
 const ModuleDetails = () => {
   const {
@@ -164,7 +124,8 @@ const ModuleDetails = () => {
     bookmarkModuleMutation();
   };
 
-  const stats = getModuleStats();
+  const stats = getModuleStats(module);
+
   const language = LANGUAGES_MAP[module.languageId!];
   const getBookmarkButtonClass = (isBookmarked: boolean) =>
     isBookmarked
@@ -260,38 +221,6 @@ const ModuleDetails = () => {
               )}
             </div>
           </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Eye className="h-6 w-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.viewCount}
-              </div>
-              <div className="text-white/70 text-sm">Views</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Users className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.studentsCompleted}
-              </div>
-              <div className="text-white/70 text-sm">Completed</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <CheckCircle className="h-6 w-6 text-yellow-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.completionRate}%
-              </div>
-              <div className="text-white/70 text-sm">Success Rate</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Clock className="h-6 w-6 text-purple-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.estimatedDuration}
-              </div>
-              <div className="text-white/70 text-sm">Duration</div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -357,16 +286,6 @@ const ModuleDetails = () => {
               Module Details
             </h2>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
-                <span className="text-white/70">Module Type</span>
-                <div
-                  className={`flex items-center gap-2 px-3 py-1 rounded-lg font-semibold text-sm ${getModuleTypeColor(stats.moduleType)}`}
-                >
-                  {getModuleTypeIcon(stats.moduleType)}
-                  {stats.moduleType}
-                </div>
-              </div>
-
               {language && (
                 <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
                   <span className="text-white/70">Programming Language</span>

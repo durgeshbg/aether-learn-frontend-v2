@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { getModuleFormData, languages, type ModuleFormType } from "./constnats";
+import { getModuleFormData, languages, type ModuleFormType } from "./constants";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { moduleKeys } from "@/tanstack/keys/moduleKeys";
 import { createModule, getModuleById, updateModule } from "@/services/module";
@@ -31,16 +31,10 @@ import {
   Layers,
   Save,
   ArrowLeft,
-  Edit3,
-  Plus,
   FileText,
   Code2,
   Globe,
-  Sparkles,
   BookOpen,
-  Lightbulb,
-  Zap,
-  Target,
 } from "lucide-react";
 import { difficultyLevels } from "../lessons/constants";
 
@@ -54,8 +48,16 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
     lessonId: string;
     moduleId: string;
   }>();
-  const { title, buttonText } = getModuleFormData(type);
   const navigate = useNavigate();
+  const {
+    title,
+    buttonText,
+    backButtonText,
+    icon,
+    description,
+    guidelines,
+    codeBestPractices,
+  } = getModuleFormData(type);
 
   const { data: module } = useSuspenseQuery({
     queryKey: moduleKeys.getById(courseId, lessonId, moduleId),
@@ -132,6 +134,14 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
     },
   });
 
+  const handleBack = () => {
+    if (type === "edit") {
+      navigate(routes.MODULE_DETAILS(courseId, lessonId, moduleId));
+    } else {
+      navigate(routes.LESSON_DETAILS(courseId, lessonId));
+    }
+  };
+
   const onSubmit = (
     data:
       | z.infer<typeof ModuleCreateSchema>
@@ -151,46 +161,22 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
       {/* Header Section */}
       <div className="mb-8">
         <Button
-          onClick={() =>
-            navigate(
-              type === "edit"
-                ? routes.MODULE_DETAILS(courseId, lessonId, moduleId)
-                : routes.LESSON_DETAILS(courseId, lessonId),
-            )
-          }
+          onClick={handleBack}
           className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          {type === "edit" ? "Back to Module" : "Back to Lesson"}
+          {backButtonText}
         </Button>
 
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-emerald-500/20 flex items-center justify-center border border-white/20">
-              {type === "edit" ? (
-                <Edit3 className="h-8 w-8 text-white/80" />
-              ) : (
-                <Plus className="h-8 w-8 text-white/80" />
-              )}
+              {icon}
             </div>
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">
-                {type === "edit"
-                  ? "Update module content and coding examples"
-                  : "Create an interactive learning module with content and code"}
-              </p>
+              <p className="text-white/70 text-lg">{description}</p>
             </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mt-6">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
-            <span className="text-white/70 text-sm">
-              {type === "edit"
-                ? "Make your changes and save to update the module"
-                : "Fill in the module details to create engaging learning content"}
-            </span>
           </div>
         </div>
       </div>
@@ -276,14 +262,6 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
                         </div>
                       </FormControl>
                       <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong>{" "}
-                          Include well-commented code examples that students can
-                          understand and experiment with. Make sure your code is
-                          tested and functional.
-                        </p>
-                      </div>
                     </FormItem>
                   )}
                 />
@@ -347,13 +325,6 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
                         </div>
                       </FormControl>
                       <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong> Clear
-                          objectives help students understand what they will
-                          learn and achieve by the end of the module.
-                        </p>
-                      </div>
                     </FormItem>
                   )}
                 />
@@ -443,15 +414,6 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
                     )}
                   </Button>
                 </div>
-
-                {/* Form Footer */}
-                <div className="pt-4 text-center">
-                  <p className="text-white/50 text-sm">
-                    {type === "edit"
-                      ? "Changes will be immediately visible to all students enrolled in this lesson"
-                      : "Once created, students will be able to access this module as part of their learning journey"}
-                  </p>
-                </div>
               </form>
             </Form>
           </div>
@@ -466,55 +428,13 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
               Module Guidelines
             </h3>
             <ul className="space-y-3 text-white/70 text-sm">
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Keep modules focused on a single concept</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Include practical, runnable code examples</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Explain the 'why' behind concepts</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-2 flex-shrink-0" />
-                <span>End with a clear summary</span>
-              </li>
+              {guidelines.map((guideline, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                  <span>{guideline}</span>
+                </li>
+              ))}
             </ul>
-          </div>
-
-          {/* Content Tips */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Lightbulb className="h-5 w-5 text-yellow-400" />
-              Content Tips
-            </h3>
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="flex items-center gap-2 mb-1">
-                  <Target className="h-3 w-3 text-emerald-400" />
-                  <span className="text-white font-medium text-xs">
-                    Clarity
-                  </span>
-                </div>
-                <p className="text-white/70 text-xs">
-                  Use simple, clear language that beginners can understand
-                </p>
-              </div>
-              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="flex items-center gap-2 mb-1">
-                  <Zap className="h-3 w-3 text-purple-400" />
-                  <span className="text-white font-medium text-xs">
-                    Engagement
-                  </span>
-                </div>
-                <p className="text-white/70 text-xs">
-                  Include interactive elements and hands-on exercises
-                </p>
-              </div>
-            </div>
           </div>
 
           {/* Code Best Practices */}
@@ -523,35 +443,13 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
               <Code2 className="h-5 w-5 text-emerald-400" />
               Code Best Practices
             </h3>
-            <ul className="space-y-2 text-white/70 text-sm">
-              <li>• Add clear comments explaining complex logic</li>
-              <li>• Use meaningful variable and function names</li>
-              <li>• Keep examples concise and focused</li>
-              <li>• Test all code before publishing</li>
-              <li>• Include expected outputs for examples</li>
-            </ul>
-          </div>
-
-          {/* Next Steps */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-3">
-              <Sparkles className="h-5 w-5 text-purple-400" />
-              {type === "edit" ? "After Updating" : "Next Steps"}
-            </h3>
-            <ul className="space-y-2 text-white/70 text-sm">
-              {type === "edit" ? (
-                <>
-                  <li>• Review the updated content for accuracy</li>
-                  <li>• Test any code changes thoroughly</li>
-                  <li>• Consider notifying students of updates</li>
-                </>
-              ) : (
-                <>
-                  <li>• Preview your module before publishing</li>
-                  <li>• Create additional modules for the lesson</li>
-                  <li>• Add quizzes to test understanding</li>
-                </>
-              )}
+            <ul className="space-y-3 text-white/70 text-sm">
+              {codeBestPractices.map((guideline, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
+                  <span>{guideline}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

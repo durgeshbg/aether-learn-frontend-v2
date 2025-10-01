@@ -30,7 +30,7 @@ import {
   getCodeAssessmentFormData,
   type CodeAssessmentFormType,
 } from "./constants";
-import { languages } from "../modules/constnats";
+import { languages } from "../modules/constants";
 import {
   Select,
   SelectContent,
