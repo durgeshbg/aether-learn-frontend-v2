@@ -15,7 +15,11 @@ import { getDashboardStats } from "@/services/user";
 import { axiosInstance } from "@/utils/axiosInstance";
 import lastTimeAgo from "@/utils/lastTimeAgo";
 
-function OrganizationAdminDashboard() {
+function OrganizationAdminDashboard({
+  organizationId,
+}: {
+  organizationId: string;
+}) {
   const navigate = useNavigate();
 
   const { data: dashboardData } = useQuery({
@@ -42,9 +46,13 @@ function OrganizationAdminDashboard() {
     navigate(routes.USERS);
   };
 
-  const handleManageCourses = () => {
-    navigate(routes.COURSES);
+  const handleManageOrganization = () => {
+    navigate(routes.ORGANIZATION_DETAILS(organizationId));
   };
+
+  // const handleManageCourses = () => {
+  //   navigate(routes.COURSES);
+  // };
 
   // const handleViewAnalytics = () => {};
 
@@ -106,12 +114,19 @@ function OrganizationAdminDashboard() {
             Manage Users
           </Button>
           <Button
-            onClick={handleManageCourses}
-            className="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
+            onClick={handleManageOrganization}
+            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
           >
             <BookOpen className="h-4 w-4 mr-2" />
-            Assign Courses
+            Manage Organization
           </Button>
+          {/* <Button */}
+          {/*   onClick={handleManageCourses} */}
+          {/*   className="bg-purple-500 hover:bg-purple-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-105" */}
+          {/* > */}
+          {/*   <BookOpen className="h-4 w-4 mr-2" /> */}
+          {/*   Assign Courses */}
+          {/* </Button> */}
           {/* <Button */}
           {/*   onClick={handleViewAnalytics} */}
           {/*   className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition-all duration-300 hover:scale-105" */}

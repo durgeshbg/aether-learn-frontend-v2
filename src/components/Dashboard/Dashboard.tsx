@@ -8,7 +8,8 @@ function Dashboard() {
 
   if (user?.role === "ADMIN") return <AdminDashboard />;
 
-  if (user?.orgAdminOf) return <OrganizationAdminDashboard />;
+  if (user?.orgAdminOf)
+    return <OrganizationAdminDashboard organizationId={user.orgAdminOf.id} />;
 
   return <UserDashboard />;
 }
