@@ -1,6 +1,5 @@
 import { getUsers } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
-import type { User } from "@/types/User";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Button } from "../ui/button";
@@ -10,30 +9,16 @@ import {
   GraduationCap,
   Mail,
   MapPin,
-  Calendar,
-  Award,
   Users,
   Search,
   Filter,
 } from "lucide-react";
 
 // Dummy data for enhanced display
-const enhanceUserData = (user: User) => ({
-  ...user,
-  college: user.organization || "MIT College of Engineering",
-  year: Math.floor(Math.random() * 4) + 1,
-  branch: ["Computer Science", "Electronics", "Mechanical", "Civil"][
-    Math.floor(Math.random() * 4)
-  ],
-  gpa: (3.2 + Math.random() * 0.8).toFixed(2),
-  joinedDate: new Date(
-    2020 + Math.floor(Math.random() * 4),
-    Math.floor(Math.random() * 12),
-    Math.floor(Math.random() * 28),
-  ).toLocaleDateString(),
-  status: ["Active", "Inactive", "Pending"][Math.floor(Math.random() * 3)],
-  avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
-});
+// const enhanceUserData = (user: User) => ({
+//   ...user,
+//   avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
+// });
 
 const UsersList = () => {
   const navigate = useNavigate();
@@ -42,28 +27,8 @@ const UsersList = () => {
     queryFn: async () => {
       return getUsers(axiosInstance);
     },
-    select: (data) => data.users?.map(enhanceUserData) || [],
+    select: (data) => data.users,
   });
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Active":
-        return "bg-green-500/20 text-green-700 border-green-500/30";
-      case "Inactive":
-        return "bg-red-500/20 text-red-700 border-red-500/30";
-      case "Pending":
-        return "bg-yellow-500/20 text-yellow-700 border-yellow-500/30";
-      default:
-        return "bg-gray-500/20 text-gray-700 border-gray-500/30";
-    }
-  };
-
-  const getYearSuffix = (year: number) => {
-    if (year === 1) return "st";
-    if (year === 2) return "nd";
-    if (year === 3) return "rd";
-    return "th";
-  };
 
   return (
     <div className="space-y-6">
@@ -119,63 +84,56 @@ const UsersList = () => {
               {/* Header with avatar and status */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <img
-                      src={user.avatar}
-                      alt={`${user.firstName} ${user.lastName}`}
-                      className="w-12 h-12 rounded-full bg-muted border-2 border-border/20"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background"></div>
-                  </div>
+                  {/* <div className="relative"> */}
+                  {/*   <img */}
+                  {/*     src={user.avatar} */}
+                  {/*     alt={`${user.firstName} ${user.lastName}`} */}
+                  {/*     className="w-12 h-12 rounded-full bg-muted border-2 border-border/20" */}
+                  {/*   /> */}
+                  {/* </div> */}
                   <div>
                     <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                       {user.firstName} {user.lastName}
                     </h3>
-                    <p className="text-sm text-muted-foreground flex items-center gap-1">
-                      <Mail className="h-3 w-3" />
-                      {user.email}
-                    </p>
+                    {user.uniqueId && (
+                      <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        {`#${user.uniqueId}`}
+                      </p>
+                    )}
                   </div>
                 </div>
-
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(user.status)}`}
-                >
-                  {user.status}
-                </span>
               </div>
 
               {/* Academic Info */}
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <GraduationCap className="h-4 w-4 text-primary" />
-                  <span className="text-foreground font-medium">
-                    {user.branch}
-                  </span>
-                  <span className="text-muted-foreground">
-                    • {user.year}
-                    {getYearSuffix(user.year)} Year
-                  </span>
-                </div>
-
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4" />
-                  <span>{user.organization?.name}</span>
+                  <Mail className="h-4 w-4" />
+                  <span>{user.email}</span>
                 </div>
 
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>Joined {user.joinedDate}</span>
+                {(user.branch || user.organization) && (
+                  <div className="flex items-center gap-2 text-sm">
+                    {user.branch && (
+                      <>
+                        <GraduationCap className="h-4 w-4 text-primary" />
+                        <span className="text-foreground font-medium">
+                          {user.branch}
+                        </span>
+                      </>
+                    )}
+                    {user.year && (
+                      <span className="text-muted-foreground">
+                        • {user.year}
+                      </span>
+                    )}
                   </div>
-
-                  <div className="flex items-center gap-2">
-                    <Award className="h-4 w-4 text-primary" />
-                    <span className="font-medium text-foreground">
-                      GPA: {user.gpa}
-                    </span>
+                )}
+                {user.organization && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <MapPin className="h-4 w-4" />
+                    <span>{user.organization?.name}</span>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Role Badge */}

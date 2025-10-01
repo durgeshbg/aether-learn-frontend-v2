@@ -1,4 +1,4 @@
-import { deleteUser, getUserById } from "@/services/user";
+import { deleteUser, getUserById, getUserProgress } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -7,8 +7,6 @@ import { Button } from "../ui/button";
 import { routes } from "@/static-data/routes";
 import {
   ArrowLeft,
-  Calendar,
-  Award,
   GraduationCap,
   Edit3,
   Trash2,
@@ -17,34 +15,20 @@ import {
   Trophy,
   BookOpen,
   Clock,
-  Star,
   TrendingUp,
+  Award,
 } from "lucide-react";
-import { useState } from "react";
-import type { User } from "@/types/User";
+import { useMemo, useState } from "react";
+import lastTimeAgo from "@/utils/lastTimeAgo";
+import { getCourseProgressStats, getProgressColor } from "./helper";
 
 // Enhanced user data for better display
-const enhanceUserData = (user: User) => ({
-  ...user,
-  avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
-  college: user.organization?.name || "MIT College of Engineering",
-  branch: "Computer Science Engineering", // You can make this dynamic later
-  year: 3,
-  semester: 6,
-  gpa: "8.5",
-  joinedDate: new Date(user.createdAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }),
-  lastActive: "2 hours ago",
-  completedAssignments: 24,
-  totalAssignments: 30,
-  quizScore: 85,
-  codingProblems: 45,
-  achievements: ["Top Performer", "Quick Learner", "Problem Solver"],
-  skills: ["JavaScript", "React", "Python", "Data Structures"],
-});
+// const enhanceUserData = (user: User) => ({
+//   ...user,
+//   avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
+//   quizScore: 85,
+//   codingProblems: 45,
+// });
 
 const UserDetails = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -52,7 +36,7 @@ const UserDetails = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const {
-    data: { user: rawUser },
+    data: { user },
   } = useSuspenseQuery({
     queryKey: userKeys.getById(userId || ""),
     queryFn: async () => {
@@ -60,7 +44,13 @@ const UserDetails = () => {
     },
   });
 
-  const user = enhanceUserData(rawUser);
+  const { data: courseProgressData } = useSuspenseQuery({
+    queryKey: userKeys.getProgress(user?.id || ""),
+    queryFn: async () => {
+      return getUserProgress(axiosInstance, { id: user?.id || "" });
+    },
+    select: (data) => data.progress,
+  });
 
   const { mutate, isPending } = useMutation({
     mutationKey: userKeys.delete(userId || ""),
@@ -87,14 +77,9 @@ const UserDetails = () => {
     }
   };
 
-  const getProgressColor = (percentage: number) => {
-    if (percentage >= 80) return "bg-green-500";
-    if (percentage >= 60) return "bg-yellow-500";
-    return "bg-red-500";
-  };
-
-  const completionRate = Math.round(
-    (user.completedAssignments / user.totalAssignments) * 100,
+  const { avgCompletionRate, totalCompletedAssignments } = useMemo(
+    () => getCourseProgressStats(courseProgressData || []),
+    [courseProgressData],
   );
 
   return (
@@ -108,12 +93,9 @@ const UserDetails = () => {
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Student Profile
-          </h1>
-          <p className="text-muted-foreground">Detailed view and management</p>
-        </div>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          Student Profile
+        </h1>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -124,16 +106,13 @@ const UserDetails = () => {
             <div className="relative p-6 bg-gradient-to-br from-primary/10 to-secondary/10">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
               <div className="relative text-center">
-                <div className="relative mx-auto w-24 h-24 mb-4">
-                  <img
-                    src={user.avatar}
-                    alt={`${user.firstName} ${user.lastName}`}
-                    className="w-full h-full rounded-full bg-muted border-4 border-background shadow-lg"
-                  />
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-background flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-full" />
-                  </div>
-                </div>
+                {/* <div className="relative mx-auto w-24 h-24 mb-4"> */}
+                {/*   <img */}
+                {/*     src={user.avatar} */}
+                {/*     alt={`${user.firstName} ${user.lastName}`} */}
+                {/*     className="w-full h-full rounded-full bg-muted border-4 border-background shadow-lg" */}
+                {/*   /> */}
+                {/* </div> */}
                 <h2 className="text-xl font-bold text-foreground mb-1">
                   {user.firstName} {user.lastName}
                 </h2>
@@ -149,44 +128,41 @@ const UserDetails = () => {
 
             {/* Quick Stats */}
             <div className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 rounded-xl bg-muted/20">
-                  <div className="text-2xl font-bold text-primary">
-                    {user.gpa}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    Current GPA
-                  </div>
-                </div>
-                <div className="text-center p-3 rounded-xl bg-muted/20">
-                  <div className="text-2xl font-bold text-primary">
-                    {user.year}
-                  </div>
-                  <div className="text-xs text-muted-foreground">Year</div>
-                </div>
+              <div className="text-center p-3 rounded-xl bg-muted/20 text-2xl font-bold text-primary">
+                #{user.uniqueId}
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center gap-3 text-sm">
-                  <Building2 className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-foreground">{user.college}</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <BookOpen className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-foreground">{user.branch}</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-foreground">
-                    Joined {user.joinedDate}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-foreground">
-                    Active {user.lastActive}
-                  </span>
-                </div>
+                {user.year && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-foreground">
+                      Year {user.year || "N/A"}
+                    </span>
+                  </div>
+                )}
+                {user.organization && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-foreground">
+                      {user.organization?.name}
+                    </span>
+                  </div>
+                )}
+                {user.branch && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <BookOpen className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-foreground">{user.branch}</span>
+                  </div>
+                )}
+                {user.lastActiveAt && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-foreground">
+                      Active {lastTimeAgo(user.lastActiveAt)}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -205,84 +181,48 @@ const UserDetails = () => {
               <div className="p-4 rounded-xl bg-muted/10 border border-border/10">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-muted-foreground">
-                    Assignment Progress
+                    Average Completion Rate
                   </span>
                   <Trophy className="h-4 w-4 text-yellow-500" />
                 </div>
                 <div className="text-2xl font-bold text-foreground mb-1">
-                  {completionRate}%
+                  {avgCompletionRate}%
                 </div>
                 <div className="w-full bg-muted/20 rounded-full h-2">
                   <div
-                    className={`h-2 rounded-full ${getProgressColor(completionRate)}`}
-                    style={{ width: `${completionRate}%` }}
+                    className={`h-2 rounded-full ${getProgressColor(avgCompletionRate)}`}
+                    style={{ width: `${avgCompletionRate}%` }}
                   />
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  {user.completedAssignments}/{user.totalAssignments} completed
+                  {`Across ${courseProgressData?.length || 0} courses`}
                 </div>
               </div>
+
+              {/* <div className="p-4 rounded-xl bg-muted/10 border border-border/10"> */}
+              {/*   <div className="flex items-center justify-between mb-2"> */}
+              {/*     <span className="text-sm text-muted-foreground"> */}
+              {/*       Quiz Average */}
+              {/*     </span> */}
+              {/*     <Star className="h-4 w-4 text-blue-500" /> */}
+              {/*   </div> */}
+              {/*   <div className="text-2xl font-bold text-foreground mb-1"> */}
+              {/*     {10}% */}
+              {/*   </div> */}
+              {/*   <div className="text-xs text-muted-foreground"> */}
+              {/*     Last {totalCompletedQuizzes} quizzes */}
+              {/*   </div> */}
+              {/* </div> */}
 
               <div className="p-4 rounded-xl bg-muted/10 border border-border/10">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-muted-foreground">
-                    Quiz Average
-                  </span>
-                  <Star className="h-4 w-4 text-blue-500" />
-                </div>
-                <div className="text-2xl font-bold text-foreground mb-1">
-                  {user.quizScore}%
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Last 10 quizzes
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-muted/10 border border-border/10">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">
-                    Problems Solved
+                    Coding Assessments Solved
                   </span>
                   <Award className="h-4 w-4 text-green-500" />
                 </div>
                 <div className="text-2xl font-bold text-foreground mb-1">
-                  {user.codingProblems}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Coding challenges
-                </div>
-              </div>
-            </div>
-
-            {/* Skills & Achievements */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-medium mb-3">Technical Skills</h4>
-                <div className="flex flex-wrap gap-2">
-                  {user.skills.map((skill: string, index: number) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-medium mb-3">Achievements</h4>
-                <div className="flex flex-wrap gap-2">
-                  {user.achievements.map(
-                    (achievement: string, index: number) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-700 border border-yellow-500/20"
-                      >
-                        {achievement}
-                      </span>
-                    ),
-                  )}
+                  {totalCompletedAssignments}
                 </div>
               </div>
             </div>
