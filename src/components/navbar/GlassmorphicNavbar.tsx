@@ -33,7 +33,6 @@ const { appName, navLinks } = navbarConstants;
 export function GlassmorphicNavbar({ className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const pathname = window.location.pathname;
   const { user, logout } = useAuth();
 
   const userAvatarText = user?.firstName

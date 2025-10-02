@@ -43,7 +43,7 @@ const QuizPreview = ({ courseId, quiz, handleStartQuiz }: IQuizPreview) => {
           <p className="text-white/80 text-lg mb-8">{quiz.description}</p>
 
           {/* Quiz Info */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="grid md:grid-cols-4 gap-6 mb-8">
             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
               <FileText className="h-8 w-8 text-blue-400 mx-auto mb-2" />
               <div className="text-xl font-bold text-white">
@@ -64,6 +64,13 @@ const QuizPreview = ({ courseId, quiz, handleStartQuiz }: IQuizPreview) => {
                 {quiz.passPercentage}%
               </div>
               <div className="text-white/70 text-sm">Pass Mark</div>
+            </div>
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+              <AlertTriangle className="h-8 w-8 text-red-400 mx-auto mb-2" />
+              <div className="text-xl font-bold text-white">
+                {quiz.maxAttempts}
+              </div>
+              <div className="text-white/70 text-sm">Attempts</div>
             </div>
           </div>
 

@@ -17,19 +17,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
-  Award,
-  BookOpen,
   Brain,
-  CheckCircle,
   Edit3,
   FileText,
-  HelpCircle,
   Plus,
   Save,
-  Sparkles,
   Target,
-  Timer,
-  Users,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
@@ -74,6 +67,7 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
             difficulty: quiz.difficulty,
             durationMinutes: quiz.durationMinutes,
             passPercentage: quiz.passPercentage,
+            maxAttempts: quiz.maxAttempts,
           }
         : {}),
     },
@@ -232,6 +226,29 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
                       <FormControl>
                         <Input
                           placeholder="e.g., 30"
+                          className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-sm" />
+                    </FormItem>
+                  )}
+                />
+
+                {/*Max Attempts */}
+                <FormField
+                  control={form.control}
+                  name="maxAttempts"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-foreground font-medium">
+                        Maximum Attempts
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="e.g., 3"
                           className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
                           {...field}
                         />

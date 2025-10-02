@@ -11,6 +11,7 @@ export type Quiz = {
   durationMinutes?: number;
   passPercentage?: number;
   questions?: Question[];
+  maxAttempts?: number;
 
   createdAt: string;
   updatedAt: string;
@@ -41,6 +42,11 @@ export const QuizCreateSchema = z.object({
     .min(1, "Passing percentage must be at least 1")
     .max(100, "Passing percentage cannot exceed 100")
     .optional(),
+  maxAttempts: z.coerce
+    .number()
+    .int()
+    .positive("Max attempts must be a positive integer")
+    .optional(),
 });
 
 export const QuizUpdateSchema = z.object({
@@ -68,6 +74,11 @@ export const QuizUpdateSchema = z.object({
     .int()
     .min(1, "Passing percentage must be at least 1")
     .max(100, "Passing percentage cannot exceed 100")
+    .optional(),
+  maxAttempts: z.coerce
+    .number()
+    .int()
+    .positive("Max attempts must be a positive integer")
     .optional(),
 });
 

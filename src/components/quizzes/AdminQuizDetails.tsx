@@ -17,6 +17,7 @@ import {
   CheckCircle,
   FileText,
   Clock,
+  Info,
 } from "lucide-react";
 import { getDifficultyColor } from "@/utils/getDifficultyColor";
 
@@ -122,6 +123,10 @@ export const AdminQuizDetails = ({
                   <div className="flex items-center gap-1 text-white/70 text-sm">
                     <HelpCircle className="h-4 w-4" />
                     <span>{questions?.length || 0} questions</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-white/70 text-sm">
+                    <Info className="h-4 w-4" />
+                    <span>{quiz.maxAttempts} attempts</span>
                   </div>
                 </div>
               </div>

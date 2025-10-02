@@ -26,6 +26,7 @@ import QuizHeader from "./UserQuizComponents/QuizHeader";
 import useFullscreen from "@/hooks/useFullScreen";
 import { MAX_WARNING_COUNT } from "./constants";
 import { useOutletContext } from "react-router";
+import { getAxiosError } from "@/utils/getAxiosError";
 
 interface UserQuizExperienceProps {
   courseId: string;
@@ -50,6 +51,7 @@ export const UserQuizExperience = ({
   const [showWarning, setShowWarning] = useState(false);
   const [setHideNavbar] =
     useOutletContext<[Dispatch<SetStateAction<boolean>>]>();
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
 
   const warningCountRef = useRef(0);
   const prevFullscreenRef = useRef(isFullscreen);
@@ -70,10 +72,20 @@ export const UserQuizExperience = ({
     meta: {
       notify: true,
       successMessage: "Quiz submitted successfully!",
-      errorMessage: "Failed to submit quiz. Please try again.",
+      invalidatesQueries: [quizResultKeys.all(courseId, quizId)],
     },
     onSuccess: () => {
       setQuizState("completed");
+    },
+    onError: (e) => {
+      setSubmissionError(getAxiosError(e));
+    },
+    onSettled: () => {
+      setHideNavbar(false);
+      exitFullscreen();
+      setQuizState("completed");
+      setShowWarning(false);
+      warningCountRef.current = 0;
     },
   });
 
@@ -92,19 +104,7 @@ export const UserQuizExperience = ({
     submitQuiz({
       answers: answersArray,
     });
-    setHideNavbar(false);
-    exitFullscreen();
-    setQuizState("completed");
-    setShowWarning(false);
-    warningCountRef.current = 0;
-  }, [
-    answers,
-    quiz,
-    exitFullscreen,
-    isSubmitingQuiz,
-    submitQuiz,
-    setHideNavbar,
-  ]);
+  }, [answers, quiz, isSubmitingQuiz, submitQuiz]);
 
   const handleStartQuiz = () => {
     setQuizState("taking");
@@ -273,7 +273,9 @@ export const UserQuizExperience = ({
   }
 
   if (quizState === "completed") {
-    return <QuizCompleted courseId={courseId} />;
+    return (
+      <QuizCompleted courseId={courseId} submissionError={submissionError} />
+    );
   }
 
   return null;
