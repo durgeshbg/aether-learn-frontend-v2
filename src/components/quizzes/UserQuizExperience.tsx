@@ -114,6 +114,22 @@ export const UserQuizExperience = ({
     enterFullscreen();
   };
 
+  // Submit quiz when user refreshes page while quiz in progress
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (quizState === "taking") {
+        e.preventDefault();
+        e.returnValue = ""; // Chrome requires returnValue to be set
+        handleSubmitQuiz();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [quizState, handleSubmitQuiz]);
+
   // Timer effect
   useEffect(() => {
     if (quizState === "taking" && timeRemaining > 0) {
