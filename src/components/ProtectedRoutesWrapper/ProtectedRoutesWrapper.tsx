@@ -1,15 +1,16 @@
 import { Outlet } from "react-router";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import Loading from "@/containers/loading/loading";
 import { GlassmorphicNavbar } from "../navbar/GlassmorphicNavbar";
 
 function ProtectedRoutesWrapper() {
+  const [hideNavbar, setHideNavbar] = useState(false);
   return (
     <>
-      <GlassmorphicNavbar />
+      {!hideNavbar && <GlassmorphicNavbar />}
       <Suspense fallback={<Loading />}>
         <main className="px-20 py-8">
-          <Outlet />
+          <Outlet context={[setHideNavbar]} />
         </main>
       </Suspense>
     </>

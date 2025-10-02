@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createQuiz, getQuiz, updateQuiz } from "@/services/quiz";
 import { routes } from "@/static-data/routes";
 import { quizKeys } from "@/tanstack/keys/quizKeys";
-import { QuizCreateSchema, QuizUpdateSchema, type Quiz } from "@/types/Quiz";
+import { QuizCreateSchema, QuizUpdateSchema } from "@/types/Quiz";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -46,7 +46,8 @@ import {
 import { getQuizFormData, type QuizFormType } from "./constants";
 
 const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
-  const { title, buttonText } = getQuizFormData(type);
+  const { title, buttonText, subtitle, buttonLoadingText, guidelines } =
+    getQuizFormData(type);
   const { courseId = "", quizId = "" } = useParams<{
     courseId: string;
     quizId: string;
@@ -147,22 +148,8 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
             </div>
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">
-                {type === "edit"
-                  ? "Update quiz information and settings"
-                  : "Create an engaging quiz to test student knowledge and understanding"}
-              </p>
+              <p className="text-white/70 text-lg">{subtitle}</p>
             </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mt-6">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
-            <span className="text-white/70 text-sm">
-              {type === "edit"
-                ? "Make your changes and save to update the quiz"
-                : "Fill in the quiz details to create an assessment for your students"}
-            </span>
           </div>
         </div>
       </div>
@@ -333,11 +320,7 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
                     {isSubmitting ? (
                       <div className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>
-                          {type === "edit"
-                            ? "Updating Quiz..."
-                            : "Creating Quiz..."}
-                        </span>
+                        <span>{buttonLoadingText}</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-2">
@@ -346,15 +329,6 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
                       </div>
                     )}
                   </Button>
-                </div>
-
-                {/* Form Footer */}
-                <div className="pt-4 text-center">
-                  <p className="text-white/50 text-sm">
-                    {type === "edit"
-                      ? "Changes will be immediately visible to all enrolled students"
-                      : "Once created, you can add questions and configure quiz settings"}
-                  </p>
                 </div>
               </form>
             </Form>
@@ -370,89 +344,12 @@ const QuizCreateForm = ({ type = "create" }: QuizFormType) => {
               Quiz Guidelines
             </h3>
             <ul className="space-y-3 text-white/70 text-sm">
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Create a clear, descriptive title</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Explain the quiz format and expectations</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Mention the difficulty level</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Include estimated completion time</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Quiz Features */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Award className="h-5 w-5 text-yellow-400" />
-              Quiz Features
-            </h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
-                <HelpCircle className="h-4 w-4 text-blue-400" />
-                <span className="text-white/80 text-sm">
-                  Multiple choice questions
-                </span>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
-                <Timer className="h-4 w-4 text-purple-400" />
-                <span className="text-white/80 text-sm">Timed assessments</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
-                <CheckCircle className="h-4 w-4 text-emerald-400" />
-                <span className="text-white/80 text-sm">Instant feedback</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
-                <Users className="h-4 w-4 text-yellow-400" />
-                <span className="text-white/80 text-sm">Progress tracking</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Best Practices */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <BookOpen className="h-5 w-5 text-blue-400" />
-              Best Practices
-            </h3>
-            <ul className="space-y-2 text-white/70 text-sm">
-              <li>• Align questions with learning objectives</li>
-              <li>• Mix question types and difficulty levels</li>
-              <li>• Provide helpful explanations for answers</li>
-              <li>• Test your quiz before publishing</li>
-              <li>• Set reasonable time limits</li>
-              <li>• Include progress indicators</li>
-            </ul>
-          </div>
-
-          {/* Next Steps */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-3">
-              <Sparkles className="h-5 w-5 text-purple-400" />
-              {type === "edit" ? "After Updating" : "Next Steps"}
-            </h3>
-            <ul className="space-y-2 text-white/70 text-sm">
-              {type === "edit" ? (
-                <>
-                  <li>• Review existing questions for accuracy</li>
-                  <li>• Update quiz settings if needed</li>
-                  <li>• Notify students about changes</li>
-                </>
-              ) : (
-                <>
-                  <li>• Add questions to your quiz</li>
-                  <li>• Configure quiz settings and timing</li>
-                  <li>• Preview before making it available</li>
-                </>
-              )}
+              {guidelines.map((guideline, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
+                  <span>{guideline}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

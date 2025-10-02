@@ -16,10 +16,7 @@ import {
   HelpCircle,
   CheckCircle,
   FileText,
-  Target,
-  Users,
   Clock,
-  Award,
 } from "lucide-react";
 import { getDifficultyColor } from "@/utils/getDifficultyColor";
 
@@ -86,20 +83,6 @@ export const AdminQuizDetails = ({
       },
     });
 
-  // Helper function to get dummy quiz stats (replace with real data from backend)
-  const getQuizStats = () => ({
-    totalQuestions: questions?.length || 0,
-    estimatedDuration: `${Math.floor((questions?.length || 0) * 1.5)} min`,
-    difficulty: ["Beginner", "Intermediate", "Advanced"][
-      Math.floor(Math.random() * 3)
-    ],
-    completionRate: Math.floor(Math.random() * 40) + 60, // 60-100%
-    averageScore: Math.floor(Math.random() * 30) + 70, // 70-100%
-    totalAttempts: Math.floor(Math.random() * 200) + 50,
-  });
-
-  const stats = getQuizStats();
-
   return (
     <div className="w-full max-w-7xl mx-auto py-8 px-4">
       {/* Header Section */}
@@ -130,15 +113,15 @@ export const AdminQuizDetails = ({
                   <div
                     className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(quiz.difficulty)}`}
                   >
-                    {stats.difficulty}
+                    {quiz.difficulty}
                   </div>
                   <div className="flex items-center gap-1 text-white/70 text-sm">
                     <Clock className="h-4 w-4" />
-                    <span>{stats.estimatedDuration}</span>
+                    <span>{quiz.durationMinutes}m</span>
                   </div>
                   <div className="flex items-center gap-1 text-white/70 text-sm">
                     <HelpCircle className="h-4 w-4" />
-                    <span>{stats.totalQuestions} questions</span>
+                    <span>{questions?.length || 0} questions</span>
                   </div>
                 </div>
               </div>
@@ -171,38 +154,6 @@ export const AdminQuizDetails = ({
                   </>
                 )}
               </Button>
-            </div>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <HelpCircle className="h-6 w-6 text-purple-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.totalQuestions}
-              </div>
-              <div className="text-white/70 text-sm">Questions</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Users className="h-6 w-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.totalAttempts}
-              </div>
-              <div className="text-white/70 text-sm">Attempts</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Award className="h-6 w-6 text-yellow-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.averageScore}%
-              </div>
-              <div className="text-white/70 text-sm">Avg Score</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Target className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.completionRate}%
-              </div>
-              <div className="text-white/70 text-sm">Completion</div>
             </div>
           </div>
         </div>
@@ -292,7 +243,7 @@ export const AdminQuizDetails = ({
                     </div>
 
                     {/* Explanation */}
-                    {question.explaination && (
+                    {question.explanation && (
                       <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-400/20 mb-4">
                         <div className="flex items-center gap-2 mb-1">
                           <FileText className="h-4 w-4 text-blue-400" />
@@ -301,7 +252,7 @@ export const AdminQuizDetails = ({
                           </span>
                         </div>
                         <p className="text-white/80 text-sm">
-                          {question.explaination}
+                          {question.explanation}
                         </p>
                       </div>
                     )}

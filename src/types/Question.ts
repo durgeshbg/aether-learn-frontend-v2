@@ -6,7 +6,7 @@ export type Question = {
   options: string[];
 
   answer?: number;
-  explaination?: string;
+  explanation?: string;
 
   createdAt: string;
   updatedAt: string;
