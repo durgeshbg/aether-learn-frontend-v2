@@ -17,9 +17,8 @@ const Submissions = () => {
   };
 
   return (
-    <div>
-      <div>Submissions Component</div>
-      <div>
+    <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl space-y-4">
+      <div className="flex flex-wrap gap-4">
         <Button onClick={handleQuizzesClick}>View Quizzes</Button>
         <Button onClick={handleCodeSolutionsClick}>View Code Solutions</Button>
       </div>
