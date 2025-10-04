@@ -17,12 +17,12 @@ export const formatTime = (seconds: number) => {
 export const getPallete = (readOnly?: boolean, isCorrect?: boolean) => {
   const palleteColors = {
     correct: [
-      "bg-green-500/20 bgrder-green-400 text-green-300",
+      "bg-green-500/20 border-green-400 text-green-300",
       "bg-green-500 text-white",
       "h-5 w-5 text-green-400 ml-auto",
     ],
     incorrect: [
-      "bg-red-500/20 bgrder-red-400 text-red-300",
+      "bg-red-500/20 border-red-400 text-red-300",
       "bg-red-500 text-white",
       "h-5 w-5 text-red-400 ml-auto",
     ],
