@@ -1,11 +1,14 @@
 import type { Question } from "@/types/Question";
 import { CheckCircle } from "lucide-react";
+import { getPallete } from "../helper";
 
 interface IQuestionAndOptions {
   currentQuestion: Question;
   currentQuestionIndex: number;
   answers: { [questionId: string]: number };
-  handleAnswerSelect: (questionId: string, selectedOption: string) => void;
+  handleAnswerSelect?: (questionId: string, selectedOption: string) => void;
+  isCorrect?: boolean;
+  readOnly?: boolean;
 }
 
 const QuestionAndOptions = ({
@@ -13,7 +16,10 @@ const QuestionAndOptions = ({
   currentQuestionIndex,
   answers,
   handleAnswerSelect,
+  readOnly = false,
+  isCorrect,
 }: IQuestionAndOptions) => {
+  const palleteArray = getPallete(readOnly, isCorrect);
   return (
     <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-6">
       <div className="mb-6">
@@ -34,27 +40,24 @@ const QuestionAndOptions = ({
           return (
             <button
               key={index}
-              onClick={() => handleAnswerSelect(currentQuestion.id, option)}
               className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${
                 isSelected
-                  ? "bg-blue-500/20 border-blue-400 text-blue-300"
+                  ? palleteArray[0]
                   : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:border-white/20"
               }`}
+              disabled={readOnly || !handleAnswerSelect}
+              onClick={() => handleAnswerSelect?.(currentQuestion.id, option)}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
-                    isSelected
-                      ? "bg-blue-500 text-white"
-                      : "bg-white/20 text-white/70"
+                    isSelected ? palleteArray[1] : "bg-white/20 text-white/70"
                   }`}
                 >
                   {String.fromCharCode(65 + index)}
                 </div>
                 <span>{option}</span>
-                {isSelected && (
-                  <CheckCircle className="h-5 w-5 text-blue-400 ml-auto" />
-                )}
+                {isSelected && <CheckCircle className={palleteArray[2]} />}
               </div>
             </button>
           );

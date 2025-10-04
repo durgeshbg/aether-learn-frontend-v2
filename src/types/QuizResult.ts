@@ -3,10 +3,13 @@ import { z } from "zod";
 export type QuizResult = {
   id: string;
   score: number;
-  userId: string;
-  quizId: string;
+  passed: boolean;
+  responses?: string[];
+  quiz: {
+    id: string;
+    title: string;
+  };
   createdAt: string;
-  updatedAt: string;
 };
 
 export const QuizResultCreateSchema = z.object({

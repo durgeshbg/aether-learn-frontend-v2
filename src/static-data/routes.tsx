@@ -30,6 +30,31 @@ export const routes = {
   COURSE_DETAILS: (id: string) => `/courses/${id}`,
   COURSE_EDIT: (id: string) => `/courses/${id}/edit`,
 
+  COURSE_SUBMISSIONS: (id: string) => `/courses/${id}/submissions`,
+  COURSE_SUBMISSIONS_QUIZZES: (id: string) =>
+    `/courses/${id}/submissions/quizzes`,
+  COURSE_SUBMISSIONS_QUIZ_DETAILS: (courseId: string, quizId: string) =>
+    `/courses/${courseId}/submissions/quizzes/${quizId}`,
+  COURSE_SUBMISSIONS_QUIZ_RESULT_DETAILS: (
+    courseId: string,
+    quizId: string,
+    quizResultId: string,
+  ) =>
+    `/courses/${courseId}/submissions/quizzes/${quizId}/results/${quizResultId}`,
+
+  COURSE_SUBMISSIONS_CODE_ASSESSMENTS: (id: string) =>
+    `/courses/${id}/submissions/code-assessments`,
+  COURSE_SUBMISSIONS_CODE_ASSESSMENT_DETAILS: (
+    courseId: string,
+    codeAssessmentId: string,
+  ) => `/courses/${courseId}/submissions/code-assessments/${codeAssessmentId}`,
+  COURSE_SUBMISSIONS_CODE_SOLUTION_DETAILS: (
+    courseId: string,
+    codeAssessmentId: string,
+    codeSolutionId: string,
+  ) =>
+    `/courses/${courseId}/submissions/code-assessments/${codeAssessmentId}/solutions/${codeSolutionId}`,
+
   LESSON_CREATE: (courseId: string) => `/courses/${courseId}/lessons/create`,
   LESSON_DETAILS: (courseId: string, lessonId: string) =>
     `/courses/${courseId}/lessons/${lessonId}`,
@@ -43,7 +68,7 @@ export const routes = {
   MODULE_EDIT: (courseId: string, lessonId: string, moduleId: string) =>
     `/courses/${courseId}/lessons/${lessonId}/modules/${moduleId}/edit`,
 
-  QUIZZES: (courseId: string) => `/courses/${courseId}/quizzes`,
+  // QUIZZES: (courseId: string) => `/courses/${courseId}/quizzes`,
   QUIZ_CREATE: (courseId: string) => `/courses/${courseId}/quizzes/create`,
   QUIZ_DETAILS: (courseId: string, quizId: string) =>
     `/courses/${courseId}/quizzes/${quizId}`,
@@ -54,8 +79,8 @@ export const routes = {
   QUESTION_EDIT: (courseId: string, quizId: string, questionId: string) =>
     `/courses/${courseId}/quizzes/${quizId}/questions/${questionId}/edit`,
 
-  CODE_ASSESSMENTS: (courseId: string) =>
-    `/courses/${courseId}/code-assessments`,
+  // CODE_ASSESSMENTS: (courseId: string) =>
+  //   `/courses/${courseId}/code-assessments`,
   CODE_ASSESSMENT_CREATE: (courseId: string) =>
     `/courses/${courseId}/code-assessments/create`,
   CODE_ASSESSMENT_DETAILS: (courseId: string, id: string) =>

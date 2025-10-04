@@ -17,10 +17,11 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import lastTimeAgo from "@/utils/lastTimeAgo";
 import { useNavigate } from "react-router";
 import { getModuleLink } from "@/utils/getModuleLink";
-import type { ModuleLink } from "@/types/User";
+import type { CourseProgress, ModuleLink } from "@/types/User";
 import { completionStats, courseCompletiondata } from "./helpers";
 import { courseKeys } from "@/tanstack/keys/courseKeys";
 import { getCourses } from "@/services/course";
+import { routes } from "@/static-data/routes";
 
 const userStats = {
   averageScore: 87,
@@ -76,6 +77,10 @@ function UserDashboard() {
 
   const handleContinueLearning = (moduleLink: ModuleLink | null) => {
     navigate(getModuleLink(moduleLink));
+  };
+
+  const handleSubmissionClick = (progress: CourseProgress) => {
+    navigate(routes.COURSE_SUBMISSIONS(progress.course.id));
   };
 
   return (
@@ -212,13 +217,23 @@ function UserDashboard() {
                 <span className="text-white/70 text-sm">
                   Next: {progress.nextModule?.title}
                 </span>
-                <Button
-                  onClick={() => handleContinueLearning(progress.nextModule)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
-                >
-                  <Play className="h-3 w-3 mr-1" />
-                  Continue
-                </Button>
+                <div className="flex space-x-3">
+                  <Button
+                    onClick={() => handleSubmissionClick(progress)}
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
+                  >
+                    <Play className="h-3 w-3 mr-1" />
+                    Submissions
+                  </Button>
+
+                  <Button
+                    onClick={() => handleContinueLearning(progress.nextModule)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
+                  >
+                    <Play className="h-3 w-3 mr-1" />
+                    Continue
+                  </Button>
+                </div>
               </div>
             </div>
           ))}

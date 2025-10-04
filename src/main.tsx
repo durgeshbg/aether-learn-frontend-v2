@@ -47,6 +47,13 @@ import "./index.css";
 import AuthProvider from "./providers/AuthProvider.tsx";
 import { QueryClientProvider } from "./providers/QueryClientProvider.tsx";
 import OrganizationDetails from "./components/organizations/OrganizationDetails/OrganizationDetials.tsx";
+import Submissions from "./components/submissions/Submissions.tsx";
+import QuizResultsTab from "./components/submissions/Tabs/QuizResultsTab.tsx";
+import QuizResults from "./components/submissions/QuizResults.tsx";
+import QuizResultDetails from "./components/submissions/QuizResultDetails.tsx";
+import CodeSolutions from "./components/submissions/CodeSolutions.tsx";
+import CodeSolutionDetails from "./components/submissions/CodeSolutionDetails.tsx";
+import CodeSolutionsTab from "./components/submissions/Tabs/CodeSolutionsTab.tsx";
 
 const router = createBrowserRouter([
   {
@@ -140,6 +147,40 @@ const router = createBrowserRouter([
                     element: <CodeAssessmentDetails />,
                   },
                 ],
+              },
+              {
+                path: "courses/:courseId/submissions",
+                element: <Submissions />,
+                children: [
+                  {
+                    index: true,
+                    element: <QuizResultsTab />,
+                  },
+                  {
+                    path: "quizzes",
+                    element: <QuizResultsTab />,
+                  },
+                  {
+                    path: "code-assessments",
+                    element: <CodeSolutionsTab />,
+                  },
+                ],
+              },
+              {
+                path: "courses/:courseId/submissions/quizzes/:quizId",
+                element: <QuizResults />,
+              },
+              {
+                path: "courses/:courseId/submissions/quizzes/:quizId/results/:quizResultId",
+                element: <QuizResultDetails />,
+              },
+              {
+                path: "courses/:courseId/submissions/code-assessments/:codeAssessmentId",
+                element: <CodeSolutions />,
+              },
+              {
+                path: "courses/:courseId/submissions/code-assessments/:codeAssessmentId/solutions/:codeSolutionId",
+                element: <CodeSolutionDetails />,
               },
               // Organization Admin Routes
               {
