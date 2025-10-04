@@ -5,9 +5,11 @@ import { routes } from "@/static-data/routes";
 
 const QuizCompleted = ({
   courseId,
+  quizId,
   submissionError,
 }: {
   courseId: string;
+  quizId: string;
   submissionError: string | null;
 }) => {
   const navigate = useNavigate();
@@ -42,6 +44,15 @@ const QuizCompleted = ({
             className={`${!submissionError ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-400"} text-white px-6 py-3 rounded-xl transition-all duration-300`}
           >
             Back to Course
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() =>
+              navigate(routes.COURSE_SUBMISSIONS_QUIZ_DETAILS(courseId, quizId))
+            }
+            className="text-white px-6 py-3 rounded-xl border-white/30 hover:border-white transition-all duration-300"
+          >
+            View Previous Submissions
           </Button>
         </div>
       </div>

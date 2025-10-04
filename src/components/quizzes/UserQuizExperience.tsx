@@ -274,7 +274,11 @@ export const UserQuizExperience = ({
 
   if (quizState === "completed") {
     return (
-      <QuizCompleted courseId={courseId} submissionError={submissionError} />
+      <QuizCompleted
+        courseId={courseId}
+        quizId={quizId}
+        submissionError={submissionError}
+      />
     );
   }
 
