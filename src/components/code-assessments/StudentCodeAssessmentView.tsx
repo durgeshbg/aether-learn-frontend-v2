@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "../ui/button";
-import { LANGUAGES_MAP } from "@/static-data/languages";
+import { LANG_KEYS, LANGUAGES_MAP } from "@/static-data/languages";
 import type { TestCase } from "@/types/TestCase";
 import type { CodeAssesment } from "@/types/CodeAssesment";
 import {
@@ -20,9 +20,8 @@ import {
 
 interface StudentCodeAssessmentViewProps {
   codeAssessment: CodeAssesment;
-  testCases: TestCase[];
+  testCases?: TestCase[];
   courseId: string;
-  codeAssessmentId: string;
 }
 
 interface TestResult {
@@ -36,7 +35,6 @@ interface TestResult {
 export const StudentCodeAssessmentView = ({
   codeAssessment,
   testCases,
-  codeAssessmentId,
 }: StudentCodeAssessmentViewProps) => {
   const navigate = useNavigate();
   const [code, setCode] = useState(codeAssessment.starterCode);
@@ -50,26 +48,28 @@ export const StudentCodeAssessmentView = ({
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
 
   const codeEditorRef = useRef<HTMLTextAreaElement>(null);
-  const language = LANGUAGES_MAP[codeAssessment.languageId];
+  const languageId =
+    parseInt(codeAssessment.languageId || "") || LANG_KEYS.PLAIN_TEXT;
+  const language = LANGUAGES_MAP.get(languageId);
 
   // Auto-save functionality
   useEffect(() => {
     const autoSave = setTimeout(() => {
       // In real app, save to localStorage or backend
-      localStorage.setItem(`code_${codeAssessmentId}`, code);
+      localStorage.setItem(`code_${codeAssessment.id}`, code);
       setLastSaved(new Date());
     }, 2000);
 
     return () => clearTimeout(autoSave);
-  }, [code, codeAssessmentId]);
+  }, [code, codeAssessment]);
 
   // Load saved code on mount
   useEffect(() => {
-    const savedCode = localStorage.getItem(`code_${codeAssessmentId}`);
+    const savedCode = localStorage.getItem(`code_${codeAssessment.id}`);
     if (savedCode) {
       setCode(savedCode);
     }
-  }, [codeAssessmentId]);
+  }, [codeAssessment]);
 
   // Mock code execution (replace with real backend call)
   const runCode = async () => {

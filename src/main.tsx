@@ -6,7 +6,7 @@ import App from "./App.tsx";
 import CodeAssessmentCreateForm from "./components/code-assessments/CodeAssessmentCreateForm.tsx";
 import CodeAssessmentDetails from "./components/code-assessments/CodeAssessmentDetails.tsx";
 import CodeAssestments from "./components/code-assessments/CodeAssestments.tsx";
-import TestCaseCreateForm from "./components/code-assessments/TestCaseCreateForm.tsx";
+import TestCaseCreateForm from "./components/code-assessments/TestCases/TestCaseCreateForm.tsx";
 import CourseDetails from "./components/courses/CourseDetails.tsx";
 import CourseFeedbacks from "./components/courses/CourseFeedbacks.tsx";
 import Courses from "./components/courses/Courses.tsx";

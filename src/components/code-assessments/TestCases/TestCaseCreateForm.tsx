@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { getTestCaseFormData, type TestCaseFormType } from "./constants";
+import { getTestCaseFormData, type TestCaseFormType } from "../constants";
 import { TestCaseCreateSchema, TestCaseUpdateSchema } from "@/types/TestCase";
 import { routes } from "@/static-data/routes";
 import { axiosInstance } from "@/utils/axiosInstance";
@@ -7,11 +7,7 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type z from "zod";
-import {
-  createTestCase,
-  getTestCases,
-  updateTestCase,
-} from "@/services/test-case";
+import { createTestCase, updateTestCase } from "@/services/test-case";
 import { testCaseKeys } from "@/tanstack/keys/test-case";
 import {
   Form,
@@ -23,25 +19,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
-  Bug,
   Save,
   ArrowLeft,
-  Edit3,
-  Plus,
   FileText,
   Target,
-  Sparkles,
   CheckCircle,
   Terminal,
   Code2,
   Eye,
-  AlertTriangle,
 } from "lucide-react";
+import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
+import { getCodeAssessmentById } from "@/services/code-assesment";
 
 const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
-  const { title, buttonText } = getTestCaseFormData(type);
+  const { title, buttonText, description, icon, formatExamples } =
+    getTestCaseFormData(type);
   const {
     courseId = "",
     codeAssessmentId = "",
@@ -54,13 +48,17 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
   const navigate = useNavigate();
 
   const { data: testCase } = useSuspenseQuery({
-    queryKey: testCaseKeys.all(courseId, codeAssessmentId),
+    queryKey: codeAssessmentKeys.getById(courseId, codeAssessmentId),
     queryFn: async () => {
       return type === "edit"
-        ? getTestCases(axiosInstance, { courseId, codeAssessmentId })
+        ? getCodeAssessmentById(axiosInstance, {
+            courseId,
+            id: codeAssessmentId,
+          })
         : null;
     },
-    select: (data) => data?.testCases.find((t) => t.id === testCaseId) || null,
+    select: (data) =>
+      data?.codeAssessment?.testCases?.find((t) => t.id === testCaseId) || null,
   });
 
   const form = useForm<z.infer<typeof TestCaseCreateSchema>>({
@@ -148,30 +146,12 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
-              {type === "edit" ? (
-                <Edit3 className="h-8 w-8 text-white/80" />
-              ) : (
-                <Plus className="h-8 w-8 text-white/80" />
-              )}
+              {icon}
             </div>
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">
-                {type === "edit"
-                  ? "Update test case input and expected output validation"
-                  : "Create a test case to validate student code solutions automatically"}
-              </p>
+              <p className="text-white/70 text-lg">{description}</p>
             </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mt-6">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
-            <span className="text-white/70 text-sm">
-              {type === "edit"
-                ? "Make your changes and save to update the test case"
-                : "Define the input and expected output for automatic code validation"}
-            </span>
           </div>
         </div>
       </div>
@@ -206,14 +186,6 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
                         </div>
                       </FormControl>
                       <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong> Use
-                          descriptive names that explain what this test case
-                          validates. This helps with debugging and understanding
-                          test failures.
-                        </p>
-                      </div>
                     </FormItem>
                   )}
                 />
@@ -238,13 +210,6 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
                         </div>
                       </FormControl>
                       <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-400/30">
-                        <p className="text-yellow-200 text-sm">
-                          <strong>Weight:</strong> Determines the importance of
-                          this test case in the overall assessment. Higher
-                          weight means more impact on the final score.
-                        </p>
-                      </div>
                     </FormItem>
                   )}
                 />
@@ -340,15 +305,6 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
                     )}
                   </Button>
                 </div>
-
-                {/* Form Footer */}
-                <div className="pt-4 text-center">
-                  <p className="text-white/50 text-sm">
-                    {type === "edit"
-                      ? "Changes will be used immediately to validate new student submissions"
-                      : "This test case will be used to automatically validate student code solutions"}
-                  </p>
-                </div>
               </form>
             </Form>
           </div>
@@ -390,74 +346,6 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
             </div>
           </div>
 
-          {/* Test Case Guidelines */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Bug className="h-5 w-5 text-emerald-400" />
-              Test Case Guidelines
-            </h3>
-            <ul className="space-y-3 text-white/70 text-sm">
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Test both normal and edge cases</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Use exact data format matching function signature</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Include boundary value testing</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Write clear, descriptive test names</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Common Test Types */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <CheckCircle className="h-5 w-5 text-yellow-400" />
-              Common Test Types
-            </h3>
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-white font-medium text-sm mb-1">
-                  Basic Functionality
-                </div>
-                <div className="text-white/70 text-xs">
-                  Test core algorithm with typical inputs
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-white font-medium text-sm mb-1">
-                  Edge Cases
-                </div>
-                <div className="text-white/70 text-xs">
-                  Empty inputs, single elements, boundary values
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-white font-medium text-sm mb-1">
-                  Error Handling
-                </div>
-                <div className="text-white/70 text-xs">
-                  Invalid inputs, out-of-range values
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                <div className="text-white font-medium text-sm mb-1">
-                  Performance
-                </div>
-                <div className="text-white/70 text-xs">
-                  Large datasets, time complexity validation
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Format Examples */}
           <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
             <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
@@ -465,47 +353,15 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
               Format Examples
             </h3>
             <div className="space-y-3 text-sm">
-              <div>
-                <div className="text-white/80 font-medium">Arrays:</div>
-                <code className="text-emerald-400 text-xs">
-                  [1, 2, 3, 4, 5]
-                </code>
-              </div>
-              <div>
-                <div className="text-white/80 font-medium">Strings:</div>
-                <code className="text-blue-400 text-xs">"hello world"</code>
-              </div>
-              <div>
-                <div className="text-white/80 font-medium">Numbers:</div>
-                <code className="text-yellow-400 text-xs">42</code>
-              </div>
-              <div>
-                <div className="text-white/80 font-medium">Booleans:</div>
-                <code className="text-purple-400 text-xs">true</code>
-              </div>
-              <div>
-                <div className="text-white/80 font-medium">
-                  Multiple params:
+              {formatExamples.map(({ label, example, color }, index) => (
+                <div>
+                  <div key={index} className="text-white/80 font-medium">
+                    {label}:
+                  </div>
+                  <code className={color}>{example}</code>
                 </div>
-                <code className="text-white/70 text-xs">One per line</code>
-              </div>
+              ))}
             </div>
-          </div>
-
-          {/* Important Notes */}
-          <div className="rounded-2xl p-6 bg-yellow-500/10 backdrop-blur-xl border border-yellow-400/30 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-yellow-200 mb-3">
-              <AlertTriangle className="h-5 w-5 text-yellow-400" />
-              Important Notes
-            </h3>
-            <ul className="space-y-2 text-yellow-100 text-sm">
-              <li>
-                • Data formats must match exactly (spaces, quotes, brackets)
-              </li>
-              <li>• Test your cases manually before saving</li>
-              <li>• Include both passing and failing scenarios</li>
-              <li>• Consider performance implications for large inputs</li>
-            </ul>
           </div>
         </div>
       </div>

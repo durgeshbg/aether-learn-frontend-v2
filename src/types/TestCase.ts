@@ -4,9 +4,9 @@ export type TestCase = {
   id: string;
   description: string;
 
-  input?: string;
-  expected?: string;
-  weight?: number;
+  input: string;
+  expected: string;
+  weight: number;
 
   createdAt: string;
   updatedAt: string;

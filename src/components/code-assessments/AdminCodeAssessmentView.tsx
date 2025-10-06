@@ -6,8 +6,7 @@ import { testCaseKeys } from "@/tanstack/keys/test-case";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { routes } from "@/static-data/routes";
 import { Button } from "../ui/button";
-import { LANGUAGES_MAP } from "@/static-data/languages";
-import type { TestCase } from "@/types/TestCase";
+import { LANGUAGES_MAP, LANG_KEYS } from "@/static-data/languages";
 import type { CodeAssesment } from "@/types/CodeAssesment";
 import {
   Code2,
@@ -17,7 +16,6 @@ import {
   ArrowLeft,
   FileText,
   Clock,
-  Users,
   Settings,
   Terminal,
   Bug,
@@ -26,32 +24,43 @@ import {
 import { deleteCodeAssessment } from "@/services/code-assesment";
 import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
 import { getDifficultyColor } from "@/utils/getDifficultyColor";
+import TestCaseItem from "./TestCases/TestCaseItem";
+import { adminCodeAssessmentData } from "./constants";
 
 interface AdminCodeAssessmentViewProps {
   codeAssessment: CodeAssesment;
-  testCases: TestCase[];
   courseId: string;
-  codeAssessmentId: string;
 }
+
+const {
+  backButtonText,
+  editButtonText,
+  deleteButtonText,
+  deleteLoadingText,
+  addTestCaseButtonText,
+  emptyTestCasesText,
+  testCaseAddTip,
+  createFirstTestCaseText,
+} = adminCodeAssessmentData;
 
 export const AdminCodeAssessmentView = ({
   codeAssessment,
-  testCases,
   courseId,
-  codeAssessmentId,
 }: AdminCodeAssessmentViewProps) => {
   const navigate = useNavigate();
   const [deletingTestCaseId, setDeletingTestCaseId] = useState<string | null>(
     null,
   );
 
+  const testCases = codeAssessment.testCases || [];
+
   const { mutate: deleteTestCaseMutation } = useMutation({
-    mutationKey: testCaseKeys.delete(courseId, codeAssessmentId, "delete"),
+    mutationKey: testCaseKeys.delete(courseId, codeAssessment.id, "delete"),
     mutationFn: async (testCaseId: string) => {
       setDeletingTestCaseId(testCaseId);
       return deleteTestCase(axiosInstance, {
         courseId,
-        codeAssessmentId,
+        codeAssessmentId: codeAssessment.id,
         id: testCaseId,
       });
     },
@@ -61,17 +70,17 @@ export const AdminCodeAssessmentView = ({
     meta: {
       notify: true,
       successMessage: "Test Case deleted successfully",
-      invalidatesQueries: testCaseKeys.all(courseId, codeAssessmentId),
+      invalidatesQueries: testCaseKeys.all(courseId, codeAssessment.id),
     },
   });
 
   const { mutate: deleteCodeAssessmentMutation, isPending: isDeleting } =
     useMutation({
-      mutationKey: codeAssessmentKeys.delete(courseId, codeAssessmentId),
+      mutationKey: codeAssessmentKeys.delete(courseId, codeAssessment.id),
       mutationFn: async () => {
         return deleteCodeAssessment(axiosInstance, {
           courseId,
-          id: codeAssessmentId,
+          id: codeAssessment.id,
         });
       },
       onSuccess: () => {
@@ -83,19 +92,12 @@ export const AdminCodeAssessmentView = ({
         invalidatesQueries: codeAssessmentKeys.all(courseId),
       },
     });
-
-  const language = LANGUAGES_MAP[codeAssessment.languageId];
+  const languageId =
+    parseInt(codeAssessment?.languageId || "") || LANG_KEYS.PLAIN_TEXT;
+  const language = LANGUAGES_MAP.get(languageId);
 
   const handleEditCodeAssessment = () => {
-    navigate(routes.CODE_ASSESSMENT_EDIT(courseId, codeAssessmentId));
-  };
-
-  // Calculate assessment statistics
-  const assessmentStats = {
-    totalTestCases: testCases.length,
-    estimatedTime: Math.max(30, testCases.length * 5), // 5 minutes per test case, minimum 30
-    difficulty: ["Easy", "Medium", "Hard"][Math.floor(Math.random() * 3)],
-    successRate: Math.floor(Math.random() * 40) + 50, // Mock data - replace with real
+    navigate(routes.CODE_ASSESSMENT_EDIT(courseId, codeAssessment.id));
   };
 
   return (
@@ -107,7 +109,7 @@ export const AdminCodeAssessmentView = ({
           className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Course
+          {backButtonText}
         </Button>
 
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
@@ -130,15 +132,7 @@ export const AdminCodeAssessmentView = ({
                   <div
                     className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(codeAssessment.difficulty)}`}
                   >
-                    {assessmentStats.difficulty}
-                  </div>
-                  <div className="flex items-center gap-2 text-white/70">
-                    <Globe className="h-4 w-4 text-blue-400" />
-                    <span>{language?.label}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-white/70 text-sm">
-                    <Clock className="h-4 w-4" />
-                    <span>~{assessmentStats.estimatedTime} min</span>
+                    {codeAssessment.difficulty}
                   </div>
                 </div>
               </div>
@@ -151,7 +145,7 @@ export const AdminCodeAssessmentView = ({
                 className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
               >
                 <Edit3 className="h-4 w-4 mr-2" />
-                Edit Assessment
+                {editButtonText}
               </Button>
 
               <Button
@@ -162,12 +156,12 @@ export const AdminCodeAssessmentView = ({
                 {isDeleting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Deleting...
+                    {deleteLoadingText}
                   </>
                 ) : (
                   <>
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Assessment
+                    {deleteButtonText}
                   </>
                 )}
               </Button>
@@ -175,18 +169,18 @@ export const AdminCodeAssessmentView = ({
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
               <Bug className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
               <div className="text-xl font-bold text-white">
-                {assessmentStats.totalTestCases}
+                {codeAssessment.testCases?.length}
               </div>
               <div className="text-white/70 text-sm">Test Cases</div>
             </div>
             <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
               <Clock className="h-6 w-6 text-blue-400 mx-auto mb-2" />
               <div className="text-xl font-bold text-white">
-                {assessmentStats.estimatedTime}m
+                {codeAssessment.durationMinutes}m
               </div>
               <div className="text-white/70 text-sm">Est. Time</div>
             </div>
@@ -196,13 +190,6 @@ export const AdminCodeAssessmentView = ({
                 {language?.label}
               </div>
               <div className="text-white/70 text-sm">Language</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Users className="h-6 w-6 text-yellow-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {assessmentStats.successRate}%
-              </div>
-              <div className="text-white/70 text-sm">Success Rate</div>
             </div>
           </div>
         </div>
@@ -250,135 +237,52 @@ export const AdminCodeAssessmentView = ({
           <div className="flex items-center justify-between mb-6">
             <h2 className="flex items-center gap-2 text-2xl font-semibold text-white">
               <Settings className="h-6 w-6 text-purple-400" />
-              Test Cases ({testCases.length})
+              Test Cases ({testCases?.length})
             </h2>
             <Button
               onClick={() =>
-                navigate(routes.TEST_CASE_CREATE(courseId, codeAssessmentId))
+                navigate(routes.TEST_CASE_CREATE(courseId, codeAssessment.id))
               }
               className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-400/30 px-3 py-1 rounded-lg text-sm transition-all duration-300"
             >
               <Plus className="h-3 w-3 mr-1" />
-              Add
+              {addTestCaseButtonText}
             </Button>
           </div>
 
           <div className="space-y-4 max-h-96 overflow-y-auto">
-            {testCases.length === 0 ? (
+            {testCases?.length === 0 ? (
               <div className="text-center py-12">
                 <Bug className="h-16 w-16 text-white/20 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-white/60 mb-2">
-                  No Test Cases Yet
+                  {emptyTestCasesText}
                 </h3>
-                <p className="text-white/40 text-sm mb-4">
-                  Add test cases to validate student solutions
-                </p>
+                <p className="text-white/40 text-sm mb-4">{testCaseAddTip}</p>
                 <Button
                   onClick={() =>
                     navigate(
-                      routes.TEST_CASE_CREATE(courseId, codeAssessmentId),
+                      routes.TEST_CASE_CREATE(courseId, codeAssessment.id),
                     )
                   }
                   className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  Create First Test Case
+                  {createFirstTestCaseText}
                 </Button>
               </div>
             ) : (
-              testCases.map((testCase, index) => (
-                <div
+              testCases?.map((testCase, index) => (
+                <TestCaseItem
                   key={testCase.id}
-                  className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/8 transition-all duration-300"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-semibold text-xs">
-                        {index + 1}
-                      </div>
-                      <h3 className="font-medium text-white">
-                        {testCase.description}
-                      </h3>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() =>
-                          navigate(
-                            routes.TEST_CASE_EDIT(
-                              courseId,
-                              codeAssessmentId,
-                              testCase.id,
-                            ),
-                          )
-                        }
-                        className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 p-1 rounded-lg transition-all duration-300"
-                      >
-                        <Edit3 className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        onClick={() => deleteTestCaseMutation(testCase.id)}
-                        disabled={deletingTestCaseId === testCase.id}
-                        className="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-400/30 p-1 rounded-lg transition-all duration-300 disabled:opacity-50"
-                      >
-                        {deletingTestCaseId === testCase.id ? (
-                          <div className="w-3 h-3 border border-red-400/30 border-t-red-400 rounded-full animate-spin" />
-                        ) : (
-                          <Trash2 className="h-3 w-3" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 text-sm">
-                    <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                      <span className="text-white/70 text-xs">Input:</span>
-                      <pre className="text-white/90 mt-1 font-mono">
-                        {testCase.input}
-                      </pre>
-                    </div>
-                    <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                      <span className="text-white/70 text-xs">
-                        Expected Output:
-                      </span>
-                      <pre className="text-white/90 mt-1 font-mono">
-                        {testCase.expected}
-                      </pre>
-                    </div>
-                  </div>
-
-                  <div className="text-xs text-white/50 mt-3">
-                    Created: {new Date(testCase.createdAt).toLocaleDateString()}
-                  </div>
-                </div>
+                  index={index}
+                  testCase={testCase}
+                  deleteTestCaseMutation={deleteTestCaseMutation}
+                  deletingTestCaseId={deletingTestCaseId}
+                />
               ))
             )}
           </div>
         </section>
-      </div>
-
-      {/* Assessment Metadata */}
-      <div className="mt-8 rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-        <h3 className="text-lg font-semibold text-white mb-4">
-          Assessment Metadata
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6 text-sm">
-          <div>
-            <span className="text-white/70">Created:</span>
-            <div className="text-white font-medium">
-              {new Date(codeAssessment.createdAt).toLocaleString()}
-            </div>
-          </div>
-          <div>
-            <span className="text-white/70">Last Updated:</span>
-            <div className="text-white font-medium">
-              {new Date(codeAssessment.updatedAt).toLocaleString()}
-            </div>
-          </div>
-          <div>
-            <span className="text-white/70">Programming Language:</span>
-            <div className="text-white font-medium">{language?.label}</div>
-          </div>
-        </div>
       </div>
     </div>
   );

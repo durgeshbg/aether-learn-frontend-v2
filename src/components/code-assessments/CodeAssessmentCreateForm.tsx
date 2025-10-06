@@ -42,26 +42,30 @@ import {
   Code2,
   Save,
   ArrowLeft,
-  Edit3,
-  Plus,
   FileText,
   Terminal,
   Globe,
-  Sparkles,
-  BookOpen,
   Lightbulb,
-  Zap,
   Target,
   Clock,
-  Users,
 } from "lucide-react";
 import { difficultyLevels } from "../lessons/constants";
 import { DifficultyLevel } from "@/types/Lesson";
+import { LANG_KEYS } from "@/static-data/languages";
 
 const CodeAssessmentCreateForm = ({
   type = "create",
 }: CodeAssessmentFormType) => {
-  const { title, buttonText } = getCodeAssessmentFormData(type);
+  const {
+    title,
+    buttonText,
+    backButtonText,
+    icon,
+    description,
+    guidelines,
+    buttonLoadingText,
+    estimatedTime,
+  } = getCodeAssessmentFormData(type);
   const { courseId = "", codeAssessmentId = "" } = useParams<{
     courseId: string;
     codeAssessmentId?: string;
@@ -90,12 +94,13 @@ const CodeAssessmentCreateForm = ({
             description: assessment.description,
             instructions: assessment.instructions,
             starterCode: assessment.starterCode,
-            languageId: parseInt(assessment?.languageId),
+            languageId:
+              parseInt(assessment?.languageId || "") ?? LANG_KEYS.PLAIN_TEXT,
             durationMinutes: assessment.durationMinutes,
             difficulty: assessment.difficulty ?? DifficultyLevel.BEGINNER,
           }
         : {
-            languageId: languages[7].value,
+            languageId: LANG_KEYS.PLAIN_TEXT,
           }),
     },
   });
@@ -161,36 +166,18 @@ const CodeAssessmentCreateForm = ({
           className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          {type === "edit" ? "Back to Assessment" : "Back to Course"}
+          {backButtonText}
         </Button>
 
         <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
-              {type === "edit" ? (
-                <Edit3 className="h-8 w-8 text-white/80" />
-              ) : (
-                <Plus className="h-8 w-8 text-white/80" />
-              )}
+              {icon}
             </div>
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">
-                {type === "edit"
-                  ? "Update coding assessment details and requirements"
-                  : "Create a comprehensive coding challenge for students to solve"}
-              </p>
+              <p className="text-white/70 text-lg">{description}</p>
             </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mt-6">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
-            <span className="text-white/70 text-sm">
-              {type === "edit"
-                ? "Make your changes and save to update the assessment"
-                : "Fill in the assessment details to create a coding challenge"}
-            </span>
           </div>
         </div>
       </div>
@@ -429,11 +416,7 @@ const CodeAssessmentCreateForm = ({
                     {isSubmitting ? (
                       <div className="flex items-center justify-center gap-2">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>
-                          {type === "edit"
-                            ? "Updating Assessment..."
-                            : "Creating Assessment..."}
-                        </span>
+                        <span>{buttonLoadingText}</span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-2">
@@ -442,15 +425,6 @@ const CodeAssessmentCreateForm = ({
                       </div>
                     )}
                   </Button>
-                </div>
-
-                {/* Form Footer */}
-                <div className="pt-4 text-center">
-                  <p className="text-white/50 text-sm">
-                    {type === "edit"
-                      ? "Changes will be immediately visible to all students with access to this course"
-                      : "Once created, you can add test cases to validate student solutions automatically"}
-                  </p>
                 </div>
               </form>
             </Form>
@@ -466,64 +440,13 @@ const CodeAssessmentCreateForm = ({
               Assessment Guidelines
             </h3>
             <ul className="space-y-3 text-white/70 text-sm">
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Write clear, unambiguous problem statements</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Provide comprehensive examples with explanations</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Include helpful starter code and comments</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full mt-2 flex-shrink-0" />
-                <span>Specify constraints and edge cases clearly</span>
-              </li>
+              {guidelines.map((guideline, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
+                  <span>{guideline}</span>
+                </li>
+              ))}
             </ul>
-          </div>
-
-          {/* Difficulty Estimation */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Zap className="h-5 w-5 text-yellow-400" />
-              Difficulty Estimation
-            </h3>
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg bg-green-500/10 border border-green-400/20">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full" />
-                  <span className="text-green-300 font-medium text-sm">
-                    Easy
-                  </span>
-                </div>
-                <p className="text-green-200 text-xs">
-                  Basic algorithms, simple data structures
-                </p>
-              </div>
-              <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-400/20">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-                  <span className="text-yellow-300 font-medium text-sm">
-                    Medium
-                  </span>
-                </div>
-                <p className="text-yellow-200 text-xs">
-                  Multiple concepts, optimization required
-                </p>
-              </div>
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-400/20">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-2 h-2 bg-red-400 rounded-full" />
-                  <span className="text-red-300 font-medium text-sm">Hard</span>
-                </div>
-                <p className="text-red-200 text-xs">
-                  Complex algorithms, advanced techniques
-                </p>
-              </div>
-            </div>
           </div>
 
           {/* Time Estimates */}
@@ -533,58 +456,13 @@ const CodeAssessmentCreateForm = ({
               Time Estimates
             </h3>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Easy Problems</span>
-                <span className="text-white font-medium">15-30 min</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Medium Problems</span>
-                <span className="text-white font-medium">30-60 min</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Hard Problems</span>
-                <span className="text-white font-medium">60+ min</span>
-              </div>
+              {estimatedTime.map((item, index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-white/70">{item.level}</span>
+                  <span className="text-white font-medium">{item.time}</span>
+                </div>
+              ))}
             </div>
-          </div>
-
-          {/* Next Steps */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-3">
-              <Users className="h-5 w-5 text-purple-400" />
-              {type === "edit" ? "After Updating" : "Next Steps"}
-            </h3>
-            <ul className="space-y-2 text-white/70 text-sm">
-              {type === "edit" ? (
-                <>
-                  <li>• Review and test the updated starter code</li>
-                  <li>• Update existing test cases if needed</li>
-                  <li>• Notify students about significant changes</li>
-                </>
-              ) : (
-                <>
-                  <li>• Add comprehensive test cases</li>
-                  <li>• Test the solution with edge cases</li>
-                  <li>• Set appropriate time limits</li>
-                  <li>• Preview the assessment before publishing</li>
-                </>
-              )}
-            </ul>
-          </div>
-
-          {/* Code Best Practices */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-3">
-              <BookOpen className="h-5 w-5 text-emerald-400" />
-              Starter Code Tips
-            </h3>
-            <ul className="space-y-2 text-white/70 text-sm">
-              <li>• Include clear function signatures</li>
-              <li>• Add helpful comments and docstrings</li>
-              <li>• Provide basic structure and imports</li>
-              <li>• Include example test calls</li>
-              <li>• Keep code clean and readable</li>
-            </ul>
           </div>
         </div>
       </div>

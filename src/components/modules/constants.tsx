@@ -39,7 +39,7 @@ export const getModuleFormData = (type: ModuleFormType["type"]) => {
   };
 };
 
-export const languages = Object.values(LANGUAGES_MAP);
+export const languages = Array.from(LANGUAGES_MAP.values());
 
 export const getModuleStats = (module: Module) => ({
   estimatedDuration: `${module.durationMinutes}m`,

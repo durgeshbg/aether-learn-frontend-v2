@@ -3,9 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
 import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
-import { testCaseKeys } from "@/tanstack/keys/test-case";
 import { getCodeAssessmentById } from "@/services/code-assesment";
-import { getTestCases } from "@/services/test-case";
 import { AdminCodeAssessmentView } from "./AdminCodeAssessmentView";
 import { StudentCodeAssessmentView } from "./StudentCodeAssessmentView";
 
@@ -26,26 +24,13 @@ const CodeAssessmentDetails = () => {
     select: (data) => data.codeAssessment,
   });
 
-  const { data: testCases } = useSuspenseQuery({
-    queryKey: testCaseKeys.all(courseId, codeAssessmentId),
-    queryFn: async () =>
-      getTestCases(axiosInstance, {
-        courseId,
-        codeAssessmentId,
-      }),
-    select: (data) => data?.testCases || [],
-  });
-
-  // Determine if user is admin/instructor
   const isAdmin = user?.role === "ADMIN";
 
   if (isAdmin) {
     return (
       <AdminCodeAssessmentView
         codeAssessment={codeAssessment}
-        testCases={testCases}
         courseId={courseId}
-        codeAssessmentId={codeAssessmentId}
       />
     );
   }
@@ -53,9 +38,8 @@ const CodeAssessmentDetails = () => {
   return (
     <StudentCodeAssessmentView
       codeAssessment={codeAssessment}
-      testCases={testCases}
+      testCases={codeAssessment.testCases}
       courseId={courseId}
-      codeAssessmentId={codeAssessmentId}
     />
   );
 };

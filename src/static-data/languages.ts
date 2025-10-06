@@ -70,92 +70,219 @@ export const LANG_KEYS = {
   VISUAL_BASIC_NET: 126,
 };
 
-export const LANGUAGES_MAP: Record<string, { label: string; value: number }> = {
-  [LANG_KEYS.ASSEMBLY]: { label: "Assembly (NASM 2.14.02)", value: 45 },
-  [LANG_KEYS.BASH]: { label: "Bash (5.0.0)", value: 46 },
-  [LANG_KEYS.BASIC]: { label: "Basic (FBC 1.07.1)", value: 47 },
-  [LANG_KEYS.C_CLANG_18]: { label: "C (Clang 18.1.8)", value: 104 },
-  [LANG_KEYS.C_CLANG_19]: { label: "C (Clang 19.1.7)", value: 110 },
-  [LANG_KEYS.C_CLANG_7]: { label: "C (Clang 7.0.1)", value: 75 },
-  [LANG_KEYS.CPP_CLANG_7]: { label: "C++ (Clang 7.0.1)", value: 76 },
-  [LANG_KEYS.C_GCC_14]: { label: "C (GCC 14.1.0)", value: 103 },
-  [LANG_KEYS.CPP_GCC_14]: { label: "C++ (GCC 14.1.0)", value: 105 },
-  [LANG_KEYS.C_GCC_7]: { label: "C (GCC 7.4.0)", value: 48 },
-  [LANG_KEYS.CPP_GCC_7]: { label: "C++ (GCC 7.4.0)", value: 52 },
-  [LANG_KEYS.C_GCC_8]: { label: "C (GCC 8.3.0)", value: 49 },
-  [LANG_KEYS.CPP_GCC_8]: { label: "C++ (GCC 8.3.0)", value: 53 },
-  [LANG_KEYS.C_GCC_9]: { label: "C (GCC 9.2.0)", value: 50 },
-  [LANG_KEYS.CPP_GCC_9]: { label: "C++ (GCC 9.2.0)", value: 54 },
-  [LANG_KEYS.CLOJURE]: { label: "Clojure (1.10.1)", value: 86 },
-  [LANG_KEYS.CSHARP_MONO]: { label: "C# (Mono 6.6.0.161)", value: 51 },
-  [LANG_KEYS.COBOL]: { label: "COBOL (GnuCOBOL 2.2)", value: 77 },
-  [LANG_KEYS.COMMON_LISP]: { label: "Common Lisp (SBCL 2.0.0)", value: 55 },
-  [LANG_KEYS.DART]: { label: "Dart (2.19.2)", value: 90 },
-  [LANG_KEYS.D_DMD]: { label: "D (DMD 2.089.1)", value: 56 },
-  [LANG_KEYS.ELIXIR]: { label: "Elixir (1.9.4)", value: 57 },
-  [LANG_KEYS.ERLANG]: { label: "Erlang (OTP 22.2)", value: 58 },
-  [LANG_KEYS.EXECUTABLE]: { label: "Executable", value: 44 },
-  [LANG_KEYS.FSHARP]: { label: "F# (.NET Core SDK 3.1.202)", value: 87 },
-  [LANG_KEYS.FORTRAN]: { label: "Fortran (GFortran 9.2.0)", value: 59 },
-  [LANG_KEYS.GO_1_13]: { label: "Go (1.13.5)", value: 60 },
-  [LANG_KEYS.GO_1_18]: { label: "Go (1.18.5)", value: 95 },
-  [LANG_KEYS.GO_1_22]: { label: "Go (1.22.0)", value: 106 },
-  [LANG_KEYS.GO_1_23]: { label: "Go (1.23.5)", value: 107 },
-  [LANG_KEYS.GROOVY]: { label: "Groovy (3.0.3)", value: 88 },
-  [LANG_KEYS.HASKELL]: { label: "Haskell (GHC 8.8.1)", value: 61 },
-  [LANG_KEYS.JAVAFX]: {
-    label: "JavaFX (JDK 17.0.6, OpenJFX 22.0.2)",
-    value: 96,
-  },
-  [LANG_KEYS.JAVA_JDK_17]: { label: "Java (JDK 17.0.6)", value: 91 },
-  [LANG_KEYS.JAVA_OPENJDK_13]: { label: "Java (OpenJDK 13.0.1)", value: 62 },
-  [LANG_KEYS.JAVASCRIPT_NODE_12]: {
-    label: "JavaScript (Node.js 12.14.0)",
-    value: 63,
-  },
-  [LANG_KEYS.JAVASCRIPT_NODE_18]: {
-    label: "JavaScript (Node.js 18.15.0)",
-    value: 93,
-  },
-  [LANG_KEYS.JAVASCRIPT_NODE_20]: {
-    label: "JavaScript (Node.js 20.17.0)",
-    value: 97,
-  },
-  [LANG_KEYS.JAVASCRIPT_NODE_22]: {
-    label: "JavaScript (Node.js 22.08.0)",
-    value: 102,
-  },
-  [LANG_KEYS.KOTLIN_1_3]: { label: "Kotlin (1.3.70)", value: 78 },
-  [LANG_KEYS.KOTLIN_2_1]: { label: "Kotlin (2.1.10)", value: 111 },
-  [LANG_KEYS.LUA]: { label: "Lua (5.3.5)", value: 64 },
-  [LANG_KEYS.MULTI_FILE_PROGRAM]: { label: "Multi-file program", value: 89 },
-  [LANG_KEYS.OBJECTIVE_C]: { label: "Objective-C (Clang 7.0.1)", value: 79 },
-  [LANG_KEYS.OCAML]: { label: "OCaml (4.09.0)", value: 65 },
-  [LANG_KEYS.OCTAVE]: { label: "Octave (5.1.0)", value: 66 },
-  [LANG_KEYS.PASCAL]: { label: "Pascal (FPC 3.0.4)", value: 67 },
-  [LANG_KEYS.PERL]: { label: "Perl (5.28.1)", value: 85 },
-  [LANG_KEYS.PHP_7]: { label: "PHP (7.4.1)", value: 68 },
-  [LANG_KEYS.PHP_8]: { label: "PHP (8.3.11)", value: 98 },
-  [LANG_KEYS.PLAIN_TEXT]: { label: "Plain Text", value: 43 },
-  [LANG_KEYS.PROLOG]: { label: "Prolog (GNU Prolog 1.4.5)", value: 69 },
-  [LANG_KEYS.PYTHON_2]: { label: "Python (2.7.17)", value: 70 },
-  [LANG_KEYS.PYTHON_3_11]: { label: "Python (3.11.2)", value: 92 },
-  [LANG_KEYS.PYTHON_3_12]: { label: "Python (3.12.5)", value: 100 },
-  [LANG_KEYS.PYTHON_3_13]: { label: "Python (3.13.2)", value: 109 },
-  [LANG_KEYS.PYTHON_3_8]: { label: "Python (3.8.1)", value: 71 },
-  [LANG_KEYS.R_4]: { label: "R (4.0.0)", value: 80 },
-  [LANG_KEYS.R_4_4]: { label: "R (4.4.1)", value: 99 },
-  [LANG_KEYS.RUBY]: { label: "Ruby (2.7.0)", value: 72 },
-  [LANG_KEYS.RUST_1_40]: { label: "Rust (1.40.0)", value: 73 },
-  [LANG_KEYS.RUST_1_85]: { label: "Rust (1.85.0)", value: 108 },
-  [LANG_KEYS.SCALA]: { label: "Scala (2.13.2)", value: 81 },
-  [LANG_KEYS.SQL]: { label: "SQL (SQLite 3.27.2)", value: 82 },
-  [LANG_KEYS.SWIFT]: { label: "Swift (5.2.3)", value: 83 },
-  [LANG_KEYS.TYPESCRIPT_3]: { label: "TypeScript (3.7.4)", value: 74 },
-  [LANG_KEYS.TYPESCRIPT_5]: { label: "TypeScript (5.0.3)", value: 94 },
-  [LANG_KEYS.TYPESCRIPT_5_6]: { label: "TypeScript (5.6.2)", value: 101 },
-  [LANG_KEYS.VISUAL_BASIC_NET]: {
-    label: "Visual Basic.Net (vbnc 0.0.0.5943)",
-    value: 84,
-  },
-};
+export const LANGUAGES_MAP: Map<number, { label: string; value: number }> =
+  new Map([
+    [
+      LANG_KEYS.ASSEMBLY,
+      { label: "Assembly (NASM 2.14.02)", value: LANG_KEYS.ASSEMBLY },
+    ],
+    [LANG_KEYS.BASH, { label: "Bash (5.0.0)", value: LANG_KEYS.BASH }],
+    [LANG_KEYS.BASIC, { label: "Basic (FBC 1.07.1)", value: LANG_KEYS.BASIC }],
+    [
+      LANG_KEYS.C_CLANG_18,
+      { label: "C (Clang 18.1.8)", value: LANG_KEYS.C_CLANG_18 },
+    ],
+    [
+      LANG_KEYS.C_CLANG_19,
+      { label: "C (Clang 19.1.7)", value: LANG_KEYS.C_CLANG_19 },
+    ],
+    [
+      LANG_KEYS.C_CLANG_7,
+      { label: "C (Clang 7.0.1)", value: LANG_KEYS.C_CLANG_7 },
+    ],
+    [
+      LANG_KEYS.CPP_CLANG_7,
+      { label: "C++ (Clang 7.0.1)", value: LANG_KEYS.CPP_CLANG_7 },
+    ],
+    [
+      LANG_KEYS.C_GCC_14,
+      { label: "C (GCC 14.1.0)", value: LANG_KEYS.C_GCC_14 },
+    ],
+    [
+      LANG_KEYS.CPP_GCC_14,
+      { label: "C++ (GCC 14.1.0)", value: LANG_KEYS.CPP_GCC_14 },
+    ],
+    [LANG_KEYS.C_GCC_7, { label: "C (GCC 7.4.0)", value: LANG_KEYS.C_GCC_7 }],
+    [
+      LANG_KEYS.CPP_GCC_7,
+      { label: "C++ (GCC 7.4.0)", value: LANG_KEYS.CPP_GCC_7 },
+    ],
+    [LANG_KEYS.C_GCC_8, { label: "C (GCC 8.3.0)", value: LANG_KEYS.C_GCC_8 }],
+    [
+      LANG_KEYS.CPP_GCC_8,
+      { label: "C++ (GCC 8.3.0)", value: LANG_KEYS.CPP_GCC_8 },
+    ],
+    [LANG_KEYS.C_GCC_9, { label: "C (GCC 9.2.0)", value: LANG_KEYS.C_GCC_9 }],
+    [
+      LANG_KEYS.CPP_GCC_9,
+      { label: "C++ (GCC 9.2.0)", value: LANG_KEYS.CPP_GCC_9 },
+    ],
+    [
+      LANG_KEYS.CLOJURE,
+      { label: "Clojure (1.10.1)", value: LANG_KEYS.CLOJURE },
+    ],
+    [
+      LANG_KEYS.CSHARP_MONO,
+      { label: "C# (Mono 6.6.0.161)", value: LANG_KEYS.CSHARP_MONO },
+    ],
+    [
+      LANG_KEYS.COBOL,
+      { label: "COBOL (GnuCOBOL 2.2)", value: LANG_KEYS.COBOL },
+    ],
+    [
+      LANG_KEYS.COMMON_LISP,
+      { label: "Common Lisp (SBCL 2.0.0)", value: LANG_KEYS.COMMON_LISP },
+    ],
+    [LANG_KEYS.DART, { label: "Dart (2.19.2)", value: LANG_KEYS.DART }],
+    [LANG_KEYS.D_DMD, { label: "D (DMD 2.089.1)", value: LANG_KEYS.D_DMD }],
+    [LANG_KEYS.ELIXIR, { label: "Elixir (1.9.4)", value: LANG_KEYS.ELIXIR }],
+    [LANG_KEYS.ERLANG, { label: "Erlang (OTP 22.2)", value: LANG_KEYS.ERLANG }],
+    [
+      LANG_KEYS.EXECUTABLE,
+      { label: "Executable", value: LANG_KEYS.EXECUTABLE },
+    ],
+    [
+      LANG_KEYS.FSHARP,
+      { label: "F# (.NET Core SDK 3.1.202)", value: LANG_KEYS.FSHARP },
+    ],
+    [
+      LANG_KEYS.FORTRAN,
+      { label: "Fortran (GFortran 9.2.0)", value: LANG_KEYS.FORTRAN },
+    ],
+    [LANG_KEYS.GO_1_13, { label: "Go (1.13.5)", value: LANG_KEYS.GO_1_13 }],
+    [LANG_KEYS.GO_1_18, { label: "Go (1.18.5)", value: LANG_KEYS.GO_1_18 }],
+    [LANG_KEYS.GO_1_22, { label: "Go (1.22.0)", value: LANG_KEYS.GO_1_22 }],
+    [LANG_KEYS.GO_1_23, { label: "Go (1.23.5)", value: LANG_KEYS.GO_1_23 }],
+    [LANG_KEYS.GROOVY, { label: "Groovy (3.0.3)", value: LANG_KEYS.GROOVY }],
+    [
+      LANG_KEYS.HASKELL,
+      { label: "Haskell (GHC 8.8.1)", value: LANG_KEYS.HASKELL },
+    ],
+    [
+      LANG_KEYS.JAVAFX,
+      { label: "JavaFX (JDK 17.0.6, OpenJFX 22.0.2)", value: LANG_KEYS.JAVAFX },
+    ],
+    [
+      LANG_KEYS.JAVA_JDK_17,
+      { label: "Java (JDK 17.0.6)", value: LANG_KEYS.JAVA_JDK_17 },
+    ],
+    [
+      LANG_KEYS.JAVA_OPENJDK_13,
+      { label: "Java (OpenJDK 13.0.1)", value: LANG_KEYS.JAVA_OPENJDK_13 },
+    ],
+    [
+      LANG_KEYS.JAVASCRIPT_NODE_12,
+      {
+        label: "JavaScript (Node.js 12.14.0)",
+        value: LANG_KEYS.JAVASCRIPT_NODE_12,
+      },
+    ],
+    [
+      LANG_KEYS.JAVASCRIPT_NODE_18,
+      {
+        label: "JavaScript (Node.js 18.15.0)",
+        value: LANG_KEYS.JAVASCRIPT_NODE_18,
+      },
+    ],
+    [
+      LANG_KEYS.JAVASCRIPT_NODE_20,
+      {
+        label: "JavaScript (Node.js 20.17.0)",
+        value: LANG_KEYS.JAVASCRIPT_NODE_20,
+      },
+    ],
+    [
+      LANG_KEYS.JAVASCRIPT_NODE_22,
+      {
+        label: "JavaScript (Node.js 22.08.0)",
+        value: LANG_KEYS.JAVASCRIPT_NODE_22,
+      },
+    ],
+    [
+      LANG_KEYS.KOTLIN_1_3,
+      { label: "Kotlin (1.3.70)", value: LANG_KEYS.KOTLIN_1_3 },
+    ],
+    [
+      LANG_KEYS.KOTLIN_2_1,
+      { label: "Kotlin (2.1.10)", value: LANG_KEYS.KOTLIN_2_1 },
+    ],
+    [LANG_KEYS.LUA, { label: "Lua (5.3.5)", value: LANG_KEYS.LUA }],
+    [
+      LANG_KEYS.MULTI_FILE_PROGRAM,
+      { label: "Multi-file program", value: LANG_KEYS.MULTI_FILE_PROGRAM },
+    ],
+    [
+      LANG_KEYS.OBJECTIVE_C,
+      { label: "Objective-C (Clang 7.0.1)", value: LANG_KEYS.OBJECTIVE_C },
+    ],
+    [LANG_KEYS.OCAML, { label: "OCaml (4.09.0)", value: LANG_KEYS.OCAML }],
+    [LANG_KEYS.OCTAVE, { label: "Octave (5.1.0)", value: LANG_KEYS.OCTAVE }],
+    [
+      LANG_KEYS.PASCAL,
+      { label: "Pascal (FPC 3.0.4)", value: LANG_KEYS.PASCAL },
+    ],
+    [LANG_KEYS.PERL, { label: "Perl (5.28.1)", value: LANG_KEYS.PERL }],
+    [LANG_KEYS.PHP_7, { label: "PHP (7.4.1)", value: LANG_KEYS.PHP_7 }],
+    [LANG_KEYS.PHP_8, { label: "PHP (8.3.11)", value: LANG_KEYS.PHP_8 }],
+    [
+      LANG_KEYS.PLAIN_TEXT,
+      { label: "Plain Text", value: LANG_KEYS.PLAIN_TEXT },
+    ],
+    [
+      LANG_KEYS.PROLOG,
+      { label: "Prolog (GNU Prolog 1.4.5)", value: LANG_KEYS.PROLOG },
+    ],
+    [
+      LANG_KEYS.PYTHON_2,
+      { label: "Python (2.7.17)", value: LANG_KEYS.PYTHON_2 },
+    ],
+    [
+      LANG_KEYS.PYTHON_3_11,
+      { label: "Python (3.11.2)", value: LANG_KEYS.PYTHON_3_11 },
+    ],
+    [
+      LANG_KEYS.PYTHON_3_12,
+      { label: "Python (3.12.5)", value: LANG_KEYS.PYTHON_3_12 },
+    ],
+    [
+      LANG_KEYS.PYTHON_3_13,
+      { label: "Python (3.13.2)", value: LANG_KEYS.PYTHON_3_13 },
+    ],
+    [
+      LANG_KEYS.PYTHON_3_8,
+      { label: "Python (3.8.1)", value: LANG_KEYS.PYTHON_3_8 },
+    ],
+    [LANG_KEYS.R_4, { label: "R (4.0.0)", value: LANG_KEYS.R_4 }],
+    [LANG_KEYS.R_4_4, { label: "R (4.4.1)", value: LANG_KEYS.R_4_4 }],
+    [LANG_KEYS.RUBY, { label: "Ruby (2.7.0)", value: LANG_KEYS.RUBY }],
+    [
+      LANG_KEYS.RUST_1_40,
+      { label: "Rust (1.40.0)", value: LANG_KEYS.RUST_1_40 },
+    ],
+    [
+      LANG_KEYS.RUST_1_85,
+      { label: "Rust (1.85.0)", value: LANG_KEYS.RUST_1_85 },
+    ],
+    [LANG_KEYS.SCALA, { label: "Scala (2.13.2)", value: LANG_KEYS.SCALA }],
+    [LANG_KEYS.SQL, { label: "SQL (SQLite 3.27.2)", value: LANG_KEYS.SQL }],
+    [LANG_KEYS.SWIFT, { label: "Swift (5.2.3)", value: LANG_KEYS.SWIFT }],
+    [
+      LANG_KEYS.TYPESCRIPT_3,
+      { label: "TypeScript (3.7.4)", value: LANG_KEYS.TYPESCRIPT_3 },
+    ],
+    [
+      LANG_KEYS.TYPESCRIPT_5,
+      { label: "TypeScript (5.0.3)", value: LANG_KEYS.TYPESCRIPT_5 },
+    ],
+    [
+      LANG_KEYS.TYPESCRIPT_5_6,
+      { label: "TypeScript (5.6.2)", value: LANG_KEYS.TYPESCRIPT_5_6 },
+    ],
+    [
+      LANG_KEYS.VISUAL_BASIC_NET,
+      {
+        label: "Visual Basic.Net (vbnc 0.0.0.5943)",
+        value: LANG_KEYS.VISUAL_BASIC_NET,
+      },
+    ],
+  ]);
