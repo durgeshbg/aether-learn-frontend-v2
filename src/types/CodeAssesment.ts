@@ -11,7 +11,8 @@ export type CodeAssesment = {
   instructions?: string;
   languageId?: string;
   starterCode?: string;
-  courseId: string;
+  runnerCode?: string;
+  courseId?: string;
   testCases?: TestCase[];
   difficulty?: DifficultyLevelType;
 
@@ -24,6 +25,7 @@ export const CodeAssessmentCreateSchema = z.object({
   description: z.string().min(1, "Description is required"),
   instructions: z.string().min(1, "Instructions are required"),
   starterCode: z.string().min(1, "Starter code is required"),
+  runnerCode: z.string().min(1, "Runner code is required"),
   languageId: z.coerce
     .number()
     .int()
@@ -51,6 +53,7 @@ export const CodeAssessmentUpdateSchema = z.object({
   description: z.string().min(1, "Description is required").optional(),
   instructions: z.string().min(1, "Instructions are required").optional(),
   starterCode: z.string().min(1, "Starter code is required").optional(),
+  runnerCode: z.string().min(1, "Runner code is required"),
   languageId: z.coerce
     .number()
     .int()

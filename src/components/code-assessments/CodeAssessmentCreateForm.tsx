@@ -94,6 +94,7 @@ const CodeAssessmentCreateForm = ({
             description: assessment.description,
             instructions: assessment.instructions,
             starterCode: assessment.starterCode,
+            runnerCode: assessment.runnerCode,
             languageId:
               parseInt(assessment?.languageId || "") ?? LANG_KEYS.PLAIN_TEXT,
             durationMinutes: assessment.durationMinutes,
@@ -360,6 +361,38 @@ const CodeAssessmentCreateForm = ({
                           Include function signatures, basic structure, and
                           helpful comments. Students should be able to focus on
                           the algorithm rather than setup.
+                        </p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
+                {/* Runner Code Field */}
+                <FormField
+                  control={form.control}
+                  name="runnerCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
+                        <Terminal className="h-5 w-5 text-purple-400" />
+                        Runner Code
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Textarea
+                            placeholder="Provide the code that will execute the student's solution and run test cases..."
+                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-gray-900/30 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-gray-900/50 focus:border-white/40 transition-all duration-300 min-h-[200px] resize-y font-mono text-sm"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red-400 text-sm" />
+                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
+                        <p className="text-white/60 text-sm">
+                          <strong className="text-white/80">Tip:</strong> This
+                          code should handle input parsing, invoking the
+                          student's function, and displaying outputs for
+                          evaluation.
                         </p>
                       </div>
                     </FormItem>

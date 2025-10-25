@@ -19,7 +19,6 @@ import {
   Settings,
   Terminal,
   Bug,
-  Globe,
 } from "lucide-react";
 import { deleteCodeAssessment } from "@/services/code-assesment";
 import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
@@ -219,14 +218,21 @@ export const AdminCodeAssessmentView = ({
               Starter Code
             </h2>
             <div className="relative">
-              <div className="absolute top-3 right-3 z-10">
-                <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/10 border border-white/20 text-white/80 text-sm">
-                  <Globe className="h-3 w-3" />
-                  {language?.label}
-                </div>
-              </div>
               <pre className="p-6 rounded-xl bg-gray-900/50 border border-white/10 text-white/90 text-sm overflow-x-auto leading-relaxed">
                 <code>{codeAssessment.starterCode}</code>
+              </pre>
+            </div>
+          </div>
+
+          {/* Runner Code */}
+          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+            <h2 className="flex items-center gap-2 text-2xl font-semibold mb-4 text-white">
+              <Code2 className="h-6 w-6 text-emerald-400" />
+              Runner Code
+            </h2>
+            <div className="relative">
+              <pre className="p-6 rounded-xl bg-gray-900/50 border border-white/10 text-white/90 text-sm overflow-x-auto leading-relaxed">
+                <code>{codeAssessment.runnerCode}</code>
               </pre>
             </div>
           </div>
