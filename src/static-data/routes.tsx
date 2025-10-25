@@ -161,4 +161,14 @@ export const apiRoutes = {
     `/courses/${courseId}/code-assessments/${codeAssessmentId}/code-solutions`,
   CODE_SOLUTION_ID: (courseId: string, codeAssessmentId: string, id: string) =>
     `/courses/${courseId}/code-assessments/${codeAssessmentId}/code-solutions/${id}`,
+  CODE_SOLUTION_RUN: (courseId: string, codeAssessmentId: string) =>
+    `/courses/${courseId}/code-assessments/${codeAssessmentId}/code-solutions/run`,
+  CODE_SOLUTION_SUBMIT: (courseId: string, codeAssessmentId: string) =>
+    `/courses/${courseId}/code-assessments/${codeAssessmentId}/code-solutions/submit`,
+  CODE_SOLUTION_STATUS: (
+    courseId: string,
+    codeAssessmentId: string,
+    id: string,
+  ) =>
+    `/courses/${courseId}/code-assessments/${codeAssessmentId}/code-solutions/${id}/status`,
 };
