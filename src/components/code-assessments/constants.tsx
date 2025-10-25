@@ -95,3 +95,10 @@ export const adminCodeAssessmentData = {
   testCaseAddTip: "Add test cases to validate student solutions",
   createFirstTestCaseText: "Create First Test Case",
 };
+
+export const MONACO_THEMES = [
+  { value: "vs", label: "Light" },
+  { value: "vs-dark", label: "Dark" },
+  { value: "hc-black", label: "High Contrast Dark" },
+  { value: "hc-light", label: "High Contrast Light" },
+] as const;

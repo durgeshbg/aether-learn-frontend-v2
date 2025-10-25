@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
 import { getCodeAssessmentById } from "@/services/code-assesment";
 import { AdminCodeAssessmentView } from "./AdminCodeAssessmentView";
-import { StudentCodeAssessmentView } from "./StudentCodeAssessmentView";
+import { StudentAssessmentView } from "./StudentAssesmentView/StudentAssessmentView";
 
 const CodeAssessmentDetails = () => {
   const { courseId = "", codeAssessmentId = "" } = useParams<{
@@ -36,10 +36,9 @@ const CodeAssessmentDetails = () => {
   }
 
   return (
-    <StudentCodeAssessmentView
+    <StudentAssessmentView
       codeAssessment={codeAssessment}
       testCases={codeAssessment.testCases}
-      courseId={courseId}
     />
   );
 };

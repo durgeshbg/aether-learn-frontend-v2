@@ -12,8 +12,8 @@ const TestCaseItem = ({
 }: {
   index: number;
   testCase: TestCase;
-  deleteTestCaseMutation: (id: string) => void;
-  deletingTestCaseId: string | null;
+  deleteTestCaseMutation?: (id: string) => void;
+  deletingTestCaseId?: string | null;
 }) => {
   const { courseId = "", codeAssessmentId = "" } = useParams<{
     courseId: string;
@@ -33,29 +33,35 @@ const TestCaseItem = ({
           </div>
           <h3 className="font-medium text-white">{testCase.description}</h3>
         </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={() =>
-              navigate(
-                routes.TEST_CASE_EDIT(courseId, codeAssessmentId, testCase.id),
-              )
-            }
-            className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 p-1 rounded-lg transition-all duration-300"
-          >
-            <Edit3 className="h-3 w-3" />
-          </Button>
-          <Button
-            onClick={() => deleteTestCaseMutation(testCase.id)}
-            disabled={deletingTestCaseId === testCase.id}
-            className="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-400/30 p-1 rounded-lg transition-all duration-300 disabled:opacity-50"
-          >
-            {deletingTestCaseId === testCase.id ? (
-              <div className="w-3 h-3 border border-red-400/30 border-t-red-400 rounded-full animate-spin" />
-            ) : (
-              <Trash2 className="h-3 w-3" />
-            )}
-          </Button>
-        </div>
+        {deleteTestCaseMutation && (
+          <div className="flex gap-2">
+            <Button
+              onClick={() =>
+                navigate(
+                  routes.TEST_CASE_EDIT(
+                    courseId,
+                    codeAssessmentId,
+                    testCase.id,
+                  ),
+                )
+              }
+              className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 p-1 rounded-lg transition-all duration-300"
+            >
+              <Edit3 className="h-3 w-3" />
+            </Button>
+            <Button
+              onClick={() => deleteTestCaseMutation(testCase.id)}
+              disabled={deletingTestCaseId === testCase.id}
+              className="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-400/30 p-1 rounded-lg transition-all duration-300 disabled:opacity-50"
+            >
+              {deletingTestCaseId === testCase.id ? (
+                <div className="w-3 h-3 border border-red-400/30 border-t-red-400 rounded-full animate-spin" />
+              ) : (
+                <Trash2 className="h-3 w-3" />
+              )}
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="space-y-2 text-sm">
