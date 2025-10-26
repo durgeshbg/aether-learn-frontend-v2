@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 
 import App from "./App.tsx";
 import CodeAssessmentCreateForm from "./components/code-assessments/CodeAssessmentCreateForm.tsx";
@@ -54,6 +54,8 @@ import QuizResultDetails from "./components/submissions/QuizResultDetails.tsx";
 import CodeSolutions from "./components/submissions/CodeSolutions.tsx";
 import CodeSolutionDetails from "./components/submissions/CodeSolutionDetails.tsx";
 import CodeSolutionsTab from "./components/submissions/Tabs/CodeSolutionsTab.tsx";
+import SubmissionQuizzesList from "./components/submissions/SubmissionQuizzesList.tsx";
+import SubmissionAssessmentsList from "./components/submissions/SubmissionAssessmentsList.tsx";
 
 const router = createBrowserRouter([
   {
@@ -154,33 +156,45 @@ const router = createBrowserRouter([
                 children: [
                   {
                     index: true,
-                    element: <QuizResultsTab />,
+                    element: <Navigate to="quizzes" replace />,
                   },
                   {
                     path: "quizzes",
                     element: <QuizResultsTab />,
+                    children: [
+                      {
+                        index: true,
+                        element: <SubmissionQuizzesList />,
+                      },
+                      {
+                        path: ":quizId",
+                        element: <QuizResults />,
+                      },
+                      {
+                        path: ":quizId/results/:quizResultId",
+                        element: <QuizResultDetails />,
+                      },
+                    ],
                   },
                   {
                     path: "code-assessments",
                     element: <CodeSolutionsTab />,
+                    children: [
+                      {
+                        index: true,
+                        element: <SubmissionAssessmentsList />,
+                      },
+                      {
+                        path: ":codeAssessmentId",
+                        element: <CodeSolutions />,
+                      },
+                      {
+                        path: ":codeAssessmentId/solutions/:codeSolutionId",
+                        element: <CodeSolutionDetails />,
+                      },
+                    ],
                   },
                 ],
-              },
-              {
-                path: "courses/:courseId/submissions/quizzes/:quizId",
-                element: <QuizResults />,
-              },
-              {
-                path: "courses/:courseId/submissions/quizzes/:quizId/results/:quizResultId",
-                element: <QuizResultDetails />,
-              },
-              {
-                path: "courses/:courseId/submissions/code-assessments/:codeAssessmentId",
-                element: <CodeSolutions />,
-              },
-              {
-                path: "courses/:courseId/submissions/code-assessments/:codeAssessmentId/solutions/:codeSolutionId",
-                element: <CodeSolutionDetails />,
               },
               // Organization Admin Routes
               {

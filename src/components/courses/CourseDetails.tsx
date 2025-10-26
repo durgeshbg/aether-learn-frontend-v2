@@ -186,9 +186,7 @@ const CourseDetails = () => {
         <CourseQuizzes
           quizzes={course.quizzes}
           quizzesCount={course.quizzesCount}
-          routeTo={(assessmentId: string) =>
-            routes.QUIZ_DETAILS(courseId, assessmentId)
-          }
+          routeTo={(quizId: string) => routes.QUIZ_DETAILS(courseId, quizId)}
         />
 
         <CourseAssesments

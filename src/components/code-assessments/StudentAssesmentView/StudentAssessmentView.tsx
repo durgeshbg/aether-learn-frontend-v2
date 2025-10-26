@@ -5,8 +5,6 @@ import { LANG_KEYS, LANGUAGES_MAP } from "@/static-data/languages";
 import type { TestCase } from "@/types/TestCase";
 import type { CodeAssesment } from "@/types/CodeAssesment";
 import { ArrowLeft, RotateCcw } from "lucide-react";
-import ProblemPanel from "./ProblemPanel";
-import type { ActiveTab } from "./types";
 import { routes } from "@/static-data/routes";
 import EditorPanel from "./EditorPanel";
 import TestCaseResults from "./TestCaseResults";
@@ -19,6 +17,7 @@ import {
   submitCodeSolution,
 } from "@/services/code-solution";
 import { axiosInstance } from "@/utils/axiosInstance";
+import DescriptionTab from "./DescriptionTab";
 
 interface StudentCodeAssessmentViewProps {
   codeAssessment: CodeAssesment;
@@ -32,7 +31,6 @@ export const StudentAssessmentView = ({
   const navigate = useNavigate();
 
   const [code, setCode] = useState(codeAssessment.starterCode || "");
-  const [activeTab, setActiveTab] = useState<ActiveTab>("description");
   const [isRunning, setIsRunning] = useState(false);
   const [codeSolutionId, setCodeSolutionId] = useState<string | null>(null);
 
@@ -79,6 +77,15 @@ export const StudentAssessmentView = ({
         });
       },
       select: (data) => data.codeSolution.testCaseResults,
+      meta: {
+        notify: false,
+        invalidatesQueries: [
+          codeSolutionKeys.all(
+            codeAssessment.courseId || "",
+            codeAssessment.id,
+          ),
+        ],
+      },
     });
 
   const { mutate: runCodeMutation } = useMutation({
@@ -101,6 +108,12 @@ export const StudentAssessmentView = ({
     onSuccess: (data) => {
       setCodeSolutionId(data.codeSolutionId);
     },
+    meta: {
+      notify: false,
+      invalidatesQueries: [
+        codeSolutionKeys.all(codeAssessment.courseId || "", codeAssessment.id),
+      ],
+    },
   });
 
   const { mutate: submitCodeMutation } = useMutation({
@@ -122,6 +135,12 @@ export const StudentAssessmentView = ({
     },
     onSuccess: (data) => {
       setCodeSolutionId(data.codeSolutionId);
+    },
+    meta: {
+      notify: false,
+      invalidatesQueries: [
+        codeSolutionKeys.all(codeAssessment.courseId || "", codeAssessment.id),
+      ],
     },
   });
 
@@ -146,38 +165,28 @@ export const StudentAssessmentView = ({
   return (
     <div className="p-4 space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-baseline gap-4">
-          <Button
-            onClick={handleBackLinkClick}
-            className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
+        <Button
+          onClick={handleBackLinkClick}
+          className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </Button>
 
-          <h1 className="text-2xl font-bold text-white mb-1">
-            {codeAssessment.title}
-          </h1>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={resetCode}
-            className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-400/30 px-3 py-2 rounded-lg transition-all duration-300"
-          >
-            <RotateCcw className="h-3 w-3 mr-2" />
-            Reset
-          </Button>
-        </div>
+        <Button
+          onClick={resetCode}
+          className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-400/30 px-3 py-2 rounded-lg transition-all duration-300"
+        >
+          <RotateCcw className="h-3 w-3 mr-2" />
+          Reset
+        </Button>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <ProblemPanel
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
+        <DescriptionTab
           codeAssessment={codeAssessment}
-          langauge={language}
           testCases={testCases}
+          language={language}
         />
 
         <div className="space-y-4">
