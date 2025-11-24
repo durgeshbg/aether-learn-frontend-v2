@@ -155,55 +155,57 @@ export default function LoginForm() {
               </form>
             </Form>
 
-            {/* Demo Accounts */}
-            <div className="mt-8 pt-6 border-t border-border/20">
-              <p className="text-xs text-muted-foreground text-center mb-4">
-                Demo Accounts - For Testing
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  className="bg-red-500/10 border-red-500/20 text-red-700 hover:bg-red-500/20 backdrop-blur-sm text-xs"
-                  onClick={() => {
-                    form.setValue("email", "admin1@mail.com");
-                    form.setValue("password", "password");
-                  }}
-                >
-                  <Shield className="h-3 w-3 mr-1" />
-                  Admin
-                </Button>
+            {/* Demo Accounts - Only visible in development */}
+            {import.meta.env.DEV && (
+              <div className="mt-8 pt-6 border-t border-border/20">
+                <p className="text-xs text-muted-foreground text-center mb-4">
+                  Demo Accounts - For Testing
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    className="bg-red-500/10 border-red-500/20 text-red-700 hover:bg-red-500/20 backdrop-blur-sm text-xs"
+                    onClick={() => {
+                      form.setValue("email", "admin1@mail.com");
+                      form.setValue("password", "password");
+                    }}
+                  >
+                    <Shield className="h-3 w-3 mr-1" />
+                    Admin
+                  </Button>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  className="bg-purple-500/10 border-purple-500/20 text-purple-700 hover:bg-purple-500/20 backdrop-blur-sm text-xs"
-                  onClick={() => {
-                    form.setValue("email", "org1admin@mail.com");
-                    form.setValue("password", "password");
-                  }}
-                >
-                  <Building2 className="h-3 w-3 mr-1" />
-                  Org Admin
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    className="bg-purple-500/10 border-purple-500/20 text-purple-700 hover:bg-purple-500/20 backdrop-blur-sm text-xs"
+                    onClick={() => {
+                      form.setValue("email", "org1admin@mail.com");
+                      form.setValue("password", "password");
+                    }}
+                  >
+                    <Building2 className="h-3 w-3 mr-1" />
+                    Org Admin
+                  </Button>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  className="bg-blue-500/10 border-blue-500/20 text-blue-700 hover:bg-blue-500/20 backdrop-blur-sm text-xs"
-                  onClick={() => {
-                    form.setValue("email", "user1@mail.com");
-                    form.setValue("password", "password");
-                  }}
-                >
-                  <User className="h-3 w-3 mr-1" />
-                  Student
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    className="bg-blue-500/10 border-blue-500/20 text-blue-700 hover:bg-blue-500/20 backdrop-blur-sm text-xs"
+                    onClick={() => {
+                      form.setValue("email", "user1@mail.com");
+                      form.setValue("password", "password");
+                    }}
+                  >
+                    <User className="h-3 w-3 mr-1" />
+                    Student
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Footer Links */}
             <div className="mt-6 text-center space-y-2">
