@@ -8,7 +8,6 @@ export type Module = {
   content?: string;
   languageId?: number;
   difficulty?: DifficultyLevelType;
-  objectives?: string[];
   code?: string;
   durationMinutes: number;
 
@@ -39,7 +38,6 @@ export const ModuleCreateSchema = z.object({
       },
     )
     .optional(),
-  objectives: z.string().optional(),
   durationMinutes: z.coerce
     .number()
     .int()
@@ -68,7 +66,6 @@ export const ModuleUpdateSchema = z.object({
       },
     )
     .optional(),
-  objectives: z.string().optional(),
   durationMinutes: z.coerce
     .number()
     .int()
@@ -88,13 +85,7 @@ export const ModuleIdParamsSchema = z.object({
 });
 
 export type ModuleCreateType = z.infer<typeof ModuleCreateSchema>;
-export type DBModuleCreateType = Omit<ModuleCreateType, "objectives"> & {
-  objectives?: string[];
-};
 export type ModuleUpdateType = z.infer<typeof ModuleUpdateSchema>;
-export type DBModuleUpdateType = Omit<ModuleUpdateType, "objectives"> & {
-  objectives?: string[];
-};
 export type ModuleIdParamsType = z.infer<typeof ModuleIdParamsSchema>;
 export type ModuleLessonCourseIdParamsType = z.infer<
   typeof ModuleLessonCourseIdParamSchema

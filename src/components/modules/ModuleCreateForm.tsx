@@ -79,7 +79,6 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
             code: module?.code,
             languageId: module?.languageId,
             difficulty: module.difficulty,
-            objectives: module.objectives ? module.objectives.join(", ") : "",
             durationMinutes: module.durationMinutes,
           }
         : {
@@ -91,13 +90,10 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
   const { mutate: createModuleMutation, isPending: isCreating } = useMutation({
     mutationKey: moduleKeys.create(courseId, lessonId),
     mutationFn: async (data: z.infer<typeof ModuleCreateSchema>) => {
-      const objectives = data.objectives
-        ? data.objectives.split(",").map((obj) => obj.trim())
-        : undefined;
       return createModule(
         axiosInstance,
         { courseId, lessonId },
-        { ...data, objectives },
+        data,
       );
     },
     onSuccess: () => {
@@ -114,13 +110,10 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
   const { mutate: updateModuleMutation, isPending: isUpdating } = useMutation({
     mutationKey: moduleKeys.update(courseId, lessonId, moduleId),
     mutationFn: async (data: z.infer<typeof ModuleUpdateSchema>) => {
-      const objectives = data.objectives
-        ? data.objectives.split(",").map((obj) => obj.trim())
-        : undefined;
       return updateModule(
         axiosInstance,
         { courseId, lessonId, id: moduleId },
-        { ...data, objectives },
+        data,
       );
     },
     onSuccess: () => {
@@ -302,29 +295,6 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
                         </SelectContent>
                       </Select>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Module Objectives */}
-                <FormField
-                  control={form.control}
-                  name="objectives"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-foreground font-medium">
-                        Learning Objectives
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="List the key learning objectives for this lesson, separated by commas (e.g., Understand React Hooks, Build functional components)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[100px] resize-y"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
                     </FormItem>
                   )}
                 />

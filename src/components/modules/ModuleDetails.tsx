@@ -126,7 +126,7 @@ const ModuleDetails = () => {
 
   const stats = getModuleStats(module);
 
-  const language = LANGUAGES_MAP[module.languageId!];
+  const language = LANGUAGES_MAP.get(module.languageId!);
   const getBookmarkButtonClass = (isBookmarked: boolean) =>
     isBookmarked
       ? "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-all duration-300"
@@ -239,19 +239,6 @@ const ModuleDetails = () => {
               </p>
             </div>
           </div>
-          {/* Module Objectives */}
-          {module.objectives && module.objectives.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold text-white mb-3">
-                Learning Objectives
-              </h3>
-              <ul className="list-disc list-inside text-white/80 space-y-1">
-                {module.objectives.map((obj, index) => (
-                  <li key={index}>{obj}</li>
-                ))}
-              </ul>
-            </div>
-          )}
         </section>
 
         {/* Code and Technical Details */}

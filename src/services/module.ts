@@ -1,7 +1,7 @@
 import { apiRoutes } from "@/static-data/routes";
 import type {
-  DBModuleCreateType,
-  DBModuleUpdateType,
+  ModuleCreateType,
+  ModuleUpdateType,
   Module,
   ModuleIdParamsType,
   ModuleLessonCourseIdParamsType,
@@ -21,7 +21,7 @@ export const getModules = async (
 export const createModule = async (
   axiosInstance: AxiosInstance,
   params: ModuleLessonCourseIdParamsType,
-  data: DBModuleCreateType,
+  data: ModuleCreateType,
 ) => {
   const response = await axiosInstance.post(
     apiRoutes.MODULES(params.courseId, params.lessonId),
@@ -43,7 +43,7 @@ export const getModuleById = async (
 export const updateModule = async (
   axiosInstance: AxiosInstance,
   params: ModuleIdParamsType,
-  data: DBModuleUpdateType,
+  data: ModuleUpdateType,
 ) => {
   const response = await axiosInstance.put(
     apiRoutes.MODULE_ID(params.courseId, params.lessonId, params.id),
