@@ -1,27 +1,35 @@
 import {
-  BookOpen,
-  Play,
-  Award,
-  TrendingUp,
-  Target,
-  FileText,
-  Code,
   Activity,
+  Award,
+  BookOpen,
+  Code,
+  FileText,
+  Play,
+  Target,
+  TrendingUp,
 } from "lucide-react";
-import { Button } from "../ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { userKeys } from "@/tanstack/keys/userKeys";
-import { useAuth } from "@/hooks/useAuth";
-import { /* getDashboardStats, */ getUserProgress } from "@/services/user";
-import { axiosInstance } from "@/utils/axiosInstance";
-import lastTimeAgo from "@/utils/lastTimeAgo";
 import { useNavigate } from "react-router";
-import { getModuleLink } from "@/utils/getModuleLink";
-import type { CourseProgress, ModuleLink } from "@/types/User";
-import { completionStats, courseCompletiondata } from "./helpers";
-import { courseKeys } from "@/tanstack/keys/courseKeys";
-import { getCourses } from "@/services/course";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
 import { routes } from "@/static-data/routes";
+import { courseKeys } from "@/tanstack/keys/courseKeys";
+import { userKeys } from "@/tanstack/keys/userKeys";
+import { getCourses } from "@/services/course";
+import { getUserProgress } from "@/services/user";
+import type { CourseProgress, ModuleLink } from "@/types/User";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { getModuleLink } from "@/utils/getModuleLink";
+import lastTimeAgo from "@/utils/lastTimeAgo";
+import { completionStats, courseCompletiondata } from "./helpers";
 
 const userStats = {
   averageScore: 87,
@@ -49,14 +57,6 @@ function UserDashboard() {
     select: (data) => data.courses,
   });
 
-  // const { data: dashboardData } = useQuery({
-  //   queryKey: userKeys.dashBoardStats(),
-  //   queryFn: async () => {
-  //     return getDashboardStats(axiosInstance);
-  //   },
-  //   select: (data) => data.dashboardData,
-  // });
-
   const {
     completedModules,
     totalModules,
@@ -71,9 +71,52 @@ function UserDashboard() {
     totalEnrolledCoursesCount,
     sumCompletionRate,
   } = courseCompletiondata(progressData || []);
+
   const overallProgress = totalEnrolledCoursesCount
-    ? sumCompletionRate / totalEnrolledCoursesCount
+    ? Math.round(sumCompletionRate / totalEnrolledCoursesCount)
     : 0;
+
+  const breakdown = [
+    {
+      label: "Modules",
+      completed: completedModules,
+      total: totalModules,
+      icon: BookOpen,
+    },
+    {
+      label: "Quizzes",
+      completed: completedQuizzes,
+      total: totalQuizzes,
+      icon: FileText,
+    },
+    {
+      label: "Code assessments",
+      completed: completedCodeAssessments,
+      total: totalCodeAssessments,
+      icon: Code,
+    },
+  ];
+
+  const highlightCards = [
+    {
+      label: "Average score",
+      value: `${userStats.averageScore}%`,
+      icon: Award,
+      helper: "+3% vs last month",
+    },
+    {
+      label: "Courses completed",
+      value: completedCoursesCount,
+      icon: Target,
+      helper: `of ${totalEnrolledCoursesCount} enrolled`,
+    },
+    {
+      label: "Active streak",
+      value: `${user?.streakCount || 0} days`,
+      icon: Activity,
+      helper: `Last active ${lastTimeAgo(user?.lastActiveAt || "")}`,
+    },
+  ];
 
   const handleContinueLearning = (moduleLink: ModuleLink | null) => {
     navigate(getModuleLink(moduleLink));
@@ -84,159 +127,166 @@ function UserDashboard() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-8 px-4">
-      <h1 className="text-4xl font-extrabold mb-3 text-white">
-        Your Learning Dashboard
-      </h1>
-      <p className="text-white/80 mb-8 text-lg">
-        Welcome back! Continue your learning journey and track your progress.
-      </p>
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
+      <header className="space-y-2">
+        <p className="text-sm font-medium text-muted-foreground">
+          Hi {user?.firstName}, welcome back
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Your learning dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Track progress, celebrate wins, and jump back into a module.
+            </p>
+          </div>
+        </div>
+      </header>
 
-      {/* Performance Summary Stats */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-        <div
-          className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl col-span-full"
-          style={{ width: "100%" }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <TrendingUp className="h-8 w-8 text-blue-400" />
-            <span className="text-sm text-white/70 font-semibold">
-              Progress
-            </span>
-          </div>
-          <div className="text-4xl font-extrabold text-white mb-2">
-            {overallProgress}%
-          </div>
-          <div className="text-white/80 text-sm mb-6">Overall Progress</div>
-          <div className="flex justify-between space-x-4 flex-wrap gap-4">
-            <div className="flex items-center space-x-2 flex-1">
-              <BookOpen className="text-blue-400 h-5 w-5" />
-              <span className="text-white/80">Modules:</span>
-              <span className="bg-blue-400/20 text-blue-400 rounded-full px-3 py-1 text-xs font-medium">
-                {completedModules}/{totalModules}
+      <section className="grid gap-4 lg:grid-cols-5">
+        <Card className="lg:col-span-3">
+          <CardHeader className="gap-4 border-b pb-6">
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-primary/10 p-2 text-primary">
+                <TrendingUp className="h-5 w-5" />
               </span>
+              <div>
+                <CardTitle className="text-base font-medium text-muted-foreground">
+                  Overall progress
+                </CardTitle>
+                <p className="text-3xl font-semibold text-foreground">
+                  {overallProgress}%
+                </p>
+              </div>
             </div>
-            <div className="flex items-center space-x-2 flex-1">
-              <FileText className="text-blue-400 h-5 w-5" />
-              <span className="text-white/80">Quizzes:</span>
-              <span className="bg-blue-400/20 text-blue-400 rounded-full px-3 py-1 text-xs font-medium">
-                {completedQuizzes}/{totalQuizzes}
-              </span>
+            <div className="h-2 w-full rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${overallProgress}%` }}
+              />
             </div>
-            <div className="flex items-center space-x-2 flex-1">
-              <Code className="text-blue-400 h-5 w-5" />
-              <span className="text-white/80">Code Assessments:</span>
-              <span className="bg-blue-400/20 text-blue-400 rounded-full px-3 py-1 text-xs font-medium">
-                {completedCodeAssessments}/{totalCodeAssessments}
-              </span>
-            </div>
-          </div>
-        </div>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-4 pt-6">
+            {breakdown.map(({ label, completed, total, icon: Icon }) => (
+              <div
+                key={label}
+                className="flex min-w-[140px] flex-1 items-center justify-between rounded-lg border px-4 py-3"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-muted-foreground">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <p className="text-xs text-muted-foreground">{label}</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      {completed}/{total}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
 
-        {/* TODO: fetch average score from backend from quiz results and code solutions */}
-        <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center justify-between mb-3">
-            <Award className="h-8 w-8 text-yellow-400" />
-            <span className="text-sm text-white/70">Score</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-1">
-            {userStats.averageScore}%
-          </div>
-          <div className="text-white/80 text-sm">Average Score</div>
-          <div className="text-green-400 text-xs mt-1">+3% this month</div>
-        </div>
-        <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center justify-between mb-3">
-            <Target className="h-8 w-8 text-emerald-400" />
-            <span className="text-sm text-white/70">Completed</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-1">
-            {completedCoursesCount}
-          </div>
-          <div className="text-white/80 text-sm">Courses Completed</div>
-          <div className="text-white/60 text-xs mt-1">
-            of {totalEnrolledCoursesCount} enrolled
-          </div>
-        </div>
-        <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center justify-between mb-3">
-            <Activity className="h-8 w-8 text-purple-400" />
-            <span className="text-sm text-white/70">Streak</span>
-          </div>
-          <div className="text-3xl font-bold text-white mb-1">
-            {user?.streakCount || 0}
-          </div>
-          <div className="text-white/80 text-sm">Day Streak</div>
-          <div className="text-purple-400 text-xs mt-1">
-            Last updated {lastTimeAgo(user?.lastActiveAt || "")}
-          </div>
+        <div className="grid gap-4 lg:col-span-2">
+          {highlightCards.map(({ label, value, icon: Icon, helper }) => (
+            <Card key={label} className="h-full">
+              <CardHeader className="flex-row items-start justify-between pb-2">
+                <div>
+                  <CardDescription>{label}</CardDescription>
+                  <CardTitle className="text-2xl font-semibold">
+                    {value}
+                  </CardTitle>
+                </div>
+                <span className="rounded-full bg-muted p-2 text-muted-foreground">
+                  <Icon className="h-4 w-4" />
+                </span>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground">{helper}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
 
-      {/* Course Progress Overview */}
-      <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-10">
-        <h2 className="flex items-center gap-2 text-xl font-semibold mb-6 text-white">
-          <BookOpen className="h-5 w-5 text-blue-400" />
-          Course Progress Overview
-        </h2>
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">
+              Course progress
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Continue where you left off or review submissions.
+            </p>
+          </div>
+        </div>
+
         <div className="grid gap-4">
-          {progressData?.map((progress) => (
-            <div
-              key={progress.id}
-              className="p-4 rounded-xl bg-white/5 border border-white/10"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h3 className="font-semibold text-white">
-                    {progress.course.name}
-                  </h3>
-                  <p className="text-sm text-white/70">
-                    <div className="flex items-center justify-between w-full">
-                      <div>Last accessed {lastTimeAgo(progress.updatedAt)}</div>
-                    </div>
-                  </p>
-                </div>
-                <div className="text-right">
-                  <span className="text-lg font-bold text-emerald-400">
+          {progressData && progressData.length > 0 ? (
+            progressData.map((progress) => (
+              <Card key={progress.id} className="border border-border">
+                <CardHeader className="flex-row items-center justify-between pb-4">
+                  <div>
+                    <CardTitle className="text-lg font-semibold">
+                      {progress.course.name}
+                    </CardTitle>
+                    <CardDescription>
+                      Last accessed {lastTimeAgo(progress.updatedAt)}
+                    </CardDescription>
+                  </div>
+                  <span className="text-sm font-medium text-primary">
                     {progress.completionRate}%
                   </span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="mb-3">
-                <div className="w-full bg-white/10 rounded-full h-2">
-                  <div
-                    className="bg-gradient-to-r from-blue-500 to-emerald-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${progress.completionRate}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-white/70 text-sm">
-                  Next: {progress.nextModule?.title}
-                </span>
-                <div className="flex space-x-3">
-                  <Button
-                    onClick={() => handleSubmissionClick(progress)}
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
-                  >
-                    <Play className="h-3 w-3 mr-1" />
-                    Submissions
-                  </Button>
-
-                  <Button
-                    onClick={() => handleContinueLearning(progress.nextModule)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105"
-                  >
-                    <Play className="h-3 w-3 mr-1" />
-                    Continue
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="h-2 w-full rounded-full bg-muted">
+                    <div
+                      className="h-full rounded-full bg-primary transition-all"
+                      style={{ width: `${progress.completionRate}%` }}
+                    />
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
+                    <span>
+                      Next up:{" "}
+                      <span className="font-medium text-foreground">
+                        {progress.nextModule?.title || "Module to be assigned"}
+                      </span>
+                    </span>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSubmissionClick(progress)}
+                      >
+                        <Play className="mr-2 h-4 w-4" />
+                        Submissions
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          handleContinueLearning(progress.nextModule)
+                        }
+                      >
+                        <Play className="mr-2 h-4 w-4" />
+                        Continue
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Card>
+              <CardContent className="py-10 text-center">
+                <p className="text-sm text-muted-foreground">
+                  You don’t have active courses yet. Explore the catalog to get
+                  started.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </section>
     </div>
