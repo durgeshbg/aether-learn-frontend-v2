@@ -63,17 +63,17 @@ export function GlassmorphicNavbar({ className }: NavbarProps) {
     >
       <div className="mx-auto flex h-14 w-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">
         <div className="flex flex-1 items-center gap-6">
-          <Link
-            to={routes.HOME}
+            <Link
+              to={routes.HOME}
             className="flex items-center gap-2 rounded-md px-2 py-1.5 text-foreground transition-colors hover:bg-muted/60"
-          >
+            >
             <div className="flex h-9 w-9 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
-              <Logo />
-            </div>
+                <Logo />
+              </div>
             <span className="hidden text-base font-semibold md:inline-block">
-              {appName}
-            </span>
-          </Link>
+                {appName}
+              </span>
+            </Link>
         </div>
 
         <div className="hidden flex-1 items-center justify-center md:flex">
@@ -101,68 +101,68 @@ export function GlassmorphicNavbar({ className }: NavbarProps) {
                   </NavigationMenuItem>
                 );
               })}
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
 
         <div className="flex flex-1 items-center justify-end gap-2 sm:gap-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
                 className="h-10 w-10 rounded-full border border-border bg-muted/40 p-0 hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/avatars/01.png" alt="@username" />
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/avatars/01.png" alt="@username" />
                   <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
-                    {userAvatarText}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
+                      {userAvatarText}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
               className="w-64 rounded-xl border border-border bg-card shadow-lg"
-              align="end"
-              forceMount
-            >
+                align="end"
+                forceMount
+              >
               <DropdownMenuLabel className="p-4 font-normal">
-                <div className="flex flex-col space-y-2">
+                  <div className="flex flex-col space-y-2">
                   <p className="text-sm font-semibold leading-none text-foreground">{`${user?.firstName} ${user?.lastName}`}</p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {user?.email || ""}
-                  </p>
-                </div>
-              </DropdownMenuLabel>
+                      {user?.email || ""}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
+                <DropdownMenuItem
                 className="cursor-pointer rounded-lg text-sm text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                onClick={handleProfile}
-              >
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem
+                  onClick={handleProfile}
+                >
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem
                 className="cursor-pointer rounded-lg text-sm text-destructive hover:bg-destructive/10 hover:text-destructive"
-                onClick={handleLogout}
-              >
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  onClick={handleLogout}
+                >
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
                 className="h-10 w-10 rounded-lg border border-border bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground md:hidden"
-              >
+                >
                 <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
               className="w-[320px] border-l border-border bg-background p-5 sm:w-[360px]"
-            >
+              >
               <nav className="mt-6 flex flex-col gap-2.5">
                 {navLinks.map((link) => {
                   const isActive = location.pathname === link.url;
@@ -184,9 +184,9 @@ export function GlassmorphicNavbar({ className }: NavbarProps) {
                   );
                 })}
                 <div className="my-4 border-t border-border" />
-              </nav>
-            </SheetContent>
-          </Sheet>
+                </nav>
+              </SheetContent>
+            </Sheet>
         </div>
       </div>
     </header>
