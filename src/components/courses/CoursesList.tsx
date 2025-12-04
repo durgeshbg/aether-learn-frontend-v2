@@ -9,6 +9,13 @@ import { BookOpen } from "lucide-react";
 import { enrollUserInCourse, getUserProgress } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
 import CourseItem from "./CourseItem";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const CoursesList = () => {
   const { user } = useAuth();
@@ -55,41 +62,56 @@ const CoursesList = () => {
     }
   };
 
+  const gridContent = (
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {courses.map((course) => (
+        <CourseItem
+          key={course.id}
+          course={course}
+          courseProgress={progressData?.find((p) => p.course.id === course.id)}
+          onCourseClick={handleCourseClick}
+        />
+      ))}
+    </div>
+  );
+
   return (
-    <div className="w-full max-w-6xl mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">
-          Available Courses
-        </h2>
-        <p className="text-white/70">
-          Discover and continue your learning journey
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
+      <header className="space-y-2">
+        <p className="text-sm font-medium text-muted-foreground">
+          Catalog overview
         </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map((course) => (
-          <CourseItem
-            key={course.id}
-            course={course}
-            courseProgress={progressData?.find(
-              (p) => p.course.id === course.id,
-            )}
-            onCourseClick={handleCourseClick}
-          />
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {courses.length === 0 && (
-        <div className="text-center py-16">
-          <BookOpen className="h-16 w-16 text-white/30 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white/80 mb-2">
-            No Courses Available
-          </h3>
-          <p className="text-white/60">
-            Check back later for new courses or contact your administrator.
-          </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Available courses
+            </h2>
+            <p className="text-muted-foreground">
+              Discover recommended learning paths and continue where you left
+              off.
+            </p>
+          </div>
         </div>
+      </header>
+
+      {courses.length > 0 ? (
+        gridContent
+      ) : (
+        <Card className="border border-dashed">
+          <CardHeader className="items-center text-center">
+            <span className="rounded-full bg-muted p-3 text-muted-foreground">
+              <BookOpen className="h-6 w-6" />
+            </span>
+            <CardTitle className="text-xl">No courses available</CardTitle>
+            <CardDescription>
+              Check back later or contact your administrator to assign content.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center text-sm text-muted-foreground">
+            Once courses are assigned to your organization they will appear
+            here.
+          </CardContent>
+        </Card>
       )}
     </div>
   );

@@ -2,6 +2,14 @@ import type { Lesson } from "@/types/Lesson";
 import { BookOpen, Play } from "lucide-react";
 import { Link } from "react-router";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 interface CourseLessonsProps {
   lessons?: Lesson[];
   lessonsCount: number;
@@ -14,46 +22,51 @@ const CourseLessons = ({
   routeTo,
 }: CourseLessonsProps) => {
   return (
-    <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-      <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
-        <BookOpen className="h-5 w-5 text-blue-400" />
-        Lessons
-      </h2>
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+    <Card className="h-fit">
+      <CardHeader className="flex items-center justify-between">
+        <div>
+          <CardTitle className="text-base font-semibold">
+            Lessons ({lessonsCount})
+          </CardTitle>
+          <CardDescription>
+            Browse the sequence for this course.
+          </CardDescription>
+        </div>
+        <span className="rounded-full bg-primary/10 p-2 text-primary">
+          <BookOpen className="h-4 w-4" />
+        </span>
+      </CardHeader>
+      <CardContent className="space-y-3">
         {lessonsCount === 0 ? (
-          <div className="text-center py-8">
-            <BookOpen className="h-12 w-12 text-white/30 mx-auto mb-3" />
-            <p className="text-white/60">No lessons available</p>
-            <p className="text-white/40 text-sm">
-              Add your first lesson to get started
-            </p>
+          <div className="rounded-lg border border-dashed border-border/60 p-4 text-center text-sm text-muted-foreground">
+            No lessons yet. Add your first lesson to get started.
           </div>
         ) : (
-          lessons?.map((lesson, index) => (
-            <Link
-              key={lesson.id}
-              to={routeTo(lesson.id)}
-              className="block p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 font-semibold text-sm">
+          <div className="space-y-3">
+            {lessons?.map((lesson, index) => (
+              <Link
+                key={lesson.id}
+                to={routeTo(lesson.id)}
+                className="flex items-center gap-3 rounded-lg border border-border/60 px-3 py-2 text-sm transition-colors hover:border-primary/40 hover:bg-primary/5"
+              >
+                <span className="rounded-md bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
                   L{index + 1}
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-white group-hover:text-blue-300 transition-colors">
+                </span>
+                <div className="flex flex-1 flex-col">
+                  <span className="font-medium text-foreground">
                     {lesson.title}
-                  </div>
-                  <div className="text-white/60 text-xs">
+                  </span>
+                  <span className="text-xs text-muted-foreground">
                     Lesson • Click to view details
-                  </div>
+                  </span>
                 </div>
-                <Play className="h-4 w-4 text-white/40 group-hover:text-blue-400 transition-colors" />
-              </div>
-            </Link>
-          ))
+                <Play className="h-4 w-4 text-muted-foreground" />
+              </Link>
+            ))}
+          </div>
         )}
-      </div>
-    </section>
+      </CardContent>
+    </Card>
   );
 };
 

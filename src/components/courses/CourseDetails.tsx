@@ -3,9 +3,17 @@ import { courseKeys } from "@/tanstack/keys/courseKeys";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
+import { BookOpen, ArrowLeft, Settings } from "lucide-react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "../ui/button";
 import { routes } from "@/static-data/routes";
-import { BookOpen, Brain, Code, ArrowLeft, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { enrollUserInCourse } from "@/services/user";
 import { userKeys } from "@/tanstack/keys/userKeys";
@@ -44,20 +52,23 @@ const CourseDetails = () => {
     },
   });
 
-  const { mutate: enrollCourseMutation } = useMutation({
-    mutationKey: userKeys.enrollCourse(),
-    mutationFn: async () => {
-      return enrollUserInCourse(axiosInstance, {
-        courseId,
-        enroll: !course.enrolled,
-      });
-    },
-    meta: {
-      notify: true,
-      successMessage: `${course.enrolled ? "Unenrolled" : "Enrolled"} in course successfully!`,
-      invalidatesQueries: [courseKeys.all()],
-    },
-  });
+  const { mutate: enrollCourseMutation, isPending: isUpdatingEnrollment } =
+    useMutation({
+      mutationKey: userKeys.enrollCourse(),
+      mutationFn: async () => {
+        return enrollUserInCourse(axiosInstance, {
+          courseId,
+          enroll: !course.enrolled,
+        });
+      },
+      meta: {
+        notify: true,
+        successMessage: `${
+          course.enrolled ? "Unenrolled" : "Enrolled"
+        } in course successfully!`,
+        invalidatesQueries: [courseKeys.all()],
+      },
+    });
 
   const handleAction = (url?: string) => {
     if (url) {
@@ -68,113 +79,96 @@ const CourseDetails = () => {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            onClick={() => navigate(routes.COURSES)}
-            className="mb-4 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Courses
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
+      <header className="space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Button variant="ghost" onClick={() => navigate(routes.COURSES)}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to courses
           </Button>
           <Button
             onClick={() => enrollCourseMutation()}
-            className={`mb-4 ${course.enrolled ? "bg-red-500 hover:bg-red-600" : "bg-emerald-500 hover:bg-emerald-600"} text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold`}
+            variant={course.enrolled ? "destructive" : "default"}
+            disabled={isUpdatingEnrollment}
           >
             {course.enrolled ? "Unenroll" : "Enroll"}
           </Button>
         </div>
 
-        {/* Action Buttons */}
-        {user?.role === "ADMIN" && (
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
-            <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
-              <Settings className="h-5 w-5 text-blue-400" />
-              Course Management
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {COURSE_ACTIONS.map((action) => (
-                <Button
-                  key={action.label}
-                  onClick={() =>
-                    handleAction(action.url ? action.url(courseId) : undefined)
-                  }
-                  className={`bg-${action.color}-500 hover:bg-${action.color}-600 text-white px-4 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold`}
-                >
-                  <action.icon className="h-4 w-4 mr-2" />
-                  {action.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-3">
-                {course.name}
-              </h1>
-              <p className="text-white/80 text-lg mb-4">{course.description}</p>
-
-              {/* Difficulty Badge */}
+        <Card>
+          <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-4">
+              <div className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium uppercase tracking-wide">
+                Course
+              </div>
+              <div className="space-y-3">
+                <CardTitle className="text-3xl font-semibold tracking-tight">
+                  {course.name}
+                </CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  {course.description}
+                </CardDescription>
+              </div>
               <div
-                className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(course.difficulty)}`}
+                className={`inline-flex items-center rounded-md border px-3 py-1 text-sm font-medium ${getDifficultyColor(
+                  course.difficulty
+                )}`}
               >
                 {course.difficulty}
               </div>
+              {!course?.feedbackSubmitted && (
+                <FeedbackDialog courseId={courseId} />
+              )}
             </div>
-
-            {/* Course Thumbnail */}
-            <div className="w-32 h-32 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/20">
+            <div className="flex w-full max-w-[160px] items-center justify-center rounded-xl border border-border/60 bg-muted/40 p-4 sm:w-auto">
               {course.thumbnailUrl ? (
                 <img
                   src={course.thumbnailUrl}
                   alt={course.name}
-                  className="w-full h-full object-cover rounded-xl opacity-40"
+                  className="h-24 w-24 rounded-lg object-cover"
                 />
               ) : (
-                <BookOpen className="h-12 w-12 text-white/60" />
+                <BookOpen className="h-12 w-12 text-muted-foreground" />
               )}
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* Course Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <BookOpen className="h-6 w-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {course.lessonsCount}
+        {user?.role === "ADMIN" && (
+          <Card>
+            <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <CardTitle className="text-base font-semibold">
+                  Course management
+                </CardTitle>
+                <CardDescription>
+                  Adjust content, lessons, and assignments.
+                </CardDescription>
               </div>
-              <div className="text-white/70 text-sm">Lessons</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Brain className="h-6 w-6 text-purple-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {course.quizzesCount}
-              </div>
-              <div className="text-white/70 text-sm">Quizzes</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Code className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {course.codeAssessmentsCount}
-              </div>
-              <div className="text-white/70 text-sm">Assessments</div>
-            </div>
-          </div>
-          {!course?.feedbackSubmitted && (
-            <div className="mt-6">
-              <FeedbackDialog courseId={courseId} />
-            </div>
-          )}
-        </div>
-      </div>
+              <span className="rounded-full bg-primary/10 p-2 text-primary">
+                <Settings className="h-4 w-4" />
+              </span>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+              {COURSE_ACTIONS.map((action) => (
+                <Button
+                  key={action.label}
+                  variant="outline"
+                  onClick={() =>
+                    handleAction(action.url ? action.url(courseId) : undefined)
+                  }
+                  className="justify-start"
+                >
+                  <action.icon className="mr-2 h-4 w-4" />
+                  {action.label}
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+      </header>
 
-      {/* Content Sections */}
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid gap-4 lg:grid-cols-3">
         <CourseLessons
           lessons={course.lessons}
           lessonsCount={course.lessonsCount}
@@ -182,13 +176,11 @@ const CourseDetails = () => {
             routes.LESSON_DETAILS(courseId, lessonId)
           }
         />
-
         <CourseQuizzes
           quizzes={course.quizzes}
           quizzesCount={course.quizzesCount}
           routeTo={(quizId: string) => routes.QUIZ_DETAILS(courseId, quizId)}
         />
-
         <CourseAssesments
           codeAssessmentsCount={course.codeAssessmentsCount}
           codeAssessments={course.codeAssessments}

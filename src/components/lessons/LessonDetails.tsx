@@ -1,29 +1,34 @@
-import { getLessonById } from "@/services/lesson";
+import { useMemo } from "react";
+import { Link, useNavigate, useParams } from "react-router";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
+import { getLessonById, deleteLesson } from "@/services/lesson";
 import { routes } from "@/static-data/routes";
 import { lessonKeys } from "@/tanstack/keys/lessonKeys";
 import { axiosInstance } from "@/utils/axiosInstance";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useParams } from "react-router";
-import { deleteLesson } from "@/services/lesson";
-import { useMutation } from "@tanstack/react-query";
-
-import {
-  PlayCircle,
-  FileText,
-  Layers,
-  ArrowLeft,
-  Clock,
-  Edit3,
-  Plus,
-  Eye,
-  CheckCircle,
-  Trash2,
-} from "lucide-react";
-import { Button } from "../ui/button";
-import { useAuth } from "@/hooks/useAuth";
 import { getDifficultyColor } from "@/utils/getDifficultyColor";
 import { getLessonStats } from "./helper";
-import { useMemo } from "react";
+import {
+  ArrowLeft,
+  CheckCircle,
+  Clock,
+  Edit3,
+  Eye,
+  FileText,
+  Layers,
+  PlayCircle,
+  Plus,
+  Trash2,
+} from "lucide-react";
 
 const LessonDetails = () => {
   const { courseId = "", lessonId = "" } = useParams<{
@@ -63,193 +68,196 @@ const LessonDetails = () => {
   const stats = useMemo(() => getLessonStats(lesson), [lesson]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={() => navigate(routes.COURSE_DETAILS(courseId))}
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Course
-        </Button>
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => navigate(routes.COURSE_DETAILS(courseId))}
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to course
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-start gap-6">
-              {/* Lesson Icon */}
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
-                <PlayCircle className="h-10 w-10 text-white/80" />
-              </div>
-
-              {/* Lesson Info */}
+      <Card>
+        <CardHeader className="flex flex-col gap-6 border-b pb-6 md:flex-row md:items-start md:justify-between">
+          <div className="flex flex-1 gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <PlayCircle className="h-6 w-6" />
+            </div>
+            <div className="space-y-3">
               <div>
-                <h1 className="text-4xl font-bold text-white mb-3">
-                  {lesson.title}
-                </h1>
-                <div className="flex items-center gap-4 mb-4">
-                  <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(lesson.difficulty)}`}
-                  >
-                    {lesson.difficulty}
-                  </div>
-                </div>
+                <CardDescription>Lesson overview</CardDescription>
+                <CardTitle className="text-3xl">{lesson.title}</CardTitle>
+              </div>
+              <div
+                className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium capitalize ${getDifficultyColor(lesson.difficulty)}`}
+              >
+                {lesson.difficulty}
               </div>
             </div>
-
-            {user?.role === "ADMIN" && (
-              <div className="flex flex-wrap gap-4">
-                <Button
-                  onClick={handleEditLesson}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-                >
-                  <Edit3 className="h-4 w-4 mr-2" />
-                  Edit Lesson
-                </Button>
-
-                <Button
-                  onClick={() => deleteLessonMutation()}
-                  disabled={isDeleting}
-                  className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isDeleting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                      Deleting...
-                    </>
-                  ) : (
-                    <>
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Lesson
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Layers className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.totalModules}
-              </div>
-              <div className="text-white/70 text-sm">Modules</div>
+          {user?.role === "ADMIN" && (
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" onClick={handleEditLesson}>
+                <Edit3 className="mr-2 h-4 w-4" />
+                Edit lesson
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => deleteLessonMutation()}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete lesson
+                  </>
+                )}
+              </Button>
             </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Clock className="h-6 w-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {stats.estimatedDuration}
+          )}
+        </CardHeader>
+        <CardContent className="grid gap-4 sm:grid-cols-2">
+          {[
+            {
+              label: "Modules",
+              value: stats.totalModules,
+              icon: Layers,
+            },
+            {
+              label: "Estimated duration",
+              value: stats.estimatedDuration,
+              icon: Clock,
+            },
+          ].map(({ label, value, icon: Icon }) => (
+            <div
+              key={label}
+              className="flex items-center justify-between rounded-lg border border-border/70 px-4 py-3"
+            >
+              <div>
+                <p className="text-sm text-muted-foreground">{label}</p>
+                <p className="text-2xl font-semibold text-foreground">
+                  {value}
+                </p>
               </div>
-              <div className="text-white/70 text-sm">Duration</div>
+              <span className="rounded-full bg-muted p-2 text-muted-foreground">
+                <Icon className="h-4 w-4" />
+              </span>
             </div>
-          </div>
-        </div>
-      </div>
+          ))}
+        </CardContent>
+      </Card>
 
-      {/* Content and Modules Grid */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Lesson Content */}
-        <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <h2 className="flex items-center gap-2 text-2xl font-semibold mb-6 text-white">
-            <FileText className="h-6 w-6 text-blue-400" />
-            Lesson Content
-          </h2>
-          <div className="prose prose-invert max-w-none">
-            <div className="p-6 rounded-xl bg-white/5 border border-white/10">
-              <p className="text-white/90 leading-relaxed whitespace-pre-wrap">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Lesson content</CardTitle>
+            <CardDescription>
+              Provide context and objectives for learners.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="rounded-lg border border-border/60 bg-card/80 p-4">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
                 {lesson.content}
               </p>
             </div>
-          </div>
-          {/* Lesson Objectives */}
-          {lesson.objectives && lesson.objectives.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-xl font-semibold text-white mb-3">
-                Learning Objectives
-              </h3>
-              <ul className="list-disc list-inside text-white/80 space-y-1">
-                {lesson.objectives.map((obj, index) => (
-                  <li key={index}>{obj}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </section>
 
-        {/* Modules Section */}
-        <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="flex items-center gap-2 text-2xl font-semibold text-white">
-              <Layers className="h-6 w-6 text-emerald-400" />
-              Modules ({stats.totalModules})
-            </h2>
+            {!!lesson.objectives?.length && (
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-foreground">
+                  Learning objectives
+                </p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  {lesson.objectives.map((objective, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 text-primary" />
+                      <span>{objective}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="flex flex-col">
+          <CardHeader className="flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-xl">
+                Modules ({stats.totalModules})
+              </CardTitle>
+              <CardDescription>
+                Review ordered modules within this lesson.
+              </CardDescription>
+            </div>
             {user?.role === "ADMIN" && (
               <Button
+                size="sm"
+                variant="outline"
                 onClick={() =>
                   navigate(routes.MODULE_CREATE(courseId, lessonId))
                 }
-                className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-400/30 px-3 py-1 rounded-lg text-sm transition-all duration-300"
               >
-                <Plus className="h-3 w-3 mr-1" />
-                Add
+                <Plus className="mr-2 h-4 w-4" />
+                Add module
               </Button>
             )}
-          </div>
-
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {lesson.modules?.length === 0 ? (
-              <div className="text-center py-12">
-                <Layers className="h-16 w-16 text-white/20 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white/60 mb-2">
-                  No Modules Yet
-                </h3>
-                <p className="text-white/40 text-sm mb-4">
-                  Start building your lesson by adding modules
-                </p>
-                <Button
-                  onClick={() =>
-                    navigate(routes.MODULE_CREATE(courseId, lessonId))
-                  }
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create First Module
-                </Button>
-              </div>
-            ) : (
-              lesson.modules?.map((module, index) => (
+          </CardHeader>
+          <CardContent className="flex-1 space-y-3">
+            {lesson.modules?.length ? (
+              lesson.modules.map((module, index) => (
                 <Link
                   key={module.id}
                   to={routes.MODULE_DETAILS(courseId, lessonId, module.id)}
-                  className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
+                  className="flex items-center gap-4 rounded-lg border border-border/70 px-4 py-3 transition-colors hover:border-primary/40"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-semibold">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-white group-hover:text-emerald-300 transition-colors">
-                        {module.title}
-                      </div>
-                      <div className="text-white/60 text-sm">
-                        Module • Click to view details
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-emerald-400/60" />
-                      <Eye className="h-4 w-4 text-white/40 group-hover:text-emerald-400 transition-colors" />
-                    </div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-sm font-semibold text-primary">
+                    {index + 1}
                   </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-foreground">{module.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Module • Click to view details
+                    </p>
+                  </div>
+                  <Eye className="h-4 w-4 text-muted-foreground" />
                 </Link>
               ))
+            ) : (
+              <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center">
+                <Layers className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">
+                  No modules yet. Start adding content to this lesson.
+                </p>
+                {user?.role === "ADMIN" && (
+                  <div className="mt-4">
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        navigate(routes.MODULE_CREATE(courseId, lessonId))
+                      }
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create first module
+                    </Button>
+                  </div>
+                )}
+              </div>
             )}
-          </div>
-        </section>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 };
 
 export default LessonDetails;
+

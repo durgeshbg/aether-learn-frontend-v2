@@ -2,8 +2,8 @@ import { Outlet } from "react-router";
 
 const Lessons = () => {
   return (
-    <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg overflow-hidden min-h-[500px]">
-      <div className="p-1">
+    <div className="mx-auto w-full max-w-7xl px-4 py-8">
+      <div className="rounded-2xl border border-border bg-card shadow-sm">
         <Outlet />
       </div>
     </div>

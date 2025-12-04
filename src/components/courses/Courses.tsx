@@ -1,8 +1,16 @@
 import { Outlet, useNavigate } from "react-router";
-import { Button } from "../ui/button";
-import { routes } from "@/static-data/routes";
-import { BookOpen, Plus, Library, GraduationCap } from "lucide-react";
+import { BookOpen, Library, Plus } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
+import { routes } from "@/static-data/routes";
 
 const Courses = () => {
   const { user } = useAuth();
@@ -16,72 +24,54 @@ const Courses = () => {
     navigate(routes.COURSES);
   };
 
+  const isAdmin = user?.role === "ADMIN";
+
   return (
-    <div className="w-full max-w-7xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {/* Course Icon */}
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/20">
-                <GraduationCap className="h-8 w-8 text-white/80" />
-              </div>
-
-              {/* Title & Description */}
-              <div>
-                <h1 className="text-4xl font-bold text-white mb-2">Courses</h1>
-                <p className="text-white/70 text-lg">
-                  Manage your learning content and educational materials
-                </p>
-              </div>
+    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-8">
+      <Card className="border border-border/70">
+        <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <CardTitle className="text-3xl font-semibold tracking-tight">
+              Courses
+            </CardTitle>
+            <CardDescription className="text-base">
+              Manage learning content, assignments, and enrollment activity.
+            </CardDescription>
+          </div>
+          {!isAdmin && (
+            <div className="text-right">
+              <p className="text-sm text-muted-foreground">Active courses</p>
+              <p className="text-2xl font-semibold text-foreground">
+                {user?.organization?.coursesCount ?? 0}
+              </p>
             </div>
-
-            {/* Quick Stats */}
-            {user?.role !== "ADMIN" && (
-              <div className="hidden md:flex md:flex-col items-center text-center gap-1 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-lg rounded-2xl px-6 py-4">
-                <div className="text-2xl font-bold text-white">
-                  {user?.organization?.coursesCount}
-                </div>
-                <div className="text-white/70 text-sm">Active Courses</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Actions */}
-      {user?.role === "ADMIN" && (
-        <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-8">
-          <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
-            <BookOpen className="h-5 w-5 text-blue-400" />
-            Admin Actions
-          </h2>
-          <div className="flex flex-wrap gap-4">
-            <Button
-              onClick={handleViewCourses}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-            >
-              <Library className="h-4 w-4 mr-2" />
-              View All Courses
+          )}
+        </CardHeader>
+        {isAdmin && (
+          <CardContent className="flex flex-wrap gap-3">
+            <Button variant="outline" onClick={handleViewCourses}>
+              <Library className="mr-2 h-4 w-4" />
+              View all courses
             </Button>
-            <Button
-              onClick={handleAddCourse}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Create New Course
+            <Button onClick={handleAddCourse}>
+              <Plus className="mr-2 h-4 w-4" />
+              Create course
             </Button>
-          </div>
-        </div>
-      )}
+          </CardContent>
+        )}
+      </Card>
 
-      {/* Content Area */}
-      <div className="rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg overflow-hidden min-h-[400px]">
-        <div className="p-1">
+      <Card className="min-h-[400px] overflow-hidden border border-border/70">
+        <CardHeader className="flex items-center gap-2 border-b pb-3">
+          <BookOpen className="h-4 w-4 text-primary" />
+          <CardTitle className="text-base font-medium text-muted-foreground">
+            Catalog
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
           <Outlet />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
