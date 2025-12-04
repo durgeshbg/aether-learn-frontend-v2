@@ -1,14 +1,16 @@
-import { getOrganizations } from "@/services/organization";
-import { getUserById, updateUserOrganization } from "@/services/user";
-import { organizationKeys } from "@/tanstack/keys/organizationKeys";
-import { userKeys } from "@/tanstack/keys/userKeys";
-import { UserOrganizationUpdateSchema } from "@/types/User";
-import { axiosInstance } from "@/utils/axiosInstance";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import type z from "zod";
+import {
+  Building2,
+  CheckCircle,
+  MapPin,
+  Save,
+  School,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,17 +26,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../ui/select";
+} from "@/components/ui/select";
 import { routes } from "@/static-data/routes";
-import {
-  ArrowLeft,
-  Building2,
-  School,
-  Save,
-  CheckCircle,
-  MapPin,
-} from "lucide-react";
+import { organizationKeys } from "@/tanstack/keys/organizationKeys";
+import { userKeys } from "@/tanstack/keys/userKeys";
 import type { Organization } from "@/types/Organization";
+import { UserOrganizationUpdateSchema } from "@/types/User";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { getOrganizations } from "@/services/organization";
+import { getUserById, updateUserOrganization } from "@/services/user";
 
 const EditUserOrganizationForm = () => {
   const { userId = "" } = useParams<{ userId: string }>();
@@ -82,14 +82,7 @@ const EditUserOrganizationForm = () => {
 
   function onSubmit(data: z.infer<typeof UserOrganizationUpdateSchema>) {
     mutate(data);
-    form.reset();
   }
-
-  // Enhanced user data for display
-  // const enhancedUser = {
-  //   ...user,
-  //   avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
-  // };
 
   const currentOrganization = organizations.find(
     (org: Organization) => org.id === user.organization?.id,
@@ -98,219 +91,112 @@ const EditUserOrganizationForm = () => {
     (org: Organization) => org.id === form.watch("organizationId"),
   );
 
+  const disableSubmit =
+    !form.watch("organizationId") ||
+    form.watch("organizationId") === currentOrganization?.id;
+
   return (
-    <div className="min-h-screen bg-background/50 backdrop-blur-sm p-6">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--secondary)_0%,_transparent_50%)] opacity-10" />
-
-      <div className="relative max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(routes.USER_DETAILS(userId))}
-            className="p-2 hover:bg-card/40 backdrop-blur-sm"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              Change Organization
-            </h1>
-          </div>
-        </div>
-
-        {/* Main Form Card */}
-        <div className="rounded-2xl bg-card/40 backdrop-blur-md border border-border/20 shadow-2xl overflow-hidden">
-          {/* Profile Header */}
-          <div className="relative p-6 bg-gradient-to-br from-secondary/10 to-primary/10 border-b border-border/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent" />
-            <div className="relative flex items-center gap-4">
-              {/* <div className="relative"> */}
-              {/*   <img */}
-              {/*     src={enhancedUser.avatar} */}
-              {/*     alt={`${user.firstName} ${user.lastName}`} */}
-              {/*     className="w-16 h-16 rounded-full bg-muted border-3 border-background shadow-lg" */}
-              {/*   /> */}
-              {/*   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-secondary/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-secondary/30"> */}
-              {/*     <Building2 className="h-3 w-3 text-secondary" /> */}
-              {/*   </div> */}
-              {/* </div> */}
-              <div className="flex-1">
-                <h2 className="text-xl font-semibold text-foreground">
-                  {user.firstName} {user.lastName}
-                </h2>
-                <p className="text-sm text-muted-foreground">{user.email}</p>
-                <div className="mt-2 flex items-center gap-2">
-                  <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary border border-primary/30">
-                    {user.role}
-                  </div>
-                  {currentOrganization && (
-                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary/20 text-secondary border border-secondary/30">
-                      <Building2 className="h-3 w-3 mr-1" />
-                      {currentOrganization.name}
-                    </div>
-                  )}
-                </div>
-              </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {currentOrganization && (
+          <div className="rounded-xl border border-border bg-muted/20 p-4">
+            <p className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <MapPin className="h-4 w-4 text-primary" />
+              Current organization
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="rounded-lg bg-muted px-3 py-2 text-sm font-semibold text-foreground">
+                {currentOrganization.name}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                ID: {currentOrganization.id}
+              </span>
             </div>
           </div>
+        )}
 
-          {/* Form Content */}
-          <div className="p-8">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
-                {/* Current Organization Display */}
-                {currentOrganization && (
-                  <div className="p-4 rounded-xl bg-muted/10 border border-border/20">
-                    <h3 className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
-                      Current Organization
-                    </h3>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-secondary/20 rounded-lg">
-                        <School className="h-5 w-5 text-secondary" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-foreground">
-                          {currentOrganization.name}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          ID: {currentOrganization.id}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Organization Selection */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
-                    <Building2 className="h-5 w-5 text-primary" />
-                    New Organization
-                  </h3>
-
-                  <FormField
-                    control={form.control}
-                    name="organizationId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-foreground font-medium">
-                          Select Organization
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
-                              <SelectValue placeholder="Choose a new organization" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-card/95 backdrop-blur-md border-border/40">
-                            {organizations.map(
-                              (org: { id: string; name: string }) => (
-                                <SelectItem
-                                  key={org.id}
-                                  value={org.id}
-                                  className="focus:bg-primary/10"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <School className="h-4 w-4 text-muted-foreground" />
-                                    {org.name}
-                                  </div>
-                                </SelectItem>
-                              ),
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Preview Selected Organization */}
-                  {selectedOrganization &&
-                    selectedOrganization.id !== currentOrganization?.id && (
-                      <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20">
-                        <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4" />
-                          Selected Organization
-                        </h4>
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-green-500/20 rounded-lg">
-                            <School className="h-5 w-5 text-green-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-green-800">
-                              {selectedOrganization.name}
-                            </p>
-                            <p className="text-sm text-green-700">
-                              Student will be transferred to this organization
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-4 pt-6 border-t border-border/20">
-                  <Button
-                    type="submit"
-                    disabled={
-                      isPending ||
-                      !form.watch("organizationId") ||
-                      form.watch("organizationId") === currentOrganization?.id
-                    }
-                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 backdrop-blur-sm transition-all duration-200 hover:shadow-xl hover:shadow-primary/30 disabled:opacity-50"
-                  >
-                    {isPending ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground mr-2" />
-                        Updating...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="h-4 w-4 mr-2" />
-                        Update Organization
-                      </>
-                    )}
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => form.reset()}
-                    disabled={isPending}
-                    className="bg-card/40 backdrop-blur-sm border-border/40 hover:bg-card/60 disabled:opacity-50"
-                  >
-                    Reset
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => navigate(routes.USER_DETAILS(userId))}
-                    disabled={isPending}
-                    className="bg-red-500/10 border-red-500/20 text-red-700 hover:bg-red-500/20 backdrop-blur-sm disabled:opacity-50"
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </Form>
+        <section className="space-y-4">
+          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <Building2 className="h-4 w-4 text-primary" />
+            Assign new organization
           </div>
 
-          {/* Subtle glow effect */}
-          <div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-secondary/5 to-primary/5 blur-xl" />
+          <FormField
+            control={form.control}
+            name="organizationId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Select organization</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose an organization" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {organizations.map((org: { id: string; name: string }) => (
+                      <SelectItem key={org.id} value={org.id}>
+                        <div className="flex items-center gap-2">
+                          <School className="h-4 w-4 text-muted-foreground" />
+                          {org.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {selectedOrganization &&
+            selectedOrganization.id !== currentOrganization?.id && (
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+                <p className="mb-2 flex items-center gap-2 font-medium">
+                  <CheckCircle className="h-4 w-4" />
+                  Selected organization
+                </p>
+                <p className="font-semibold">{selectedOrganization.name}</p>
+                <p className="text-xs text-emerald-800">
+                  The learner will be moved to this organization.
+                </p>
+              </div>
+            )}
+        </section>
+
+        <div className="flex flex-wrap gap-3 border-t border-border pt-4">
+          <Button type="submit" disabled={isPending || disableSubmit}>
+            {isPending ? (
+              <>
+                <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/40 border-t-transparent" />
+                Updating
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Update organization
+              </>
+            )}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+            disabled={isPending}
+          >
+            Reset
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => navigate(routes.USER_DETAILS(userId))}
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
         </div>
-      </div>
-    </div>
+      </form>
+    </Form>
   );
 };
 
