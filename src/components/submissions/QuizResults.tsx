@@ -30,58 +30,54 @@ const QuizResults = () => {
       routes.COURSE_SUBMISSIONS_QUIZ_RESULT_DETAILS(
         courseId,
         quizId,
-        quizResultId,
-      ),
+        quizResultId
+      )
     );
   };
 
   return (
-    <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+    <section className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold">Quiz attempts</h3>
+          <p className="text-sm text-muted-foreground">
+            {quizResults.length} submissions found.
+          </p>
+        </div>
+      </div>
       {quizResults.length === 0 ? (
-        <div className="text-center py-8">
-          <Target className="h-12 w-12 text-white/30 mx-auto mb-3" />
-          <p className="text-white/60">No quiz submissions available</p>
-          <p className="text-white/40 text-sm">
-            You have not attempted this quiz yet.
+        <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center">
+          <Target className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">
+            No quiz submissions available yet.
           </p>
         </div>
       ) : (
-        <div className="space-y-3 max-h-96 overflow-y-auto">
+        <div className="space-y-3">
           {quizResults?.map((result) => (
-            <div
+            <button
               key={result.id}
               onClick={() => handleQuizResultClick(result.id)}
-              className="block p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group cursor-pointer"
+              className="flex w-full items-center gap-4 rounded-lg border border-border/70 px-4 py-3 text-left transition-colors hover:border-primary/40"
             >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-sm ${
-                    result.passed
-                      ? "bg-green-500/20 text-green-400"
-                      : "bg-red-500/20 text-red-400"
-                  }`}
-                >
-                  {result.passed ? "✓" : "✗"}
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-white group-hover:text-purple-300 transition-colors">
-                    Score: {result.score}
-                  </div>
-                  <div className="text-white/60 text-xs">
-                    {lastTimeAgo(result.createdAt)} • Click to view details
-                  </div>
-                </div>
-                <div
-                  className={`text-xs font-medium px-2 py-1 rounded-full ${
-                    result.passed
-                      ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                      : "bg-red-500/10 text-red-400 border border-red-500/20"
-                  }`}
-                >
-                  {result.passed ? "Pass" : "Fail"}
-                </div>
+              <div
+                className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold ${
+                  result.passed
+                    ? "bg-emerald-500/10 text-emerald-500"
+                    : "bg-red-500/10 text-red-500"
+                }`}
+              >
+                {result.passed ? "✓" : "✗"}
               </div>
-            </div>
+              <div className="flex-1">
+                <p className="font-medium text-foreground">
+                  Score: {result.score}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {lastTimeAgo(result.createdAt)} • Tap to view details
+                </p>
+              </div>
+            </button>
           ))}
         </div>
       )}

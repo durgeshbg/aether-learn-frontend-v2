@@ -20,18 +20,19 @@ const SubmissionQuizzesList: React.FC = () => {
   });
 
   return (
-    <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-      <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
-        <Brain className="h-5 w-5 text-purple-400" />
-        Quizzes
-      </h2>
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+    <section className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Quizzes</h2>
+        <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+          {course.quizzesCount} total
+        </span>
+      </div>
+      <div className="space-y-3">
         {course.quizzesCount === 0 ? (
-          <div className="text-center py-8">
-            <Brain className="h-12 w-12 text-white/30 mx-auto mb-3" />
-            <p className="text-white/60">No quizzes available</p>
-            <p className="text-white/40 text-sm">
-              You have not attempted any quizzes in this course yet.
+          <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center">
+            <Brain className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              No quizzes available yet.
             </p>
           </div>
         ) : (
@@ -39,22 +40,18 @@ const SubmissionQuizzesList: React.FC = () => {
             <Link
               key={quiz.id}
               to={routes.COURSE_SUBMISSIONS_QUIZ_DETAILS(courseId, quiz.id)}
-              className="block p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
+              className="flex items-center gap-4 rounded-lg border border-border/70 px-4 py-3 transition-colors hover:border-primary/40"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 font-semibold text-sm">
-                  Q{index + 1}
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-white group-hover:text-purple-300 transition-colors">
-                    {quiz.title}
-                  </div>
-                  <div className="text-white/60 text-xs">
-                    Click to view attemps
-                  </div>
-                </div>
-                <Target className="h-4 w-4 text-white/40 group-hover:text-purple-400 transition-colors" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                Q{index + 1}
               </div>
+              <div className="flex-1">
+                <p className="font-medium text-foreground">{quiz.title}</p>
+                <p className="text-xs text-muted-foreground">
+                  Tap to view attempts
+                </p>
+              </div>
+              <Target className="h-4 w-4 text-muted-foreground" />
             </Link>
           ))
         )}

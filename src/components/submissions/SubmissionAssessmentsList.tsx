@@ -20,18 +20,19 @@ const SubmissionAssessmentsList = () => {
   });
 
   return (
-    <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-      <h2 className="flex items-center gap-2 text-xl font-semibold mb-4 text-white">
-        <Code className="h-5 w-5 text-emerald-400" />
-        Assessments
-      </h2>
-      <div className="space-y-3 max-h-96 overflow-y-auto">
+    <section className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Code assessments</h2>
+        <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+          {course.codeAssessmentsCount} total
+        </span>
+      </div>
+      <div className="space-y-3">
         {course.codeAssessmentsCount === 0 ? (
-          <div className="text-center py-8">
-            <Code className="h-12 w-12 text-white/30 mx-auto mb-3" />
-            <p className="text-white/60">No quizzes available</p>
-            <p className="text-white/40 text-sm">
-              You have not attempted any quizzes in this course yet.
+          <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center">
+            <Code className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              No assessments available yet.
             </p>
           </div>
         ) : (
@@ -40,24 +41,22 @@ const SubmissionAssessmentsList = () => {
               key={assessment.id}
               to={routes.COURSE_SUBMISSIONS_CODE_ASSESSMENT_DETAILS(
                 courseId,
-                assessment.id,
+                assessment.id
               )}
-              className="block p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
+              className="flex items-center gap-4 rounded-lg border border-border/70 px-4 py-3 transition-colors hover:border-primary/40"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-semibold text-sm">
-                  C{index + 1}
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-white group-hover:text-emerald-300 transition-colors">
-                    {assessment.title}
-                  </div>
-                  <div className="text-white/60 text-xs">
-                    Click to view Submissions
-                  </div>
-                </div>
-                <FileText className="h-4 w-4 text-white/40 group-hover:text-emerald-400 transition-colors" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                C{index + 1}
               </div>
+              <div className="flex-1">
+                <p className="font-medium text-foreground">
+                  {assessment.title}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Tap to view submissions
+                </p>
+              </div>
+              <FileText className="h-4 w-4 text-muted-foreground" />
             </Link>
           ))
         )}

@@ -36,52 +36,57 @@ const CodeSolutions = () => {
   };
 
   return (
-    <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+    <section className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold">Code submissions</h3>
+          <p className="text-sm text-muted-foreground">
+            {codeSolutions.length} submissions found.
+          </p>
+        </div>
+      </div>
       {codeSolutions.length === 0 ? (
-        <div className="text-center py-8">
-          <Code className="h-12 w-12 text-white/30 mx-auto mb-3" />
-          <p className="text-white/60">No code submissions available</p>
-          <p className="text-white/40 text-sm">
-            You have not attempted this code assessment yet.
+        <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center">
+          <Code className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">
+            No code submissions yet.
           </p>
         </div>
       ) : (
-        <div className="space-y-3 max-h-96 overflow-y-auto">
+        <div className="space-y-3">
           {codeSolutions?.map((solution) => (
-            <div
+            <button
               key={solution.id}
               onClick={() => handleCodeSolutionClick(solution.id)}
-              className="block p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group cursor-pointer"
+              className="flex w-full items-center gap-4 rounded-lg border border-border/70 px-4 py-3 text-left transition-colors hover:border-primary/40"
             >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-sm ${
-                    solution.type === "RUN"
-                      ? "bg-amber-500/20 text-amber-400"
-                      : "bg-blue-500/20 text-blue-400"
-                  }`}
-                >
-                  {solution.type === "RUN" ? "R" : "S"}
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-medium text-white">
-                    {solution.type === "RUN" ? "Run type" : "Submission"}
-                  </h3>
-                  <div className="text-white/60 text-xs">
-                    {lastTimeAgo(solution.createdAt)} • Click to view details
-                  </div>
-                </div>
-                <div
-                  className={`text-xs font-medium px-2 py-1 rounded-full ${
-                    solution.status === "SUBMITTED"
-                      ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                      : "bg-green-500/10 text-green-400 border border-green-500/20"
-                  }`}
-                >
-                  {solution.status}
-                </div>
+              <div
+                className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold ${
+                  solution.type === "RUN"
+                    ? "bg-amber-500/10 text-amber-500"
+                    : "bg-blue-500/10 text-blue-500"
+                }`}
+              >
+                {solution.type === "RUN" ? "R" : "S"}
               </div>
-            </div>
+              <div className="flex-1">
+                <p className="font-medium text-foreground">
+                  {solution.type === "RUN" ? "Run" : "Submission"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {lastTimeAgo(solution.createdAt)} • Tap to view details
+                </p>
+              </div>
+              <span
+                className={`rounded-full px-2 py-1 text-xs font-medium ${
+                  solution.status === "SUBMITTED"
+                    ? "bg-yellow-500/10 text-yellow-500"
+                    : "bg-emerald-500/10 text-emerald-500"
+                }`}
+              >
+                {solution.status}
+              </span>
+            </button>
           ))}
         </div>
       )}

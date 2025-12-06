@@ -11,14 +11,16 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 export const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
-  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  return `${mins.toString().padStart(2, "0")}:${secs
+    .toString()
+    .padStart(2, "0")}`;
 };
 
 export const getPallete = (readOnly?: boolean, isCorrect?: boolean) => {
   const palleteColors = {
     correct: [
-      "border border-emerald-300 bg-emerald-50 text-emerald-900",
-      "bg-emerald-500 text-white",
+      "border border-emerald-300 bg-emerald-500/10 text-emerald-500",
+      "bg-emerald-500 text-white ",
       "h-5 w-5 text-emerald-500 ml-auto",
     ],
     incorrect: [
