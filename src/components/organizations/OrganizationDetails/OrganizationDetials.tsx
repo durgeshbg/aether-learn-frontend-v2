@@ -8,16 +8,7 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import { Button } from "../../ui/button";
-import {
-  ArrowLeft,
-  MapPin,
-  Globe,
-  Edit3,
-  Trash2,
-  Shield,
-  Mail,
-  PhoneCall,
-} from "lucide-react";
+import { ArrowLeft, Edit3, Trash2, Shield } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import OrganizationUsersAndCourses from "./OrganizationUsersAndCourses";
@@ -64,148 +55,113 @@ const OrganizationDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background/50 backdrop-blur-sm p-6">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5" />
-
-      <div className="relative max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(routes.ORGANIZATIONS)}
-            className="p-2 hover:bg-card/40 backdrop-blur-sm"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Organization Details
+    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Organization
+          </p>
+          <h1 className="text-3xl font-semibold text-foreground">
+            Organization details
           </h1>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(routes.ORGANIZATIONS)}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to list
+        </Button>
+      </div>
 
-        {/* Organization Profile Card */}
-        <div className="rounded-2xl bg-card/40 backdrop-blur-md border border-border/20 shadow-2xl overflow-hidden">
-          {/* Profile Header */}
-          <div className="relative p-8 bg-gradient-to-br from-primary/10 to-secondary/10 border-b border-border/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
-            <div className="relative flex flex-col md:flex-row items-start gap-6">
-              <img
-                src={organization.logoUrl}
-                alt={organization.name}
-                className="w-24 h-24 rounded-2xl bg-muted border-4 border-background shadow-xl"
-              />
-
-              <div className="flex-1">
-                <h2 className="text-2xl font-bold text-foreground mb-2">
-                  {organization.name}
-                </h2>
-                <p className="text-muted-foreground mb-4 max-w-2xl">
-                  {organization.description}
+      <div className="rounded-2xl border border-border/60 bg-card p-6 shadow-sm space-y-6">
+        <div className="flex flex-col gap-6 md:flex-row">
+          <img
+            src={organization.logoUrl}
+            alt={organization.name}
+            className="h-24 w-24 rounded-2xl border border-border/60"
+          />
+          <div className="flex-1 space-y-4">
+            <div>
+              <p className="text-sm text-muted-foreground">College</p>
+              <h2 className="text-2xl font-semibold text-foreground">
+                {organization.name}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {organization.description || "No description available."}
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1 text-sm">
+                <p className="text-muted-foreground">Administrator</p>
+                <p className="font-medium text-foreground">
+                  {organization.orgAdmin
+                    ? `${organization.orgAdmin.firstName} ${organization.orgAdmin.lastName}`
+                    : "Not assigned"}
                 </p>
-
-                <div className="grid md:grid-cols-2 gap-4 text-sm">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Shield className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">
-                        {`Admin: ${organization.orgAdmin?.firstName} ${organization.orgAdmin?.lastName}`}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">
-                        {organization.address}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">
-                        {organization.websiteUrl}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">
-                        {organization.email}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <PhoneCall className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">
-                        {organization.phone}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              </div>
+              <div className="space-y-1 text-sm">
+                <p className="text-muted-foreground">Address</p>
+                <p className="font-medium text-foreground">
+                  {organization.address || "Not provided"}
+                </p>
+              </div>
+              <div className="space-y-1 text-sm">
+                <p className="text-muted-foreground">Website</p>
+                <p className="font-medium text-foreground">
+                  {organization.websiteUrl || "Not provided"}
+                </p>
+              </div>
+              <div className="space-y-1 text-sm">
+                <p className="text-muted-foreground">Contact</p>
+                <p className="font-medium text-foreground">
+                  {organization.email || "—"} • {organization.phone || "—"}
+                </p>
               </div>
             </div>
           </div>
-
-          {/* Actions Section */}
-          <div className="p-8 border-b border-border/20">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Edit3 className="h-5 w-5 text-primary" />
-              Management Actions
-            </h3>
-
-            <div className="flex flex-wrap gap-3">
-              <Button
-                variant="outline"
-                className="bg-blue-500/10 border-blue-500/20 text-blue-700 hover:bg-blue-500/20"
-                onClick={() =>
-                  navigate(routes.ORGANIZATION_EDIT(organizationId))
-                }
-              >
-                <Edit3 className="h-4 w-4 mr-2" />
-                Edit Organization
-              </Button>
-
-              <Button
-                variant="outline"
-                className="bg-purple-500/10 border-purple-500/20 text-purple-700 hover:bg-purple-500/20"
-                onClick={() =>
-                  navigate(routes.ORGANIZATION_EDIT_ADMIN(organizationId))
-                }
-              >
-                <Shield className="h-4 w-4 mr-2" />
-                Edit Admin
-              </Button>
-
-              <Button
-                variant="outline"
-                className={`transition-all duration-300 ${
-                  showDeleteConfirm
-                    ? "bg-red-500 text-white border-red-500 hover:bg-red-600"
-                    : "bg-red-500/10 border-red-500/20 text-red-700 hover:bg-red-500/20"
-                }`}
-                onClick={handleDelete}
-                disabled={isPending}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                {showDeleteConfirm ? "Confirm Delete" : "Delete Organization"}
-              </Button>
-            </div>
-
-            {showDeleteConfirm && (
-              <p
-                className="
-                mt-4 text-sm text-red-500 bg-red-100 p-3 rounded-lg
-                border border-red-200
-              "
-              >
-                ⚠️ Click "Confirm Delete" again to permanently remove this
-                organization. This action cannot be undone.
-              </p>
-            )}
-          </div>
         </div>
 
-        {user?.role === "ADMIN" && <OrganizationUsersAndCourses />}
+        <div className="flex flex-wrap gap-3 border-t border-border/60 pt-4">
+          <Button
+            variant="outline"
+            onClick={() => navigate(routes.ORGANIZATION_EDIT(organizationId))}
+            className="gap-2"
+          >
+            <Edit3 className="h-4 w-4" />
+            Edit details
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() =>
+              navigate(routes.ORGANIZATION_EDIT_ADMIN(organizationId))
+            }
+            className="gap-2"
+          >
+            <Shield className="h-4 w-4" />
+            Update admin
+          </Button>
+          <Button
+            variant="outline"
+            className={showDeleteConfirm ? "bg-red-500 text-white" : ""}
+            onClick={handleDelete}
+            disabled={isPending}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            {showDeleteConfirm ? "Confirm delete" : "Delete organization"}
+          </Button>
+        </div>
+
+        {showDeleteConfirm && (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+            Click “Confirm delete” again to permanently remove this
+            organization. This action cannot be undone.
+          </p>
+        )}
       </div>
+
+      {user?.role === "ADMIN" && <OrganizationUsersAndCourses />}
     </div>
   );
 };

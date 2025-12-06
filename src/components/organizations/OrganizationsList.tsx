@@ -4,8 +4,9 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { routes } from "@/static-data/routes";
-import { MapPin, Users, GraduationCap, BookOpen } from "lucide-react";
+import { Users, GraduationCap, BookOpen, Search, Filter } from "lucide-react";
 
 const OrganizationsList = () => {
   const navigate = useNavigate();
@@ -19,96 +20,89 @@ const OrganizationsList = () => {
 
   return (
     <div className="space-y-6">
-      {/* Colleges Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {organizations?.map((organization) => (
-          <div
-            key={organization.id}
-            className="group relative overflow-hidden rounded-2xl bg-card/40 backdrop-blur-md border border-border/20 hover:border-border/40 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 cursor-pointer"
-            onClick={() =>
-              navigate(routes.ORGANIZATION_DETAILS(organization.id))
-            }
-          >
-            {/* Background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-            {/* Content */}
-            <div className="relative p-6 space-y-4">
-              {/* Header with logo and status */}
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <img
-                      src={organization.logoUrl}
-                      alt={organization.name}
-                      className="w-12 h-12 rounded-full bg-muted border-2 border-border/20"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                      {organization.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      {organization.address}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {organization.description && (
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {organization.description}
-                </p>
-              )}
-
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <Users className="h-4 w-4 text-primary" />
-                  <span className="text-foreground font-medium">
-                    {organization.usersCount}
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    students
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm">
-                  <BookOpen className="h-4 w-4 text-primary" />
-                  <span className="text-foreground font-medium">
-                    {organization.coursesCount}
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    programs
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Hover effect overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="flex flex-col gap-2">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Network overview
+        </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold text-foreground">
+              Organizations
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {organizations?.length || 0} partners across the platform
+            </p>
           </div>
-        ))}
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="relative flex-1 sm:min-w-[240px]">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input placeholder="Search organizations" className="pl-9" />
+            </div>
+            <Button variant="outline">
+              <Filter className="mr-2 h-4 w-4" />
+              Filters
+            </Button>
+          </div>
+        </div>
       </div>
 
-      {/* Empty state */}
-      {(!organizations || organizations.length === 0) && (
-        <div className="text-center py-12">
-          <div className="mx-auto w-24 h-24 bg-muted/20 rounded-full flex items-center justify-center mb-4">
-            <GraduationCap className="h-12 w-12 text-muted-foreground/50" />
-          </div>
-          <h3 className="text-lg font-medium text-foreground mb-2">
-            No colleges found
-          </h3>
-          <p className="text-muted-foreground mb-4">
-            Get started by adding your first college to the network.
-          </p>
-          <Button onClick={() => navigate(routes.ORGANIZATION_CREATE)}>
-            <GraduationCap className="h-4 w-4 mr-2" />
-            Add College
-          </Button>
+      <div className="rounded-lg border border-border/60">
+        <div className="grid grid-cols-[2fr_1fr_1fr] gap-2 border-b border-border/60 px-4 py-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <span>Organization</span>
+          <span>Members</span>
+          <span>Programs</span>
         </div>
-      )}
+        <div className="max-h-[600px] divide-y divide-border/40 overflow-auto">
+          {organizations?.map((organization) => (
+            <button
+              key={organization.id}
+              onClick={() =>
+                navigate(routes.ORGANIZATION_DETAILS(organization.id))
+              }
+              className="grid w-full grid-cols-[2fr_1fr_1fr] items-center gap-2 px-4 py-4 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <div className="flex items-center gap-3">
+                <img
+                  src={organization.logoUrl}
+                  alt={organization.name}
+                  className="h-10 w-10 rounded-full border border-border/60"
+                />
+                <span className="font-medium text-foreground">
+                  {organization.name}
+                </span>
+              </div>
+              <div className="text-sm font-semibold text-foreground">
+                <Users className="mr-2 inline-flex h-4 w-4 text-primary" />
+                {organization.usersCount}
+              </div>
+              <div className="text-sm font-semibold text-foreground">
+                <BookOpen className="mr-2 inline-flex h-4 w-4 text-primary" />
+                {organization.coursesCount}
+              </div>
+            </button>
+          ))}
+
+          {(!organizations || organizations.length === 0) && (
+            <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+              <div className="rounded-full border border-dashed border-muted-foreground/30 p-6">
+                <GraduationCap className="h-10 w-10 text-muted-foreground/70" />
+              </div>
+              <div>
+                <p className="text-base font-medium text-foreground">
+                  No organizations found
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Add your first organization to start assigning teams.
+                </p>
+              </div>
+              <Button onClick={() => navigate(routes.ORGANIZATION_CREATE)}>
+                <GraduationCap className="mr-2 h-4 w-4" />
+                Add organization
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
