@@ -69,60 +69,60 @@ const LessonDetails = () => {
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
-      <Button
+        <Button
         variant="ghost"
         size="sm"
-        onClick={() => navigate(routes.COURSE_DETAILS(courseId))}
+          onClick={() => navigate(routes.COURSE_DETAILS(courseId))}
         className="inline-flex w-fit items-center gap-2 text-muted-foreground"
-      >
+        >
         <ArrowLeft className="h-4 w-4" />
         Back to course
-      </Button>
+        </Button>
 
       <Card>
         <CardHeader className="flex flex-col gap-6 border-b pb-6 md:flex-row md:items-start md:justify-between">
           <div className="flex flex-1 gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <PlayCircle className="h-6 w-6" />
-            </div>
+              </div>
             <div className="space-y-3">
               <div>
                 <CardDescription>Lesson overview</CardDescription>
                 <CardTitle className="text-3xl">{lesson.title}</CardTitle>
               </div>
-              <div
+                  <div
                 className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium capitalize ${getDifficultyColor(lesson.difficulty)}`}
-              >
-                {lesson.difficulty}
+                  >
+                    {lesson.difficulty}
+                </div>
               </div>
             </div>
-          </div>
 
-          {user?.role === "ADMIN" && (
+            {user?.role === "ADMIN" && (
             <div className="flex flex-wrap gap-3">
               <Button variant="outline" onClick={handleEditLesson}>
                 <Edit3 className="mr-2 h-4 w-4" />
                 Edit lesson
-              </Button>
-              <Button
+                </Button>
+                <Button
                 variant="destructive"
-                onClick={() => deleteLessonMutation()}
-                disabled={isDeleting}
-              >
-                {isDeleting ? (
-                  <>
+                  onClick={() => deleteLessonMutation()}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <>
                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                    Deleting...
-                  </>
-                ) : (
-                  <>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
                     <Trash2 className="mr-2 h-4 w-4" />
                     Delete lesson
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           {[
@@ -181,10 +181,10 @@ const LessonDetails = () => {
                       <CheckCircle className="mt-0.5 h-4 w-4 text-primary" />
                       <span>{objective}</span>
                     </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                ))}
+              </ul>
+            </div>
+          )}
           </CardContent>
         </Card>
 
@@ -192,7 +192,7 @@ const LessonDetails = () => {
           <CardHeader className="flex-row items-center justify-between">
             <div>
               <CardTitle className="text-xl">
-                Modules ({stats.totalModules})
+              Modules ({stats.totalModules})
               </CardTitle>
               <CardDescription>
                 Review ordered modules within this lesson.
@@ -220,12 +220,12 @@ const LessonDetails = () => {
                   className="flex items-center gap-4 rounded-lg border border-border/70 px-4 py-3 transition-colors hover:border-primary/40"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-sm font-semibold text-primary">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
                     <p className="font-medium text-foreground">{module.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      Module • Click to view details
+                        Module • Click to view details
                     </p>
                   </div>
                   <Eye className="h-4 w-4 text-muted-foreground" />

@@ -111,7 +111,7 @@ const AdminDashboard = () => {
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Control center
-            </h1>
+      </h1>
             <p className="text-muted-foreground">
               Monitor the platform and jump straight into the workflows that
               need your attention.
@@ -134,7 +134,7 @@ const AdminDashboard = () => {
                 <span className="rounded-full bg-primary/10 p-2 text-primary">
                   <Icon className="h-4 w-4" />
                 </span>
-              </div>
+        </div>
               <CardTitle className="text-3xl font-semibold text-foreground">
                 {value}
               </CardTitle>
@@ -160,8 +160,8 @@ const AdminDashboard = () => {
                       {title}
                     </CardTitle>
                     <CardDescription>{helper}</CardDescription>
-                  </div>
-                </div>
+          </div>
+        </div>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col gap-4">
                 <ul className="space-y-2 text-sm text-muted-foreground">
@@ -171,16 +171,16 @@ const AdminDashboard = () => {
                       <span>{item}</span>
                     </li>
                   ))}
-                </ul>
+        </ul>
                 <div className="pt-2">
-                  <Button
+          <Button
                     variant="outline"
                     className="w-full justify-center"
                     onClick={action.handler}
-                  >
+          >
                     {action.label}
-                  </Button>
-                </div>
+          </Button>
+        </div>
               </CardContent>
             </Card>
           ),

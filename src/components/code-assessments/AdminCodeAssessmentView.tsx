@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
+
 import { deleteTestCase } from "@/services/test-case";
 import { testCaseKeys } from "@/tanstack/keys/test-case";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { routes } from "@/static-data/routes";
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { LANGUAGES_MAP, LANG_KEYS } from "@/static-data/languages";
 import type { CodeAssesment } from "@/types/CodeAssesment";
 import {
@@ -14,10 +22,7 @@ import {
   Trash2,
   Plus,
   ArrowLeft,
-  FileText,
-  Clock,
-  Settings,
-  Terminal,
+  Loader2Icon,
   Bug,
 } from "lucide-react";
 import { deleteCodeAssessment } from "@/services/code-assesment";
@@ -38,8 +43,6 @@ const {
   deleteLoadingText,
   addTestCaseButtonText,
   emptyTestCasesText,
-  testCaseAddTip,
-  createFirstTestCaseText,
 } = adminCodeAssessmentData;
 
 export const AdminCodeAssessmentView = ({
@@ -48,7 +51,7 @@ export const AdminCodeAssessmentView = ({
 }: AdminCodeAssessmentViewProps) => {
   const navigate = useNavigate();
   const [deletingTestCaseId, setDeletingTestCaseId] = useState<string | null>(
-    null,
+    null
   );
 
   const testCases = codeAssessment.testCases || [];
@@ -100,184 +103,182 @@ export const AdminCodeAssessmentView = ({
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={() => navigate(routes.COURSE_DETAILS(courseId))}
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {backButtonText}
-        </Button>
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => navigate(routes.COURSE_DETAILS(courseId))}
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {backButtonText}
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-start gap-6">
-              {/* Assessment Icon */}
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
-                <Code2 className="h-10 w-10 text-white/80" />
+      <Card>
+        <CardHeader className="space-y-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="flex flex-1 gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Code2 className="h-5 w-5" />
               </div>
-
-              {/* Assessment Info */}
-              <div>
-                <h1 className="text-4xl font-bold text-white mb-3">
+              <div className="space-y-2">
+                <CardDescription>Code assessment</CardDescription>
+                <CardTitle className="text-3xl">
                   {codeAssessment.title}
-                </h1>
-                <p className="text-white/80 text-lg mb-4">
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
                   {codeAssessment.description}
                 </p>
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`inline-flex items-center px-3 py-1 rounded-lg border font-semibold text-sm ${getDifficultyColor(codeAssessment.difficulty)}`}
-                  >
-                    {codeAssessment.difficulty}
-                  </div>
-                </div>
               </div>
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-              <Button
-                onClick={handleEditCodeAssessment}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-              >
-                <Edit3 className="h-4 w-4 mr-2" />
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button variant="outline" onClick={handleEditCodeAssessment}>
+                <Edit3 className="mr-2 h-4 w-4" />
                 {editButtonText}
               </Button>
-
               <Button
+                variant="destructive"
                 onClick={() => deleteCodeAssessmentMutation()}
                 disabled={isDeleting}
-                className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isDeleting ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                     {deleteLoadingText}
                   </>
                 ) : (
                   <>
-                    <Trash2 className="h-4 w-4 mr-2" />
+                    <Trash2 className="mr-2 h-4 w-4" />
                     {deleteButtonText}
                   </>
                 )}
               </Button>
             </div>
           </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Bug className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {codeAssessment.testCases?.length}
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                label: "Difficulty",
+                value: codeAssessment.difficulty,
+                className: getDifficultyColor(codeAssessment.difficulty),
+              },
+              {
+                label: "Duration",
+                value: `${codeAssessment.durationMinutes}m`,
+              },
+              {
+                label: "Language",
+                value: language?.label || "Not set",
+              },
+              {
+                label: "Test cases",
+                value: codeAssessment.testCases?.length || 0,
+              },
+            ].map(({ label, value, className }) => (
+              <div
+                key={label}
+                className="rounded-lg border border-border/70 px-3 py-2"
+              >
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                  {label}
+                </p>
+                <p
+                  className={
+                    className
+                      ? `mt-1 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium capitalize ${className}`
+                      : "text-sm font-semibold text-foreground"
+                  }
+                >
+                  {value}
+                </p>
               </div>
-              <div className="text-white/70 text-sm">Test Cases</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Clock className="h-6 w-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {codeAssessment.durationMinutes}m
-              </div>
-              <div className="text-white/70 text-sm">Est. Time</div>
-            </div>
-            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
-              <Terminal className="h-6 w-6 text-purple-400 mx-auto mb-2" />
-              <div className="text-xl font-bold text-white">
-                {language?.label}
-              </div>
-              <div className="text-white/70 text-sm">Language</div>
-            </div>
+            ))}
           </div>
+        </CardHeader>
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,0.4fr)]">
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Instructions</CardTitle>
+              <CardDescription>
+                Set the stage for learners before they start coding.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-lg border border-border/70 bg-card/80 p-4">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+                  {codeAssessment.instructions}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Starter code</CardTitle>
+              <CardDescription>
+                Provide the scaffolding students begin with.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-lg border border-border/70 bg-zinc-950/95 p-4 text-sm leading-relaxed text-muted-foreground">
+                <pre className="overflow-x-auto">
+                  <code>{codeAssessment.starterCode}</code>
+                </pre>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Runner code</CardTitle>
+              <CardDescription>
+                Executed after learners submit their solution.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-lg border border-border/70 bg-zinc-950/95 p-4 text-sm leading-relaxed text-muted-foreground">
+                <pre className="overflow-x-auto">
+                  <code>{codeAssessment.runnerCode}</code>
+                </pre>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
 
-      {/* Assessment Details and Test Cases Grid */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Instructions and Starter Code */}
-        <section className="space-y-6">
-          {/* Instructions */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h2 className="flex items-center gap-2 text-2xl font-semibold mb-4 text-white">
-              <FileText className="h-6 w-6 text-blue-400" />
-              Instructions
-            </h2>
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-              <p className="text-white/90 leading-relaxed whitespace-pre-wrap">
-                {codeAssessment.instructions}
-              </p>
+        <Card className="flex flex-col">
+          <CardHeader className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-xl">
+                Test cases ({testCases.length})
+              </CardTitle>
+              <CardDescription>
+                Maintain coverage and edge-case validation.
+              </CardDescription>
             </div>
-          </div>
-
-          {/* Starter Code */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h2 className="flex items-center gap-2 text-2xl font-semibold mb-4 text-white">
-              <Code2 className="h-6 w-6 text-emerald-400" />
-              Starter Code
-            </h2>
-            <div className="relative">
-              <pre className="p-6 rounded-xl bg-gray-900/50 border border-white/10 text-white/90 text-sm overflow-x-auto leading-relaxed">
-                <code>{codeAssessment.starterCode}</code>
-              </pre>
-            </div>
-          </div>
-
-          {/* Runner Code */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h2 className="flex items-center gap-2 text-2xl font-semibold mb-4 text-white">
-              <Code2 className="h-6 w-6 text-emerald-400" />
-              Runner Code
-            </h2>
-            <div className="relative">
-              <pre className="p-6 rounded-xl bg-gray-900/50 border border-white/10 text-white/90 text-sm overflow-x-auto leading-relaxed">
-                <code>{codeAssessment.runnerCode}</code>
-              </pre>
-            </div>
-          </div>
-        </section>
-
-        {/* Test Cases Management */}
-        <section className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="flex items-center gap-2 text-2xl font-semibold text-white">
-              <Settings className="h-6 w-6 text-purple-400" />
-              Test Cases ({testCases?.length})
-            </h2>
             <Button
+              size="sm"
+              variant="outline"
               onClick={() =>
                 navigate(routes.TEST_CASE_CREATE(courseId, codeAssessment.id))
               }
-              className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-400/30 px-3 py-1 rounded-lg text-sm transition-all duration-300"
             >
-              <Plus className="h-3 w-3 mr-1" />
+              <Plus className="mr-2 h-4 w-4" />
               {addTestCaseButtonText}
             </Button>
-          </div>
-
-          <div className="space-y-4 max-h-96 overflow-y-auto">
-            {testCases?.length === 0 ? (
-              <div className="text-center py-12">
-                <Bug className="h-16 w-16 text-white/20 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white/60 mb-2">
+          </CardHeader>
+          <CardContent className="flex-1 space-y-4 overflow-y-scroll max-h-[600px] p-4">
+            {testCases.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center">
+                <Bug className="mx-auto mb-3 h-6 w-6 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground">
                   {emptyTestCasesText}
-                </h3>
-                <p className="text-white/40 text-sm mb-4">{testCaseAddTip}</p>
-                <Button
-                  onClick={() =>
-                    navigate(
-                      routes.TEST_CASE_CREATE(courseId, codeAssessment.id),
-                    )
-                  }
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  {createFirstTestCaseText}
-                </Button>
+                </p>
               </div>
             ) : (
-              testCases?.map((testCase, index) => (
+              testCases.map((testCase, index) => (
                 <TestCaseItem
                   key={testCase.id}
                   index={index}
@@ -287,8 +288,8 @@ export const AdminCodeAssessmentView = ({
                 />
               ))
             )}
-          </div>
-        </section>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -73,7 +73,7 @@ function OrganizationAdminDashboard({
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Organization overview
-            </h1>
+      </h1>
             <p className="text-muted-foreground">
               Monitor learner engagement and jump into the workflows you manage
               most.
@@ -118,7 +118,7 @@ function OrganizationAdminDashboard({
                 <span className="rounded-full bg-primary/10 p-2 text-primary">
                   <Icon className="h-4 w-4" />
                 </span>
-              </div>
+          </div>
               <CardTitle className="text-3xl font-semibold text-foreground">
                 {value}
               </CardTitle>
@@ -166,7 +166,7 @@ function OrganizationAdminDashboard({
             <CardContent className="mt-auto pt-0">
               <Button variant="outline" className="w-full" onClick={onClick}>
                 {actionLabel}
-              </Button>
+          </Button>
             </CardContent>
           </Card>
         ))}
@@ -200,7 +200,7 @@ function OrganizationAdminDashboard({
                   </p>
                 </div>
                 <span className="text-sm font-medium text-primary">
-                  {course.averageCompletionRate}% completion
+                    {course.averageCompletionRate}% completion
                 </span>
               </div>
             ))}
@@ -221,7 +221,7 @@ function OrganizationAdminDashboard({
               <CardDescription>
                 Live view of progress updated in the last 24 hours.
               </CardDescription>
-            </div>
+          </div>
             <span className="rounded-full bg-primary/10 p-2 text-primary">
               <Clock className="h-4 w-4" />
             </span>

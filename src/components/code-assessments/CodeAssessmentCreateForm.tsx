@@ -3,6 +3,7 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+
 import {
   Form,
   FormControl,
@@ -14,6 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import type z from "zod";
 import {
   createCodeAssessment,
@@ -38,17 +46,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import {
-  Code2,
-  Save,
-  ArrowLeft,
-  FileText,
-  Terminal,
-  Globe,
-  Lightbulb,
-  Target,
-  Clock,
-} from "lucide-react";
+import { Save, ArrowLeft, Target, Clock } from "lucide-react";
 import { difficultyLevels } from "../lessons/constants";
 import { DifficultyLevel } from "@/types/Lesson";
 import { LANG_KEYS } from "@/static-data/languages";
@@ -151,183 +149,209 @@ const CodeAssessmentCreateForm = ({
   };
 
   const isSubmitting = isCreating || isUpdating;
+  const backTarget =
+    type === "edit"
+      ? routes.CODE_ASSESSMENT_DETAILS(courseId, codeAssessmentId)
+      : routes.COURSE_DETAILS(courseId);
 
   return (
-    <div className="w-full max-w-7xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={() =>
-            navigate(
-              type === "edit"
-                ? routes.CODE_ASSESSMENT_DETAILS(courseId, codeAssessmentId)
-                : routes.COURSE_DETAILS(courseId),
-            )
-          }
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {backButtonText}
-        </Button>
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => navigate(backTarget)}
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {backButtonText}
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
+      <Card>
+        <CardHeader className="space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
               {icon}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">{description}</p>
+              <CardTitle className="text-3xl">{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
             </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
-      {/* Form Section */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Form */}
-        <div className="lg:col-span-2">
-          <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,0.35fr)]">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Assessment configuration</CardTitle>
+            <CardDescription>
+              Provide the prompt, scaffolding, and evaluation details for this
+              coding challenge.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
+                className="space-y-6"
               >
-                {/* Assessment Title Field */}
                 <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Code2 className="h-5 w-5 text-emerald-400" />
-                        Assessment Title
-                      </FormLabel>
+                      <FormLabel>Assessment title</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            placeholder="Enter assessment title (e.g., Two Sum Algorithm Challenge)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                            {...field}
-                          />
-                        </div>
+                        <Input
+                          placeholder="Two Sum Algorithm Challenge"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Assessment Description Field */}
                 <FormField
                   control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <FileText className="h-5 w-5 text-blue-400" />
-                        Problem Description
-                      </FormLabel>
+                      <FormLabel>Problem description</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Describe the coding problem clearly. What should the function do? What are the inputs and expected outputs?"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[120px] resize-y"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Describe the coding problem, expected inputs, and outputs."
+                          className="min-h-[120px]"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Instructions Field */}
                 <FormField
                   control={form.control}
                   name="instructions"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Lightbulb className="h-5 w-5 text-yellow-400" />
-                        Detailed Instructions
-                      </FormLabel>
+                      <FormLabel>Detailed instructions</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Provide step-by-step instructions, constraints, examples, and any specific requirements..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[150px] resize-y"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong>{" "}
-                          Include examples with inputs and outputs, mention
-                          time/space complexity requirements, and specify any
-                          constraints or edge cases.
-                        </p>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Duration in minutes */}
-                <FormField
-                  control={form.control}
-                  name="durationMinutes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-foreground font-medium">
-                        Duration (minutes)
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., 30"
-                          className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
+                        <Textarea
+                          placeholder="List constraints, examples, and evaluation criteria."
+                          className="min-h-[150px]"
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Difficulty Level */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="durationMinutes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Duration (minutes)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="30" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="difficulty"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Difficulty</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select difficulty" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {difficultyLevels.map((level) => (
+                              <SelectItem key={level.value} value={level.value}>
+                                {level.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
                 <FormField
                   control={form.control}
-                  name="difficulty"
+                  name="starterCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground font-medium">
-                        Difficulty Level
-                      </FormLabel>
+                      <FormLabel>Starter code</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Function signature and helpful comments…"
+                          className="min-h-[180px] font-mono text-sm"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="runnerCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Runner code</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Code that executes the student's solution and runs test cases."
+                          className="min-h-[180px] font-mono text-sm"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="languageId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Programming language</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={field.value?.toString()}
                       >
                         <FormControl>
-                          <SelectTrigger className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
-                            <SelectValue placeholder="Difficulty level" />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select language" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-card/95 backdrop-blur-md border-border/40">
-                          {difficultyLevels.map((level) => {
-                            return (
-                              <SelectItem
-                                key={level.value}
-                                value={level.value}
-                                className="focus:bg-primary/10"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div>
-                                    <p className="font-medium">{level.label}</p>
-                                  </div>
-                                </div>
-                              </SelectItem>
-                            );
-                          })}
+                        <SelectContent>
+                          {languages.map((language) => (
+                            <SelectItem
+                              key={language.value}
+                              value={language.value.toString()}
+                            >
+                              {language.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -335,168 +359,67 @@ const CodeAssessmentCreateForm = ({
                   )}
                 />
 
-                {/* Starter Code Field */}
-                <FormField
-                  control={form.control}
-                  name="starterCode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Terminal className="h-5 w-5 text-purple-400" />
-                        Starter Code Template
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Provide the initial code template that students will start with..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-gray-900/30 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-gray-900/50 focus:border-white/40 transition-all duration-300 min-h-[200px] resize-y font-mono text-sm"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong>{" "}
-                          Include function signatures, basic structure, and
-                          helpful comments. Students should be able to focus on
-                          the algorithm rather than setup.
-                        </p>
-                      </div>
-                    </FormItem>
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      <span>{buttonLoadingText}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Save className="h-4 w-4" />
+                      <span>{buttonText}</span>
+                    </div>
                   )}
-                />
-
-                {/* Runner Code Field */}
-                <FormField
-                  control={form.control}
-                  name="runnerCode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Terminal className="h-5 w-5 text-purple-400" />
-                        Runner Code
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Provide the code that will execute the student's solution and run test cases..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-gray-900/30 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-gray-900/50 focus:border-white/40 transition-all duration-300 min-h-[200px] resize-y font-mono text-sm"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Tip:</strong> This
-                          code should handle input parsing, invoking the
-                          student's function, and displaying outputs for
-                          evaluation.
-                        </p>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Programming Language Field */}
-                <FormField
-                  control={form.control}
-                  name="languageId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Globe className="h-5 w-5 text-blue-400" />
-                        Programming Language
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value?.toString()}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full px-4 py-3 text-white bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300">
-                            <SelectValue placeholder="Select programming language" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="bg-white/10 backdrop-blur-2xl border-white/20 rounded-xl">
-                          {languages.map((language) => (
-                            <SelectItem
-                              key={language.value}
-                              value={language.value.toString()}
-                              className="text-white hover:bg-white/20 focus:bg-white/20"
-                            >
-                              {language.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className="text-red-400 text-sm" />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Submit Button */}
-                <div className="pt-4">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] shadow-xl ${
-                      type === "edit"
-                        ? "bg-blue-500 hover:bg-blue-600"
-                        : "bg-emerald-500 hover:bg-emerald-600"
-                    } text-white ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-                  >
-                    {isSubmitting ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>{buttonLoadingText}</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <Save className="h-5 w-5" />
-                        <span>{buttonText}</span>
-                      </div>
-                    )}
-                  </Button>
-                </div>
+                </Button>
               </form>
             </Form>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Assessment Guidelines */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Target className="h-5 w-5 text-emerald-400" />
-              Assessment Guidelines
-            </h3>
-            <ul className="space-y-3 text-white/70 text-sm">
-              {guidelines.map((guideline, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                  <span>{guideline}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base font-semibold">
+                Assessment guidelines
+              </CardTitle>
+              <CardDescription>
+                Keep challenges consistent and approachable.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {guidelines.map((guideline) => (
+                  <li key={guideline} className="flex gap-2">
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                    {guideline}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
 
-          {/* Time Estimates */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Clock className="h-5 w-5 text-blue-400" />
-              Time Estimates
-            </h3>
-            <div className="space-y-3 text-sm">
-              {estimatedTime.map((item, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <span className="text-white/70">{item.level}</span>
-                  <span className="text-white font-medium">{item.time}</span>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base font-semibold">
+                Time estimates
+              </CardTitle>
+              <CardDescription>
+                Suggested durations per difficulty.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              {estimatedTime.map((item) => (
+                <div
+                  key={item.level}
+                  className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2"
+                >
+                  <span className="text-muted-foreground">{item.level}</span>
+                  <span className="font-medium text-foreground">{item.time}</span>
                 </div>
               ))}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
@@ -504,3 +427,5 @@ const CodeAssessmentCreateForm = ({
 };
 
 export default CodeAssessmentCreateForm;
+
+

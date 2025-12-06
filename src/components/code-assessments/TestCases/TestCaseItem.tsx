@@ -3,6 +3,7 @@ import { routes } from "@/static-data/routes";
 import type { TestCase } from "@/types/TestCase";
 import { Edit3, Trash2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const TestCaseItem = ({
   index,
@@ -22,20 +23,22 @@ const TestCaseItem = ({
   const navigate = useNavigate();
 
   return (
-    <div
-      key={testCase.id}
-      className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/8 transition-all duration-300"
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <div className="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-semibold text-xs">
+    <Card key={testCase.id} className="border-border/70">
+      <CardHeader className="flex items-center justify-between gap-2 py-3">
+        <div className="flex items-center gap-2">
+          <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-[11px] font-semibold text-primary">
             {index + 1}
-          </div>
-          <h3 className="font-medium text-white">{testCase.description}</h3>
+          </span>
+          <CardTitle className="text-sm font-semibold">
+            {testCase.description}
+          </CardTitle>
         </div>
         {deleteTestCaseMutation && (
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             <Button
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7"
               onClick={() =>
                 navigate(
                   routes.TEST_CASE_EDIT(
@@ -45,42 +48,45 @@ const TestCaseItem = ({
                   ),
                 )
               }
-              className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-400/30 p-1 rounded-lg transition-all duration-300"
             >
-              <Edit3 className="h-3 w-3" />
+              <Edit3 className="h-3.5 w-3.5" />
             </Button>
             <Button
+              size="icon"
+              variant="destructive"
+              className="h-7 w-7"
               onClick={() => deleteTestCaseMutation(testCase.id)}
               disabled={deletingTestCaseId === testCase.id}
-              className="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-400/30 p-1 rounded-lg transition-all duration-300 disabled:opacity-50"
             >
               {deletingTestCaseId === testCase.id ? (
-                <div className="w-3 h-3 border border-red-400/30 border-t-red-400 rounded-full animate-spin" />
+                <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
               ) : (
-                <Trash2 className="h-3 w-3" />
+                <Trash2 className="h-3.5 w-3.5" />
               )}
             </Button>
           </div>
         )}
-      </div>
-
-      <div className="space-y-2 text-sm">
-        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-          <span className="text-white/70 text-xs">Input:</span>
-          <pre className="text-white/90 mt-1 font-mono">{testCase.input}</pre>
+      </CardHeader>
+      <CardContent className="space-y-2 p-4 text-xs">
+        <div className="rounded-md border border-border/60 p-2">
+          <p className="text-[10px] uppercase text-muted-foreground">Input</p>
+          <pre className="mt-1 whitespace-pre-wrap font-mono text-muted-foreground">
+            {testCase.input}
+          </pre>
         </div>
-        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-          <span className="text-white/70 text-xs">Expected Output:</span>
-          <pre className="text-white/90 mt-1 font-mono">
+        <div className="rounded-md border border-border/60 p-2">
+          <p className="text-[10px] uppercase text-muted-foreground">
+            Expected
+          </p>
+          <pre className="mt-1 whitespace-pre-wrap font-mono text-muted-foreground">
             {testCase.expected}
           </pre>
         </div>
-      </div>
-
-      <div className="text-xs text-white/50 mt-3">
-        Created: {new Date(testCase.createdAt).toLocaleDateString()}
-      </div>
-    </div>
+        <p className="text-[11px] text-muted-foreground">
+          Created {new Date(testCase.createdAt).toLocaleDateString()}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 

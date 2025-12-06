@@ -136,12 +136,12 @@ function UserDashboard() {
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Your learning dashboard
-            </h1>
+      </h1>
             <p className="text-muted-foreground">
               Track progress, celebrate wins, and jump back into a module.
             </p>
           </div>
-        </div>
+          </div>
       </header>
 
       <section className="grid gap-4 lg:grid-cols-5">
@@ -176,15 +176,15 @@ function UserDashboard() {
                 <div className="flex items-center gap-3">
                   <span className="text-muted-foreground">
                     <Icon className="h-4 w-4" />
-                  </span>
+              </span>
                   <div>
                     <p className="text-xs text-muted-foreground">{label}</p>
                     <p className="text-sm font-semibold text-foreground">
                       {completed}/{total}
                     </p>
-                  </div>
-                </div>
-              </div>
+            </div>
+          </div>
+        </div>
             ))}
           </CardContent>
         </Card>
@@ -198,7 +198,7 @@ function UserDashboard() {
                   <CardTitle className="text-2xl font-semibold">
                     {value}
                   </CardTitle>
-                </div>
+          </div>
                 <span className="rounded-full bg-muted p-2 text-muted-foreground">
                   <Icon className="h-4 w-4" />
                 </span>
@@ -228,52 +228,52 @@ function UserDashboard() {
             progressData.map((progress) => (
               <Card key={progress.id} className="border border-border">
                 <CardHeader className="flex-row items-center justify-between pb-4">
-                  <div>
+                <div>
                     <CardTitle className="text-lg font-semibold">
-                      {progress.course.name}
+                    {progress.course.name}
                     </CardTitle>
                     <CardDescription>
                       Last accessed {lastTimeAgo(progress.updatedAt)}
                     </CardDescription>
-                  </div>
+                    </div>
                   <span className="text-sm font-medium text-primary">
                     {progress.completionRate}%
                   </span>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="h-2 w-full rounded-full bg-muted">
-                    <div
+                  <div
                       className="h-full rounded-full bg-primary transition-all"
-                      style={{ width: `${progress.completionRate}%` }}
+                    style={{ width: `${progress.completionRate}%` }}
                     />
-                  </div>
+                </div>
                   <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
                     <span>
                       Next up:{" "}
                       <span className="font-medium text-foreground">
                         {progress.nextModule?.title || "Module to be assigned"}
                       </span>
-                    </span>
+                </span>
                     <div className="flex gap-2">
-                      <Button
+                  <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleSubmissionClick(progress)}
-                      >
+                    onClick={() => handleSubmissionClick(progress)}
+                  >
                         <Play className="mr-2 h-4 w-4" />
-                        Submissions
-                      </Button>
-                      <Button
+                    Submissions
+                  </Button>
+                  <Button
                         size="sm"
                         onClick={() =>
                           handleContinueLearning(progress.nextModule)
                         }
-                      >
+                  >
                         <Play className="mr-2 h-4 w-4" />
-                        Continue
-                      </Button>
-                    </div>
-                  </div>
+                    Continue
+                  </Button>
+                </div>
+              </div>
                 </CardContent>
               </Card>
             ))

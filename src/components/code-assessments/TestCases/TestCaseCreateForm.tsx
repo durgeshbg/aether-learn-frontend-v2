@@ -21,15 +21,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../../ui/button";
 import {
-  Save,
-  ArrowLeft,
-  FileText,
-  Target,
-  CheckCircle,
-  Terminal,
-  Code2,
-  Eye,
-} from "lucide-react";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../ui/card";
+import { Save, ArrowLeft, Eye } from "lucide-react";
 import { codeAssessmentKeys } from "@/tanstack/keys/code-assesment";
 import { getCodeAssessmentById } from "@/services/code-assesment";
 
@@ -81,7 +79,7 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
         return createTestCase(
           axiosInstance,
           { courseId, codeAssessmentId },
-          data,
+          data
         );
       },
       onSuccess: () => {
@@ -92,7 +90,7 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
         successMessage: "Test Case created successfully",
         invalidatesQueries: testCaseKeys.all(courseId, codeAssessmentId),
       },
-    },
+    }
   );
 
   const { mutate: updateTestCaseMutation, isPending: isUpdating } = useMutation(
@@ -102,7 +100,7 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
         return updateTestCase(
           axiosInstance,
           { courseId, codeAssessmentId, id: testCaseId },
-          data,
+          data
         );
       },
       onSuccess: () => {
@@ -113,7 +111,7 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
         successMessage: "Test Case updated successfully",
         invalidatesQueries: testCaseKeys.all(courseId, codeAssessmentId),
       },
-    },
+    }
   );
 
   const onSubmit = (data: z.infer<typeof TestCaseCreateSchema>) => {
@@ -130,239 +128,198 @@ const TestCaseCreateForm = ({ type = "create" }: TestCaseFormType) => {
   const watchedValues = form.watch();
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={() =>
-            navigate(routes.CODE_ASSESSMENT_DETAILS(courseId, codeAssessmentId))
-          }
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Assessment
-        </Button>
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() =>
+          navigate(routes.CODE_ASSESSMENT_DETAILS(courseId, codeAssessmentId))
+        }
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to assessment
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
-              {icon}
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">{description}</p>
-            </div>
+      <Card>
+        <CardHeader className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            {icon}
           </div>
-        </div>
-      </div>
+          <div>
+            <CardTitle className="text-3xl">{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
 
-      {/* Form Section */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Form */}
-        <div className="lg:col-span-2">
-          <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.65fr)_minmax(0,0.35fr)]">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Test case details</CardTitle>
+            <CardDescription>
+              Define inputs, expectations, and weights for this scenario.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
+                className="space-y-6"
               >
-                {/* Test Case Description Field */}
                 <FormField
                   control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <FileText className="h-5 w-5 text-blue-400" />
-                        Test Case Description
-                      </FormLabel>
+                      <FormLabel>Test case description</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            placeholder="Enter test case description (e.g., Basic functionality test, Edge case with empty array)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                            {...field}
-                          />
-                        </div>
+                        <Input
+                          placeholder="Basic functionality test, edge case, etc."
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Test weight */}
                 <FormField
                   control={form.control}
                   name="weight"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <CheckCircle className="h-5 w-5 text-yellow-400" />
-                        Test Case Weight
-                      </FormLabel>
+                      <FormLabel>Weight</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            placeholder="Enter test case weight (e.g., 1)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                            {...field}
-                          />
-                        </div>
+                        <Input placeholder="1" {...field} />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Test Input Field */}
                 <FormField
                   control={form.control}
                   name="input"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Terminal className="h-5 w-5 text-emerald-400" />
-                        Input Data
-                      </FormLabel>
+                      <FormLabel>Input data</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Enter the input data for this test case (e.g., [1, 2, 3, 4, 5] or multiple parameters separated by lines)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-gray-900/30 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-gray-900/50 focus:border-white/40 transition-all duration-300 min-h-[120px] resize-y font-mono text-sm"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="[1,2,3] or newline-separated params"
+                          className="font-mono text-sm"
+                          rows={5}
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-emerald-500/10 border border-emerald-400/30">
-                        <p className="text-emerald-200 text-sm">
-                          <strong>Input Format:</strong> Use the exact format
-                          expected by your function. For arrays use [1,2,3], for
-                          strings use "hello", for multiple params use separate
-                          lines.
-                        </p>
-                      </div>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Expected Output Field */}
                 <FormField
                   control={form.control}
                   name="expected"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Target className="h-5 w-5 text-purple-400" />
-                        Expected Output
-                      </FormLabel>
+                      <FormLabel>Expected output</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Enter the expected output for this input (e.g., [2, 4, 6, 8, 10] or true/false for boolean results)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-gray-900/30 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-gray-900/50 focus:border-white/40 transition-all duration-300 min-h-[120px] resize-y font-mono text-sm"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Expected output, e.g. [2,4,6]"
+                          className="font-mono text-sm"
+                          rows={5}
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-purple-500/10 border border-purple-400/30">
-                        <p className="text-purple-200 text-sm">
-                          <strong>Output Format:</strong> Use the exact format
-                          your function returns. Match data types precisely -
-                          strings need quotes, arrays use brackets, etc.
-                        </p>
-                      </div>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Submit Button */}
-                <div className="pt-4">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] shadow-xl ${
-                      type === "edit"
-                        ? "bg-blue-500 hover:bg-blue-600"
-                        : "bg-emerald-500 hover:bg-emerald-600"
-                    } text-white ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-                  >
-                    {isSubmitting ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>
-                          {type === "edit"
-                            ? "Updating Test Case..."
-                            : "Creating Test Case..."}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <Save className="h-5 w-5" />
-                        <span>{buttonText}</span>
-                      </div>
-                    )}
-                  </Button>
-                </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      <span>
+                        {type === "edit"
+                          ? "Updating test case..."
+                          : "Creating test case..."}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Save className="h-4 w-4" />
+                      <span>{buttonText}</span>
+                    </div>
+                  )}
+                </Button>
               </form>
             </Form>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Test Case Preview */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Eye className="h-5 w-5 text-blue-400" />
-              Test Case Preview
-            </h3>
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                <div className="text-white/70 text-xs mb-1">Description</div>
-                <div className="text-white font-medium">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                <Eye className="h-4 w-4" />
+                Live preview
+              </CardTitle>
+              <CardDescription>
+                Mirrors exactly how this case will be stored.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
+              <div className="rounded-lg border border-border/60 p-4">
+                <p className="text-xs uppercase text-muted-foreground">
+                  Description
+                </p>
+                <p className="font-medium text-foreground">
                   {watchedValues.description ||
                     "Test case description will appear here..."}
-                </div>
+                </p>
               </div>
-
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-400/30">
-                <div className="text-emerald-200 text-xs mb-2">INPUT</div>
-                <pre className="text-emerald-100 font-mono text-sm whitespace-pre-wrap">
-                  {watchedValues.input || "Input data will be shown here..."}
+              <div className="rounded-lg border border-border/60 p-4">
+                <p className="text-xs uppercase text-muted-foreground">Input</p>
+                <pre className="font-mono text-muted-foreground whitespace-pre-wrap">
+                  {watchedValues.input || "Input preview..."}
                 </pre>
               </div>
-
-              <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-400/30">
-                <div className="text-purple-200 text-xs mb-2">
-                  EXPECTED OUTPUT
-                </div>
-                <pre className="text-purple-100 font-mono text-sm whitespace-pre-wrap">
-                  {watchedValues.expected ||
-                    "Expected output will be shown here..."}
+              <div className="rounded-lg border border-border/60 p-4">
+                <p className="text-xs uppercase text-muted-foreground">
+                  Expected output
+                </p>
+                <pre className="font-mono text-muted-foreground whitespace-pre-wrap">
+                  {watchedValues.expected || "Expected output preview..."}
                 </pre>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Format Examples */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Code2 className="h-5 w-5 text-purple-400" />
-              Format Examples
-            </h3>
-            <div className="space-y-3 text-sm">
-              {formatExamples.map(({ label, example, color }, index) => (
-                <div>
-                  <div key={index} className="text-white/80 font-medium">
-                    {label}:
-                  </div>
-                  <code className={color}>{example}</code>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base font-semibold">
+                Format examples
+              </CardTitle>
+              <CardDescription>
+                Quick references for popular input/output styles.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-muted-foreground">
+              {formatExamples.map(({ label, example }) => (
+                <div key={label}>
+                  <p className="font-medium text-foreground">{label}</p>
+                  <code className="block rounded bg-muted px-3 py-2 font-mono text-xs">
+                    {example}
+                  </code>
                 </div>
               ))}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
