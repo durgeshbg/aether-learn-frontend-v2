@@ -1,6 +1,12 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "../../ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../ui/card";
 import { LANG_KEYS, LANGUAGES_MAP } from "@/static-data/languages";
 import type { TestCase } from "@/types/TestCase";
 import type { CodeAssesment } from "@/types/CodeAssesment";
@@ -163,33 +169,47 @@ export const StudentAssessmentView = ({
   }, [navigate, codeAssessment]);
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Button
+          variant="ghost"
+          size="sm"
           onClick={handleBackLinkClick}
-          className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
+          className="inline-flex items-center gap-2 text-muted-foreground"
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
+          <ArrowLeft className="h-4 w-4" />
+          Back to course
         </Button>
 
         <Button
+          variant="outline"
+          size="sm"
           onClick={resetCode}
-          className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-400/30 px-3 py-2 rounded-lg transition-all duration-300"
+          className="inline-flex items-center gap-2"
         >
-          <RotateCcw className="h-3 w-3 mr-2" />
-          Reset
+          <RotateCcw className="h-4 w-4" />
+          Reset code
         </Button>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <Card className="border border-border/70">
+        <CardHeader>
+          <CardTitle className="text-2xl">{codeAssessment.title}</CardTitle>
+          <CardDescription>
+            Review the prompt on the left, implement your solution on the right,
+            and run tests before submitting.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.45fr)_minmax(0,0.55fr)]">
         <DescriptionTab
           codeAssessment={codeAssessment}
           testCases={testCases}
           language={language}
         />
 
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <EditorPanel
             code={code}
             setCode={setCode}

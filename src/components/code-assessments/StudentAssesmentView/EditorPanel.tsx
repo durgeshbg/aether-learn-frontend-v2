@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Play, Upload } from "lucide-react";
 import MonacoEditor from "./MonacoEditor";
 import {
@@ -53,63 +54,65 @@ const EditorPanel = ({
   }, [assesmentId, setCode]);
 
   return (
-    <div className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl overflow-hidden">
-      <div className="flex items-center justify-between p-2 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={runCode}
-            disabled={isRunning}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white px-2 py-1 rounded-lg transition-all duration-300 disabled:opacity-50"
-          >
-            {isRunning ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1" />
-                Running
-              </>
-            ) : (
-              <>
-                <Play className="h-4 w-4 mr-1" />
-                Run
-              </>
-            )}
-          </Button>
-          <Button
-            onClick={submitCode}
-            disabled={isRunning}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-lg transition-all duration-300"
-          >
-            <Upload className="h-4 w-4 mr-1" />
-            Submit
-          </Button>
+    <Card className="border border-border/70 gap-0">
+      <CardHeader className="gap-4 border-b !pb-0">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              onClick={runCode}
+              disabled={isRunning}
+              className="gap-2"
+            >
+              {isRunning ? (
+                <>
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Running
+                </>
+              ) : (
+                <>
+                  <Play className="h-4 w-4" />
+                  Run
+                </>
+              )}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={submitCode}
+              disabled={isRunning}
+              className="gap-2"
+            >
+              <Upload className="h-4 w-4" />
+              Submit
+            </Button>
+          </div>
+          <div className="text-xs text-muted-foreground hidden md:block">
+            Last saved {lastTimeAgo(lastSaved.toISOString())}
+          </div>
+          <Select value={selectedTheme} onValueChange={setSelectedTheme}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Editor theme" />
+            </SelectTrigger>
+            <SelectContent>
+              {MONACO_THEMES.map((theme) => (
+                <SelectItem key={theme.value} value={theme.value}>
+                  {theme.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-
-        <div className="text-sm text-white/60 hidden md:block">
-          Last saved: {lastTimeAgo(lastSaved.toISOString())}
-        </div>
-
-        <Select value={selectedTheme} onValueChange={setSelectedTheme}>
-          <SelectTrigger className="w-[180px]" id="theme-select">
-            <SelectValue placeholder="Select theme" />
-          </SelectTrigger>
-          <SelectContent>
-            {MONACO_THEMES.map((theme) => (
-              <SelectItem key={theme.value} value={theme.value}>
-                {theme.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="relative">
+      </CardHeader>
+      <CardContent className="p-0">
         <MonacoEditor
           value={code}
           selectedTheme={selectedTheme}
           languageId={language?.value}
           onChange={(value) => setCode(value || "")}
         />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
