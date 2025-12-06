@@ -17,6 +17,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { useNavigate, useParams } from "react-router";
 import { routes } from "@/static-data/routes";
 import {
@@ -105,172 +112,149 @@ const CourseCreateForm = ({ type = "create" }: CourseFormType) => {
   const isSubmitting = isCreating || isUpdating;
 
   return (
-    <div className="w-full max-w-4xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={() =>
-            navigate(
-              type === "edit"
-                ? routes.COURSE_DETAILS(courseId)
-                : routes.COURSES,
-            )
-          }
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {type === "edit" ? "Back to Course" : "Back to Courses"}
-        </Button>
+    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() =>
+          navigate(
+            type === "edit" ? routes.COURSE_DETAILS(courseId) : routes.COURSES,
+          )
+        }
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {type === "edit" ? "Back to course" : "Back to courses"}
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-white/20">
+      <Card>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
               {type === "edit" ? (
-                <Edit3 className="h-8 w-8 text-white/80" />
+                <Edit3 className="h-5 w-5" />
               ) : (
-                <Plus className="h-8 w-8 text-white/80" />
+                <Plus className="h-5 w-5" />
               )}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">
+              <CardDescription>
+                {type === "edit" ? "Update course" : "Create course"}
+              </CardDescription>
+              <CardTitle className="text-3xl">{title}</CardTitle>
+              <p className="text-sm text-muted-foreground">
                 {type === "edit"
-                  ? "Update course information and settings"
-                  : "Create a new course for your learners"}
+                  ? "Adjust details and publish changes."
+                  : "Provide foundational details before adding lessons."}
               </p>
             </div>
           </div>
-
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mt-6">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
-            <span className="text-white/70 text-sm">
-              {type === "edit"
-                ? "Make your changes and save to update the course"
-                : "Fill in the details below to create your course"}
-            </span>
+          <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
+            <Sparkles className="h-3 w-3" />
+            {type === "edit" ? "Editing existing course" : "New course draft"}
           </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
-      {/* Form Section */}
-      <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-        <Form {...createOrUpdateForm}>
-          <form
-            onSubmit={createOrUpdateForm.handleSubmit(onSubmit)}
-            className="space-y-8"
-          >
-            {/* Course Name Field */}
-            <FormField
-              control={createOrUpdateForm.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                    <BookOpen className="h-5 w-5 text-blue-400" />
-                    Course Name
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        placeholder="Enter course name (e.g., React Fundamentals)"
-                        className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-400 text-sm" />
-                </FormItem>
-              )}
-            />
-
-            {/* Course Description Field */}
-            <FormField
-              control={createOrUpdateForm.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                    <FileText className="h-5 w-5 text-emerald-400" />
-                    Course Description
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        placeholder="Describe what students will learn in this course"
-                        className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-400 text-sm" />
-                </FormItem>
-              )}
-            />
-
-            {/* Thumbnail URL Field */}
-            <FormField
-              control={createOrUpdateForm.control}
-              name="thumbnailUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                    <ImageIcon className="h-5 w-5 text-purple-400" />
-                    Thumbnail URL
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        placeholder="https://example.com/course-thumbnail.jpg"
-                        className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage className="text-red-400 text-sm" />
-                  <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                    <p className="text-white/60 text-sm">
-                      <strong className="text-white/80">Tip:</strong> Use a
-                      high-quality image (1200x600px recommended) that
-                      represents your course content. This will be displayed on
-                      course cards and details.
-                    </p>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            {/* Submit Button */}
-            <div className="pt-4">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] shadow-xl ${
-                  type === "edit"
-                    ? "bg-blue-500 hover:bg-blue-600"
-                    : "bg-emerald-500 hover:bg-emerald-600"
-                } text-white ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>
-                      {type === "edit"
-                        ? "Updating Course..."
-                        : "Creating Course..."}
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <Save className="h-5 w-5" />
-                    <span>{buttonText}</span>
-                  </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Course information</CardTitle>
+          <CardDescription>
+            Keep titles concise and descriptions outcome-focused.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...createOrUpdateForm}>
+            <form
+              onSubmit={createOrUpdateForm.handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
+              <FormField
+                control={createOrUpdateForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                      <BookOpen className="h-4 w-4 text-primary" />
+                      Course name
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="React Fundamentals" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
+              />
+
+              <FormField
+                control={createOrUpdateForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                      <FileText className="h-4 w-4 text-primary" />
+                      Course description
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Describe what learners will achieve..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={createOrUpdateForm.control}
+                name="thumbnailUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                      <ImageIcon className="h-4 w-4 text-primary" />
+                      Thumbnail URL
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://example.com/thumbnail.png"
+                        {...field}
+                      />
+                    </FormControl>
+                    <p className="text-xs text-muted-foreground">
+                      Ideal size 1200×600px. Displayed on course cards and
+                      details.
+                    </p>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="pt-2">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                      {type === "edit"
+                        ? "Updating course..."
+                        : "Creating course..."}
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      {buttonText}
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -28,6 +28,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { PlayCircle, Save, ArrowLeft, BookOpen, FileText } from "lucide-react";
 import {
   Select,
@@ -136,93 +143,94 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
   const isSubmitting = isCreating || isUpdating;
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={() =>
-            navigate(
-              type === "edit"
-                ? routes.LESSON_DETAILS(courseId, lessonId)
-                : routes.COURSE_DETAILS(courseId),
-            )
-          }
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {backLinkText}
-        </Button>
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() =>
+          navigate(
+            type === "edit"
+              ? routes.LESSON_DETAILS(courseId, lessonId)
+              : routes.COURSE_DETAILS(courseId),
+          )
+        }
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {backLinkText}
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
+      <Card>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
               {icon}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">{subtitle}</p>
+              <CardDescription>
+                {type === "edit" ? "Update lesson" : "Create lesson"}
+              </CardDescription>
+              <CardTitle className="text-3xl">{title}</CardTitle>
+              <p className="text-sm text-muted-foreground">{subtitle}</p>
             </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
-      {/* Form Section */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Form */}
-        <div className="lg:col-span-2">
-          <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Lesson content</CardTitle>
+            <CardDescription>
+              Explain the concept, provide context, and outline objectives.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
+                className="space-y-6"
               >
-                {/* Lesson Title Field */}
                 <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <PlayCircle className="h-5 w-5 text-emerald-400" />
-                        Lesson Title
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                        <PlayCircle className="h-4 w-4 text-primary" />
+                        Lesson title
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            placeholder="Enter lesson title (e.g., Introduction to React Hooks)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                            {...field}
-                          />
-                        </div>
+                        <Input
+                          placeholder="Introduction to React Hooks"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Lesson Content Field */}
                 <FormField
                   control={form.control}
                   name="content"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <FileText className="h-5 w-5 text-blue-400" />
-                        Lesson Content
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                        <FileText className="h-4 w-4 text-primary" />
+                        Lesson content
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Write your lesson content here. Explain the concepts, provide examples, and guide students through the learning process..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[200px] resize-y"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Explain the concept, provide examples, and guide learners through the steps..."
+                          className="min-h-[200px] resize-y"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">{contentTip}</p>
-                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {contentTip}
+                      </p>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -294,52 +302,49 @@ const LessonCreateForm = ({ type = "create" }: LessonFormType) => {
                   )}
                 />
 
-                {/* Submit Button */}
-                <div className="pt-4">
+                <div className="pt-2">
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] shadow-xl ${
-                      type === "edit"
-                        ? "bg-blue-500 hover:bg-blue-600"
-                        : "bg-emerald-500 hover:bg-emerald-600"
-                    } text-white ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                    className="w-full"
                   >
                     {isSubmitting ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>{buttonLoadingText}</span>
-                      </div>
+                      <>
+                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        {buttonLoadingText}
+                      </>
                     ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <Save className="h-5 w-5" />
-                        <span>{buttonText}</span>
-                      </div>
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        {buttonText}
+                      </>
                     )}
                   </Button>
                 </div>
               </form>
             </Form>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Lesson Guidelines */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <BookOpen className="h-5 w-5 text-purple-400" />
-              Lesson Guidelines
-            </h3>
-            <ul className="space-y-3 text-white/70 text-sm">
-              {guidelines.map((line, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                  <span>{line}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Guidelines</CardTitle>
+              <CardDescription>
+                Keep lessons actionable and modular.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {guidelines.map((line) => (
+                  <li key={line} className="flex items-start gap-2">
+                    <div className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

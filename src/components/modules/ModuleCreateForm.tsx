@@ -1,14 +1,17 @@
 import { useNavigate, useParams } from "react-router";
-import { getModuleFormData, languages, type ModuleFormType } from "./constants";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { moduleKeys } from "@/tanstack/keys/moduleKeys";
-import { createModule, getModuleById, updateModule } from "@/services/module";
-import { axiosInstance } from "@/utils/axiosInstance";
-import { ModuleCreateSchema, ModuleUpdateSchema } from "@/types/Module";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
+
+import { moduleKeys } from "@/tanstack/keys/moduleKeys";
+import { getModuleFormData, languages, type ModuleFormType } from "./constants";
+import { createModule, getModuleById, updateModule } from "@/services/module";
+import { ModuleCreateSchema, ModuleUpdateSchema } from "@/types/Module";
+import { axiosInstance } from "@/utils/axiosInstance";
 import { routes } from "@/static-data/routes";
+import { difficultyLevels } from "../lessons/constants";
+
 import {
   Form,
   FormControl,
@@ -20,6 +23,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import {
   Select,
   SelectContent,
@@ -36,7 +46,6 @@ import {
   Globe,
   BookOpen,
 } from "lucide-react";
-import { difficultyLevels } from "../lessons/constants";
 
 const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
   const {
@@ -82,20 +91,15 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
             durationMinutes: module.durationMinutes,
           }
         : {
-            languageId: languages[7].value,
+            languageId: languages[0].value,
           }),
     },
   });
 
   const { mutate: createModuleMutation, isPending: isCreating } = useMutation({
     mutationKey: moduleKeys.create(courseId, lessonId),
-    mutationFn: async (data: z.infer<typeof ModuleCreateSchema>) => {
-      return createModule(
-        axiosInstance,
-        { courseId, lessonId },
-        data,
-      );
-    },
+    mutationFn: async (data: z.infer<typeof ModuleCreateSchema>) =>
+      createModule(axiosInstance, { courseId, lessonId }, data),
     onSuccess: () => {
       form.reset();
       navigate(routes.LESSON_DETAILS(courseId, lessonId));
@@ -109,13 +113,12 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
 
   const { mutate: updateModuleMutation, isPending: isUpdating } = useMutation({
     mutationKey: moduleKeys.update(courseId, lessonId, moduleId),
-    mutationFn: async (data: z.infer<typeof ModuleUpdateSchema>) => {
-      return updateModule(
+    mutationFn: async (data: z.infer<typeof ModuleUpdateSchema>) =>
+      updateModule(
         axiosInstance,
         { courseId, lessonId, id: moduleId },
         data,
-      );
-    },
+      ),
     onSuccess: () => {
       form.reset();
       navigate(routes.MODULE_DETAILS(courseId, lessonId, moduleId));
@@ -150,148 +153,130 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
   const isSubmitting = isCreating || isUpdating;
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={handleBack}
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {backButtonText}
-        </Button>
+    <div className="mx-auto w-full max-w-6xl space-y-6 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleBack}
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {backButtonText}
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-emerald-500/20 flex items-center justify-center border border-white/20">
+      <Card>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
               {icon}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">{description}</p>
+              <CardDescription>
+                {type === "edit" ? "Update module" : "Create module"}
+              </CardDescription>
+              <CardTitle className="text-3xl">{title}</CardTitle>
+              <p className="text-sm text-muted-foreground">{description}</p>
             </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
-      {/* Form Section */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Form */}
-        <div className="lg:col-span-2">
-          <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Module content</CardTitle>
+            <CardDescription>
+              Provide the lesson narrative, code, and supporting metadata.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
-                {/* Module Title Field */}
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Layers className="h-5 w-5 text-purple-400" />
-                        Module Title
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                        <Layers className="h-4 w-4 text-primary" />
+                        Module title
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            placeholder="Enter module title (e.g., Variables and Data Types)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                            {...field}
-                          />
-                        </div>
+                        <Input
+                          placeholder="Variables and Data Types"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Module Content Field */}
                 <FormField
                   control={form.control}
                   name="content"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <FileText className="h-5 w-5 text-blue-400" />
-                        Module Content
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                        <FileText className="h-4 w-4 text-primary" />
+                        Module content
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Write your module content here. Explain concepts clearly, provide context, and guide students through the learning process..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[150px] resize-y"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Explain concepts clearly, provide context, and guide students..."
+                          className="min-h-[180px] resize-y"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Code Example Field */}
                 <FormField
                   control={form.control}
                   name="code"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Code2 className="h-5 w-5 text-emerald-400" />
-                        Code Example
-                        <span className="text-white/50 text-sm font-normal ml-2">
-                          (Optional)
-                        </span>
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                        <Code2 className="h-4 w-4 text-primary" />
+                        Code example (optional)
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Enter code examples, snippets, or exercises here..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-gray-900/30 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-gray-900/50 focus:border-white/40 transition-all duration-300 min-h-[200px] resize-y font-mono text-sm"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Enter code examples, snippets, or exercises..."
+                          className="min-h-[200px] resize-y font-mono text-sm"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
-                {/* Difficulty Level */}
+
                 <FormField
                   control={form.control}
                   name="difficulty"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground font-medium">
-                        Difficulty Level
+                      <FormLabel className="text-sm font-medium">
+                        Difficulty level
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
-                          <SelectTrigger className="bg-background/50 border-border/40 backdrop-blur-sm focus:bg-background/70 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 transition-all duration-200">
-                            <SelectValue placeholder="Difficulty level" />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select difficulty" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-card/95 backdrop-blur-md border-border/40">
-                          {difficultyLevels.map((level) => {
-                            return (
-                              <SelectItem
-                                key={level.value}
-                                value={level.value}
-                                className="focus:bg-primary/10"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div>
-                                    <p className="font-medium">{level.label}</p>
-                                  </div>
-                                </div>
-                              </SelectItem>
-                            );
-                          })}
+                        <SelectContent>
+                          {difficultyLevels.map((level) => (
+                            <SelectItem key={level.value} value={level.value}>
+                              {level.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -299,129 +284,120 @@ const ModuleCreateForm = ({ type = "create" }: ModuleFormType) => {
                   )}
                 />
 
-                {/* Duration Field */}
                 <FormField
                   control={form.control}
                   name="durationMinutes"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-foreground font-medium">
-                        Estimated Duration (minutes)
+                      <FormLabel className="text-sm font-medium">
+                        Estimated duration (minutes)
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g., 30"
-                          className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                          {...field}
-                        />
+                        <Input placeholder="e.g., 30" {...field} />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Programming Language Field */}
                 <FormField
                   control={form.control}
                   name="languageId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Globe className="h-5 w-5 text-yellow-400" />
-                        Programming Language
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                        <Globe className="h-4 w-4 text-primary" />
+                        Programming language
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value?.toString()}
                       >
                         <FormControl>
-                          <SelectTrigger className="w-full px-4 py-3 text-white bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300">
-                            <SelectValue placeholder="Select programming language" />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select language" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-white/10 backdrop-blur-2xl border-white/20 rounded-xl">
+                        <SelectContent>
                           {languages.map((language) => (
                             <SelectItem
                               key={language.value}
                               value={language.value.toString()}
-                              className="text-white hover:bg-white/20 focus:bg-white/20"
                             >
                               {language.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Submit Button */}
-                <div className="pt-4">
+                <div className="pt-2">
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] shadow-xl ${
-                      type === "edit"
-                        ? "bg-blue-500 hover:bg-blue-600"
-                        : "bg-emerald-500 hover:bg-emerald-600"
-                    } text-white ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                    className="w-full"
                   >
                     {isSubmitting ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>
-                          {type === "edit"
-                            ? "Updating Module..."
-                            : "Creating Module..."}
-                        </span>
-                      </div>
+                      <>
+                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        {type === "edit"
+                          ? "Updating module..."
+                          : "Creating module..."}
+                      </>
                     ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <Save className="h-5 w-5" />
-                        <span>{buttonText}</span>
-                      </div>
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        {buttonText}
+                      </>
                     )}
                   </Button>
                 </div>
               </form>
             </Form>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Module Guidelines */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <BookOpen className="h-5 w-5 text-blue-400" />
-              Module Guidelines
-            </h3>
-            <ul className="space-y-3 text-white/70 text-sm">
-              {guidelines.map((guideline, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
-                  <span>{guideline}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Module guidelines</CardTitle>
+              <CardDescription>
+                Keep each module focused and outcome-driven.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {guidelines.map((guideline) => (
+                  <li key={guideline} className="flex items-start gap-2">
+                    <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
+                    <span>{guideline}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
 
-          {/* Code Best Practices */}
-          <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-3">
-              <Code2 className="h-5 w-5 text-emerald-400" />
-              Code Best Practices
-            </h3>
-            <ul className="space-y-3 text-white/70 text-sm">
-              {codeBestPractices.map((guideline, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
-                  <span>{guideline}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Code best practices</CardTitle>
+              <CardDescription>
+                Encourage readable and runnable snippets.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {codeBestPractices.map((guideline) => (
+                  <li key={guideline} className="flex items-start gap-2">
+                    <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
+                    <span>{guideline}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

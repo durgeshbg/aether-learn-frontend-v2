@@ -71,13 +71,13 @@ export function FeedbackDialog({ courseId }: { courseId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Give Feedback</Button>
+        <Button variant="outline">Give feedback</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Share Your Feedback</DialogTitle>
+          <DialogTitle>Share your experience</DialogTitle>
           <DialogDescription>
-            Help us improve by sharing your thoughts and rating your experience.
+            Help course authors understand what resonated and what needs work.
           </DialogDescription>
         </DialogHeader>
         <Form {...createFeedback}>
@@ -95,7 +95,7 @@ export function FeedbackDialog({ courseId }: { courseId: string }) {
                           <button
                             key={star}
                             type="button"
-                            className="p-1 rounded-sm hover:bg-muted transition-colors"
+                            className="rounded-md p-1 transition-colors hover:bg-muted"
                             onClick={() => handleStarClick(star)}
                             onMouseEnter={() => handleStarHover(star)}
                             onMouseLeave={handleStarLeave}
@@ -142,7 +142,7 @@ export function FeedbackDialog({ courseId }: { courseId: string }) {
                 Cancel
               </Button>
               <Button type="submit" disabled={isCourseFeedbackPending}>
-                {isCourseFeedbackPending ? "Submitting..." : "Submit Feedback"}
+                {isCourseFeedbackPending ? "Submitting..." : "Submit feedback"}
               </Button>
             </DialogFooter>
           </form>

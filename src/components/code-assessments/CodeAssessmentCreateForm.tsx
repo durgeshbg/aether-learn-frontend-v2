@@ -46,7 +46,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Save, ArrowLeft, Target, Clock } from "lucide-react";
+import { Save, ArrowLeft } from "lucide-react";
 import { difficultyLevels } from "../lessons/constants";
 import { DifficultyLevel } from "@/types/Lesson";
 import { LANG_KEYS } from "@/static-data/languages";
@@ -127,7 +127,7 @@ const CodeAssessmentCreateForm = ({
         return updateCodeAssessment(
           axiosInstance,
           { courseId, id: codeAssessmentId },
-          data,
+          data
         );
       },
       onSuccess: () => {
@@ -359,7 +359,11 @@ const CodeAssessmentCreateForm = ({
                   )}
                 />
 
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -415,7 +419,9 @@ const CodeAssessmentCreateForm = ({
                   className="flex items-center justify-between rounded-lg border border-border/60 px-3 py-2"
                 >
                   <span className="text-muted-foreground">{item.level}</span>
-                  <span className="font-medium text-foreground">{item.time}</span>
+                  <span className="font-medium text-foreground">
+                    {item.time}
+                  </span>
                 </div>
               ))}
             </CardContent>
@@ -427,5 +433,3 @@ const CodeAssessmentCreateForm = ({
 };
 
 export default CodeAssessmentCreateForm;
-
-
