@@ -228,7 +228,7 @@ const ModuleDetails = () => {
         </Card>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,0.3fr)]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.6fr)_minmax(0,0.4fr)]">
         <Card className="min-h-[500px]">
           <CardHeader>
             <CardTitle className="text-xl">Module content</CardTitle>
