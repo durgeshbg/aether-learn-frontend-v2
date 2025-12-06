@@ -91,7 +91,7 @@ export const UserQuizExperience = ({
 
   const questions = useMemo(
     () => shuffleArray<Question>(quiz?.questions || []),
-    [quiz?.questions],
+    [quiz?.questions]
   );
 
   const handleSubmitQuiz = useCallback(() => {
@@ -205,7 +205,7 @@ export const UserQuizExperience = ({
     if (questionIndex === -1) return;
 
     const answerIndex = questions[questionIndex].options.findIndex(
-      (option) => option === answer,
+      (option) => option === answer
     );
     if (answerIndex === -1) return;
 
@@ -234,37 +234,40 @@ export const UserQuizExperience = ({
             setShowWarning={setShowWarning}
           />
         )}
-        <div className="w-full min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 p-4">
-          <div className="max-w-4xl mx-auto">
-            <QuizHeader
-              title={quiz.title}
-              answersLength={answers?.length}
-              currentQuestionIndex={currentQuestionIndex}
-              questionsLength={questions.length}
-              isFullscreen={isFullscreen}
-              timeRemaining={timeRemaining}
-            />
+        <div className="min-h-screen bg-background px-4 py-6">
+          <div className="mx-auto grid w-full max-w-6xl gap-4 lg:grid-cols-[minmax(0,0.7fr)_minmax(240px,0.3fr)]">
+            <div className="flex flex-col gap-4">
+              <QuizHeader
+                title={quiz.title}
+                answersLength={answers?.length}
+                currentQuestionIndex={currentQuestionIndex}
+                questionsLength={questions.length}
+                isFullscreen={isFullscreen}
+                timeRemaining={timeRemaining}
+              />
 
-            <QuestionAndOptions
-              currentQuestion={questions[currentQuestionIndex]}
-              currentQuestionIndex={currentQuestionIndex}
-              answers={answers}
-              handleAnswerSelect={handleAnswerSelect}
-            />
+              <QuestionAndOptions
+                currentQuestion={questions[currentQuestionIndex]}
+                currentQuestionIndex={currentQuestionIndex}
+                answers={answers}
+                handleAnswerSelect={handleAnswerSelect}
+              />
 
-            <QuestionControls
-              currentIndex={currentQuestionIndex}
-              setCurrentIndex={setCurrentQuestionIndex}
-              questionLength={questions.length}
-              handleSubmitQuiz={handleSubmitQuiz}
-              isSubmitting={isSubmitingQuiz}
-            />
+              <QuestionControls
+                currentIndex={currentQuestionIndex}
+                setCurrentIndex={setCurrentQuestionIndex}
+                questionLength={questions.length}
+                handleSubmitQuiz={handleSubmitQuiz}
+                isSubmitting={isSubmitingQuiz}
+              />
+            </div>
 
             <QuestionsNavigator
               currentIndex={currentQuestionIndex}
               setCurrentIndex={setCurrentQuestionIndex}
               questions={questions}
               answers={answers}
+              className="lg:sticky lg:top-6"
             />
           </div>
         </div>

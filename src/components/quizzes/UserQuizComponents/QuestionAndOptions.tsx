@@ -21,43 +21,44 @@ const QuestionAndOptions = ({
 }: IQuestionAndOptions) => {
   const palleteArray = getPallete(readOnly, isCorrect);
   return (
-    <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl mb-6">
-      <div className="mb-6">
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-lg flex-shrink-0">
-            {currentQuestionIndex + 1}
-          </div>
-          <h2 className="text-xl font-semibold text-white leading-relaxed">
-            {currentQuestion.text}
-          </h2>
+    <div className="mb-6 rounded-xl border border-border/70 bg-card p-6">
+      <div className="mb-4 flex items-start gap-3">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary">
+          {currentQuestionIndex + 1}
         </div>
+        <h2 className="text-lg font-semibold text-foreground">
+          {currentQuestion.text}
+        </h2>
       </div>
 
-      {/* Answer Options */}
       <div className="space-y-3">
         {currentQuestion.options.map((option, index) => {
           const isSelected = answers[currentQuestion.id] === index + 1;
           return (
             <button
               key={index}
-              className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 ${
+              className={`w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
                 isSelected
                   ? palleteArray[0]
-                  : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:border-white/20"
+                  : "border-border/70 bg-muted/40 text-muted-foreground hover:border-border"
               }`}
               disabled={readOnly || !handleAnswerSelect}
               onClick={() => handleAnswerSelect?.(currentQuestion.id, option)}
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
-                    isSelected ? palleteArray[1] : "bg-white/20 text-white/70"
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
+                    isSelected
+                      ? palleteArray[1]
+                      : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {String.fromCharCode(65 + index)}
                 </div>
-                <span>{option}</span>
-                {isSelected && <CheckCircle className={palleteArray[2]} />}
+                <span className="text-foreground">{option}</span>
+                {isSelected && (
+                  <CheckCircle className={`${palleteArray[2]} ml-auto`} />
+                )}
               </div>
             </button>
           );

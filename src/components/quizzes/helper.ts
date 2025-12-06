@@ -17,19 +17,19 @@ export const formatTime = (seconds: number) => {
 export const getPallete = (readOnly?: boolean, isCorrect?: boolean) => {
   const palleteColors = {
     correct: [
-      "bg-green-500/20 border-green-400 text-green-300",
-      "bg-green-500 text-white",
-      "h-5 w-5 text-green-400 ml-auto",
+      "border border-emerald-300 bg-emerald-50 text-emerald-900",
+      "bg-emerald-500 text-white",
+      "h-5 w-5 text-emerald-500 ml-auto",
     ],
     incorrect: [
-      "bg-red-500/20 border-red-400 text-red-300",
-      "bg-red-500 text-white",
-      "h-5 w-5 text-red-400 ml-auto",
+      "border border-destructive/40 bg-destructive/10 text-destructive",
+      "bg-destructive text-destructive-foreground",
+      "h-5 w-5 text-destructive ml-auto",
     ],
     default: [
-      "bg-blue-500/20 border-blue-400 text-blue-300",
-      "bg-blue-500 text-white",
-      "h-5 w-5 text-blue-400 ml-auto",
+      "border border-primary/40 bg-primary/5 text-primary",
+      "bg-primary text-primary-foreground",
+      "h-5 w-5 text-primary ml-auto",
     ],
   };
   if (readOnly) {

@@ -1,6 +1,14 @@
 import { AlertCircle, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router";
 import { Button } from "../../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../ui/card";
 import { routes } from "@/static-data/routes";
 
 const QuizCompleted = ({
@@ -13,49 +21,51 @@ const QuizCompleted = ({
   submissionError: string | null;
 }) => {
   const navigate = useNavigate();
+  const isSuccess = !submissionError;
+
   return (
-    <div className="w-full max-w-4xl mx-auto py-8 px-4">
-      <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl text-center">
-        <div
-          className={`w-24 h-24 rounded-2xl mx-auto mb-6 flex items-center justify-center ${!submissionError ? "bg-blue-500/20 border-blue-400" : "bg-red-500/20 border-red-400"} border-2`}
-        >
-          {!submissionError ? (
-            <CheckCircle className="h-12 w-12 text-blue-400" />
-          ) : (
-            <AlertCircle className="h-12 w-12 text-red-400" />
-          )}
-        </div>
-
-        <h1 className="text-3xl font-bold text-white mb-4">
-          {!submissionError ? "Quiz Completed!" : "Submission Error"}
-        </h1>
-
-        <div className="mb-8">
-          <p className="text-white/80 text-lg">
-            {!submissionError
+    <div className="mx-auto w-full max-w-4xl px-4 py-8">
+      <Card>
+        <CardHeader className="text-center">
+          <div
+            className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
+              isSuccess ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"
+            }`}
+          >
+            {isSuccess ? (
+              <CheckCircle className="h-8 w-8" />
+            ) : (
+              <AlertCircle className="h-8 w-8" />
+            )}
+          </div>
+          <CardTitle className="text-2xl">
+            {isSuccess ? "Quiz completed" : "Submission error"}
+          </CardTitle>
+          <CardDescription>
+            {isSuccess
               ? "You have successfully completed the quiz."
               : submissionError}
-          </p>
-        </div>
-
-        <div className="flex gap-4 justify-center">
-          <Button
-            onClick={() => navigate(routes.COURSE_DETAILS(courseId))}
-            className={`${!submissionError ? "bg-blue-500 hover:bg-blue-600" : "bg-red-500 hover:bg-red-400"} text-white px-6 py-3 rounded-xl transition-all duration-300`}
-          >
-            Back to Course
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center text-sm text-muted-foreground">
+          {
+            "You can review your answers in submissions or return to the course overview."
+          }
+        </CardContent>
+        <CardFooter className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Button onClick={() => navigate(routes.COURSE_DETAILS(courseId))}>
+            Back to course
           </Button>
           <Button
             variant="outline"
             onClick={() =>
               navigate(routes.COURSE_SUBMISSIONS_QUIZ_DETAILS(courseId, quizId))
             }
-            className="text-white px-6 py-3 rounded-xl border-white/30 hover:border-white transition-all duration-300"
           >
-            View Previous Submissions
+            View submissions
           </Button>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

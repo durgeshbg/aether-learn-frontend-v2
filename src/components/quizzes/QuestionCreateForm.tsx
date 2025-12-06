@@ -25,8 +25,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../ui/button";
 import {
-  Brain,
-  Save,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import {
   ArrowLeft,
   Edit3,
   Plus,
@@ -102,7 +107,7 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
         successMessage: "Question created successfully",
         invalidatesQueries: questionKeys.all(courseId, quizId),
       },
-    },
+    }
   );
 
   const { mutate: updateQuestionMutation, isPending: isUpdating } = useMutation(
@@ -112,7 +117,7 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
         return updateQuestion(
           axiosInstance,
           { courseId, quizId, id: questionId },
-          data,
+          data
         );
       },
       onSuccess: () => {
@@ -123,7 +128,7 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
         successMessage: "Question updated successfully",
         invalidatesQueries: questionKeys.all(courseId, quizId),
       },
-    },
+    }
   );
 
   const onSubmit = (data: z.infer<typeof QuestionCreateSchema>) => {
@@ -138,43 +143,40 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
   const watchedAnswer = form.watch("answer");
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-8 px-4">
-      {/* Header Section */}
-      <div className="mb-8">
-        <Button
-          onClick={() => navigate(routes.QUIZ_DETAILS(courseId, quizId))}
-          className="mb-6 bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-xl px-4 py-2 rounded-xl transition-all duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Quiz
-        </Button>
+    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => navigate(routes.QUIZ_DETAILS(courseId, quizId))}
+        className="inline-flex w-fit items-center gap-2 text-muted-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to quiz
+      </Button>
 
-        <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-white/20">
-              {type === "edit" ? (
-                <Edit3 className="h-8 w-8 text-white/80" />
-              ) : (
-                <Plus className="h-8 w-8 text-white/80" />
-              )}
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2">{title}</h1>
-              <p className="text-white/70 text-lg">{subtitle}</p>
-            </div>
+      <Card>
+        <CardHeader className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            {type === "edit" ? (
+              <Edit3 className="h-6 w-6" />
+            ) : (
+              <Plus className="h-6 w-6" />
+            )}
           </div>
-        </div>
-      </div>
+          <div>
+            <CardTitle className="text-2xl">{title}</CardTitle>
+            <CardDescription>{subtitle}</CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
 
-      {/* Form Section */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Form */}
-        <div className="lg:col-span-2">
-          <div className="rounded-2xl p-8 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <Card>
+          <CardContent className="pt-6">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
+                className="space-y-6"
               >
                 {/* Question Text Field */}
                 <FormField
@@ -182,20 +184,18 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
                   name="text"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <HelpCircle className="h-5 w-5 text-blue-400" />
-                        Question Text
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium text-foreground">
+                        <HelpCircle className="h-4 w-4 text-primary" />
+                        Question text
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Enter your quiz question here. Be clear and specific about what you're asking..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[100px] resize-y"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Enter your quiz question..."
+                          className="min-h-[100px]"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -203,17 +203,13 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
                 {/* Answer Options */}
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                      <ListChecks className="h-5 w-5 text-emerald-400" />
-                      Answer Options
+                    <FormLabel className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <ListChecks className="h-4 w-4 text-emerald-500" />
+                      Answer options
                     </FormLabel>
-                    <Button
-                      type="button"
-                      onClick={() => append("")}
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg text-sm"
-                    >
-                      <Plus className="h-3 w-3 mr-2" />
-                      Add Option
+                    <Button type="button" size="sm" onClick={() => append("")}>
+                      <Plus className="mr-2 h-3 w-3" />
+                      Add option
                     </Button>
                   </div>
 
@@ -228,10 +224,10 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
                               <div className="flex items-center gap-3">
                                 {/* Option Number/Indicator */}
                                 <div
-                                  className={`w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-sm border-2 ${
+                                  className={`flex h-8 w-8 items-center justify-center rounded-md border text-sm font-semibold ${
                                     watchedAnswer === index + 1
-                                      ? "bg-green-500/20 border-green-400 text-green-400"
-                                      : "bg-white/10 border-white/30 text-white/70"
+                                      ? "border-primary/40 bg-primary/10 text-primary"
+                                      : "border-border/60 text-muted-foreground"
                                   }`}
                                 >
                                   {String.fromCharCode(65 + index)}
@@ -239,14 +235,15 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
 
                                 {/* Option Input */}
                                 <FormControl>
-                                  <div className="flex-1 relative">
+                                  <div className="relative flex-1">
                                     <Input
-                                      placeholder={`Enter option ${String.fromCharCode(65 + index)}`}
-                                      className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
+                                      placeholder={`Enter option ${String.fromCharCode(
+                                        65 + index
+                                      )}`}
                                       {...optionField}
                                     />
                                     {watchedAnswer === index + 1 && (
-                                      <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-green-400" />
+                                      <CheckCircle className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
                                     )}
                                   </div>
                                 </FormControl>
@@ -256,13 +253,14 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
                                   <Button
                                     type="button"
                                     onClick={() => remove(index)}
-                                    className="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-400/30 p-2 rounded-lg transition-all duration-300"
+                                    variant="ghost"
+                                    size="icon"
                                   >
                                     <X className="h-4 w-4" />
                                   </Button>
                                 )}
                               </div>
-                              <FormMessage className="text-red-400 text-sm ml-11" />
+                              <FormMessage className="ml-11" />
                             </FormItem>
                           )}
                         />
@@ -277,32 +275,22 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
                   name="answer"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Target className="h-5 w-5 text-green-400" />
-                        Correct Answer
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium text-foreground">
+                        <Target className="h-4 w-4 text-primary" />
+                        Correct answer
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input
-                            type="number"
-                            placeholder="Enter the number of the correct option (1, 2, 3...)"
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300"
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(parseInt(e.target.value))
-                            }
-                          />
-                        </div>
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="Option number (1, 2, 3...)"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value))
+                          }
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
-                      <div className="mt-2 p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p className="text-white/60 text-sm">
-                          <strong className="text-white/80">Selected:</strong>{" "}
-                          Option {watchedAnswer}
-                          {fields[watchedAnswer - 1] &&
-                            ` - ${form.getValues(`options.${watchedAnswer - 1}`)}`}
-                        </p>
-                      </div>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -313,74 +301,54 @@ const QuestionCreateForm = ({ type = "create" }: QuestionFormType) => {
                   name="explanation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2 text-white font-semibold text-lg">
-                        <Lightbulb className="h-5 w-5 text-yellow-400" />
+                      <FormLabel className="flex items-center gap-2 text-sm font-medium text-foreground">
+                        <Lightbulb className="h-4 w-4 text-amber-500" />
                         Explanation
-                        <span className="text-white/50 text-sm font-normal ml-2">
-                          (Optional)
+                        <span className="text-xs text-muted-foreground">
+                          (optional)
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Textarea
-                            placeholder="Explain why this is the correct answer. This helps students learn from their mistakes..."
-                            className="w-full px-4 py-3 text-white placeholder-white/50 bg-white/5 border border-white/20 rounded-xl backdrop-blur-sm focus:bg-white/10 focus:border-white/40 transition-all duration-300 min-h-[100px] resize-y"
-                            {...field}
-                          />
-                        </div>
+                        <Textarea
+                          placeholder="Explain why this option is correct."
+                          className="min-h-[100px]"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormMessage className="text-red-400 text-sm" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Submit Button */}
-                <div className="pt-4">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-[1.02] shadow-xl ${
-                      type === "edit"
-                        ? "bg-blue-500 hover:bg-blue-600"
-                        : "bg-emerald-500 hover:bg-emerald-600"
-                    } text-white ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
-                  >
-                    {isSubmitting ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>{buttonLoadingText}</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <Save className="h-5 w-5" />
-                        <span>{buttonText}</span>
-                      </div>
-                    )}
-                  </Button>
-                </div>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
+                  {isSubmitting ? buttonLoadingText : buttonText}
+                </Button>
               </form>
             </Form>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Question Guidelines */}
-          <div className="rounded-2xl p-6 bg-white/10 backdrop-blur-2xl border border-white/15 shadow-xl">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-              <Brain className="h-5 w-5 text-purple-400" />
-              Question Guidelines
-            </h3>
-            <ul className="space-y-3 text-white/70 text-sm">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base font-semibold">
+              Question guidelines
+            </CardTitle>
+            <CardDescription>
+              Keep prompts focused and scorable.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
               {guidelines.map((guideline, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full mt-2 flex-shrink-0" />
-                  <span>{guideline}</span>
-                </li>
+                <li key={index}>• {guideline}</li>
               ))}
             </ul>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

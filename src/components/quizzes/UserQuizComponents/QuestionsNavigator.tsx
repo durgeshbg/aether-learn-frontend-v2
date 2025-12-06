@@ -5,11 +5,14 @@ interface AnswersMap {
   [questionId: string]: number;
 }
 
+import { cn } from "@/lib/utils";
+
 interface IQuestionsNavigator {
   questions: Question[];
   currentIndex: number;
   setCurrentIndex: Dispatch<SetStateAction<number>>;
   answers: AnswersMap;
+  className?: string;
 }
 
 const QuestionsNavigator = ({
@@ -17,26 +20,38 @@ const QuestionsNavigator = ({
   currentIndex,
   setCurrentIndex,
   answers,
+  className,
 }: IQuestionsNavigator) => {
   return (
-    <div className="mt-6 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
-      <h3 className="text-white font-medium mb-3">Question Navigator</h3>
-      <div className="grid grid-cols-10 gap-2">
-        {questions.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-8 h-8 rounded-lg font-semibold text-sm transition-all duration-300 ${
-              index === currentIndex
-                ? "bg-blue-500 text-white"
-                : answers[questions[index].id]
-                  ? "bg-green-500/30 text-green-400 border border-green-400/50"
-                  : "bg-white/10 text-white/70 hover:bg-white/20"
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
+    <div
+      className={cn(
+        "rounded-xl border border-border/70 bg-card p-4",
+        className
+      )}
+    >
+      <h3 className="mb-3 text-sm font-medium text-foreground">
+        Question navigator
+      </h3>
+      <div className="grid grid-cols-6 gap-2 text-sm">
+        {questions.map((_, index) => {
+          const answered = Boolean(answers[questions[index].id]);
+          const isCurrent = index === currentIndex;
+          return (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`h-8 w-8 rounded-md font-semibold transition-colors cursor-pointer ${
+                isCurrent
+                  ? "bg-primary text-primary-foreground"
+                  : answered
+                  ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              {index + 1}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

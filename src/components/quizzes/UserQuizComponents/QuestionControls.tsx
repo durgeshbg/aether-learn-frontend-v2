@@ -28,33 +28,24 @@ const QuestionControls = ({
   return (
     <div className="flex items-center justify-between">
       <Button
+        variant="outline"
         onClick={handlePrevious}
         disabled={currentIndex === 0}
-        className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ChevronLeft className="h-4 w-4 mr-2" />
+        <ChevronLeft className="mr-2 h-4 w-4" />
         Previous
       </Button>
 
-      <div className="flex gap-3">
-        {currentIndex === questionLength - 1 ? (
-          <Button
-            onClick={handleSubmitQuiz}
-            disabled={isSubmitting}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg font-semibold"
-          >
-            {isSubmitting ? "Submitting..." : "Submit Quiz"}
-          </Button>
-        ) : (
-          <Button
-            onClick={handleNext}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
-          >
-            Next
-            <ChevronRight className="h-4 w-4 ml-2" />
-          </Button>
-        )}
-      </div>
+      {currentIndex === questionLength - 1 ? (
+        <Button onClick={handleSubmitQuiz} disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Submit quiz"}
+        </Button>
+      ) : (
+        <Button variant="outline" onClick={handleNext}>
+          Next
+          <ChevronRight className="ml-2 h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 };
