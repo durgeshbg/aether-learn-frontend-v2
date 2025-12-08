@@ -159,7 +159,7 @@ export const UserDetailsUpdateSchema = z.object({
   email: z.string().email().optional(),
   branch: z.string().optional(),
   uniqueId: z.string().optional(),
-  year: z.number().int().min(1900).max(2100).optional(),
+  year: z.coerce.number().int().min(1900).max(2100).optional(),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters long")

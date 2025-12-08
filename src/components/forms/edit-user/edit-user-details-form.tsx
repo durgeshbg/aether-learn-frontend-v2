@@ -4,14 +4,7 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type z from "zod";
-import {
-  Eye,
-  EyeOff,
-  Lock,
-  Mail,
-  Save,
-  User as UserIcon,
-} from "lucide-react";
+import { Eye, EyeOff, Mail, Save, User as UserIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,11 +50,7 @@ const EditUserDetailsForm = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: userKeys.updateDetails(userId || ""),
     mutationFn: async (data: z.infer<typeof UserDetailsUpdateSchema>) => {
-      return upadteUserDetails(
-        axiosInstance,
-        { id: userId || "" },
-        data,
-      );
+      return upadteUserDetails(axiosInstance, { id: userId || "" }, data);
     },
     meta: {
       notify: true,
@@ -162,7 +151,9 @@ const EditUserDetailsForm = () => {
                         ) : (
                           <Eye className="h-4 w-4" />
                         )}
-                        <span className="sr-only">Toggle password visibility</span>
+                        <span className="sr-only">
+                          Toggle password visibility
+                        </span>
                       </Button>
                     </div>
                   </FormControl>
@@ -225,7 +216,11 @@ const EditUserDetailsForm = () => {
         </section>
 
         <div className="flex flex-wrap gap-3 border-t border-border pt-4">
-          <Button type="submit" disabled={isPending} className="flex-1 sm:flex-none">
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="flex-1 sm:flex-none"
+          >
             {isPending ? (
               <>
                 <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground/40 border-t-transparent" />
