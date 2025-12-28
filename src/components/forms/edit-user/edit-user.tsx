@@ -87,28 +87,30 @@ const EditUserForm = ({ type = "details" }: EditUserFormProps) => {
         </p>
       </header>
 
-      <div className="flex flex-wrap gap-2">
-        {(Object.keys(sections) as Array<keyof typeof sections>).map(
-          (sectionKey) => {
-            const section = sections[sectionKey];
-            const Icon = section.icon;
+      {user.role === "ADMIN" && (
+        <div className="flex flex-wrap gap-2">
+          {(Object.keys(sections) as Array<keyof typeof sections>).map(
+            (sectionKey) => {
+              const section = sections[sectionKey];
+              const Icon = section.icon;
 
-            return (
-              <Button
-                key={sectionKey}
-                variant={sectionKey === type ? "default" : "outline"}
-                className="gap-2"
-                asChild
-              >
-                <Link to={section.path}>
-                  <Icon className="h-4 w-4" />
-                  {section.label}
-                </Link>
-              </Button>
-            );
-          },
-        )}
-      </div>
+              return (
+                <Button
+                  key={sectionKey}
+                  variant={sectionKey === type ? "default" : "outline"}
+                  className="gap-2"
+                  asChild
+                >
+                  <Link to={section.path}>
+                    <Icon className="h-4 w-4" />
+                    {section.label}
+                  </Link>
+                </Button>
+              );
+            }
+          )}
+        </div>
+      )}
 
       <Card>
         <CardHeader>

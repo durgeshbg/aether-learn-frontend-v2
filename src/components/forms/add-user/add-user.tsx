@@ -42,14 +42,6 @@ export default function AddUserForm() {
   const form = useForm<z.infer<typeof UserCreateSchema>>({
     resolver: zodResolver(UserCreateSchema),
     defaultValues: {
-      email: "",
-      password: "",
-      firstName: "",
-      lastName: "",
-      organizationId: "",
-      year: undefined,
-      branch: "",
-      uniqueId: "",
       orgAdmin: false,
       role: "USER",
     },

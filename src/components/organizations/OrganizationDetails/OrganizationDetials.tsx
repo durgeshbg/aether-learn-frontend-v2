@@ -142,15 +142,17 @@ const OrganizationDetails = () => {
             <Shield className="h-4 w-4" />
             Update admin
           </Button>
-          <Button
-            variant="outline"
-            className={showDeleteConfirm ? "bg-red-500 text-white" : ""}
-            onClick={handleDelete}
-            disabled={isPending}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            {showDeleteConfirm ? "Confirm delete" : "Delete organization"}
-          </Button>
+          {user?.role === "ADMIN" && (
+            <Button
+              variant="outline"
+              className={showDeleteConfirm ? "bg-red-500 text-white" : ""}
+              onClick={handleDelete}
+              disabled={isPending}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              {showDeleteConfirm ? "Confirm delete" : "Delete organization"}
+            </Button>
+          )}
         </div>
 
         {showDeleteConfirm && (
