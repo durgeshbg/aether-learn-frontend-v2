@@ -141,7 +141,7 @@ export const UserCreateSchema = z.object({
   organizationId: z.string().cuid("Invalid organization ID format").optional(),
   branch: z.string().optional(),
   uniqueId: z.string().optional(),
-  year: z.number().int().min(1900).max(2100).optional(),
+  year: z.coerce.number().int().min(1900).max(2100).optional(),
   orgAdmin: z.boolean().default(false).optional(),
   role: z
     .enum(["ADMIN", "USER"], {
