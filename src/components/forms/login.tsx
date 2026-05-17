@@ -24,15 +24,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router";
 import { routes } from "@/static-data/routes";
 import { UserLoginSchema } from "@/types/User";
-import {
-  Mail,
-  Lock,
-  Shield,
-  Building2,
-  User,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import { Mail, Lock, Shield, Building2, User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import Logo from "@/components/navbar/Logo";
 
@@ -152,54 +144,52 @@ export default function LoginForm() {
             </form>
           </Form>
 
-          {import.meta.env.DEV && (
-            <div className="space-y-3 rounded-lg border border-dashed border-border/70 p-4">
-              <p className="text-xs font-medium uppercase text-muted-foreground">
-                Demo accounts
-              </p>
-              <div className="grid gap-2 sm:grid-cols-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  className="justify-start"
-                  onClick={() => {
-                    form.setValue("email", "admin1@mail.com");
-                    form.setValue("password", "password");
-                  }}
-                >
-                  <Shield className="mr-2 h-3.5 w-3.5" />
-                  Admin
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  className="justify-start"
-                  onClick={() => {
-                    form.setValue("email", "org1admin@mail.com");
-                    form.setValue("password", "password");
-                  }}
-                >
-                  <Building2 className="mr-2 h-3.5 w-3.5" />
-                  Org admin
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  type="button"
-                  className="justify-start"
-                  onClick={() => {
-                    form.setValue("email", "user1@mail.com");
-                    form.setValue("password", "password");
-                  }}
-                >
-                  <User className="mr-2 h-3.5 w-3.5" />
-                  Student
-                </Button>
-              </div>
+          <div className="space-y-3 rounded-lg border border-dashed border-border/70 p-4">
+            <p className="text-xs font-medium uppercase text-muted-foreground">
+              Demo accounts
+            </p>
+            <div className="grid gap-2 sm:grid-cols-3">
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                className="justify-start"
+                onClick={() => {
+                  form.setValue("email", "admin1@mail.com");
+                  form.setValue("password", "password");
+                }}
+              >
+                <Shield className="mr-2 h-3.5 w-3.5" />
+                Admin
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                className="justify-start"
+                onClick={() => {
+                  form.setValue("email", "org1admin@mail.com");
+                  form.setValue("password", "password");
+                }}
+              >
+                <Building2 className="mr-2 h-3.5 w-3.5" />
+                Org admin
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                className="justify-start"
+                onClick={() => {
+                  form.setValue("email", "user1@mail.com");
+                  form.setValue("password", "password");
+                }}
+              >
+                <User className="mr-2 h-3.5 w-3.5" />
+                Student
+              </Button>
             </div>
-          )}
+          </div>
 
           <p className="text-center text-xs text-muted-foreground">
             Need help? Contact your organization’s IT support.
